@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">LTH Store</string>
+    <string name="first_slide">Choose Your Products</string>
+    <string name="second_slide">Fast Delivery</string>
+    <string name="third_slide">Good Service</string>
+    <string name="description">Lorem Ipsum is simple dummy text of the printing and typesetting industrys standard dummy text ever since the</string>
+    <!--    Sign in-->
+    <string name="strTitleSignIn">Đăng Nhập</string>
+    <string name="strHintUsername">Tên đăng nhập</string>
+    <string name="strHintEmail">Địa chỉ email</string>
+    <string name="strHintPassword">Mật khẩu</string>
+    <string name="strForgotPassword">Quên mật khẩu ?</string>
+    <string name="strNotHaveAccount">Không có tài khoản ?</string>
+
+    <!--    Sign up-->
+    <string name="strTitleSignUp">Đăng kí</string>
+    <string name="strHaveAccount">Đã có tài khoản ?</string>
+
+    <string name="strTitleForgotPassword">Quên mật khẩu</string>
+    <string name="strTitleContinue">Tiếp tục</string>
+
+    <string name="strMenuChangePassword">Đổi mật khẩu</string>
+    <string name="strMenuLogout">Đăng xuất</string>
+
+    <string name="strResetPassword">Đặt lại mật khẩu</string>
+
+    <string name="strCurrentPassword">Mật khẩu hiện tại</string>
+    <string name="strNewPassword">Mật khẩu mới</string>
+    <string name="strConfirmPassword">Xác nhận mật khẩu</string>
+    <string name="strTitleUpdate">Cập nhật</string>
+
+    <string name="strTitleNewProductHome">Mới</string>
+
+    <string name="strTitleCategory">Danh mục</string>
+    <string name="strTitleSeeAll">Xem tất cả</string>
+    <string name="strTitleNewProducts">Sản phẩm mới nhất</string>
+
+    <string name="strTitlePopularProduct">Sản phẩm phổ biến</string>
+
+    <string name="strTitleHomeNavigation">Trang chủ</string>
+
+    <string name="strTitleProductNavigation">Sản phẩm</string>
+    <string name="strTitleOrderNavigation">Đơn hàng</string>
+    <string name="strTitleProfileNavigation">Tài khoản</string>
+</resources>

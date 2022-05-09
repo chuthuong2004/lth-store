@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/mnu_home_navigation"
+        android:icon="@drawable/ic_home_bottom_navigation"
+        android:title="@string/strTitleHomeNavigation"></item>
+    <item android:id="@+id/mnu_product_navigation"
+        android:icon="@drawable/ic_product_bottom_navigation"
+        android:title="@string/strTitleProductNavigation"></item>
+    <item android:id="@+id/mnu_order_navigation"
+        android:icon="@drawable/ic_order_bottom_navigation"
+        android:title="@string/strTitleOrderNavigation"></item>
+    <item android:id="@+id/mnu_profile_navigation"
+        android:icon="@drawable/ic_profile_bottom_nav"
+        android:title="@string/strTitleProfileNavigation"></item>
+</menu>
