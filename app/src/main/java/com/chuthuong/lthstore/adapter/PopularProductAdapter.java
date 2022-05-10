@@ -43,6 +43,7 @@ public class PopularProductAdapter extends RecyclerView.Adapter<PopularProductAd
         NumberFormat formatter = new DecimalFormat("#,###");
         String formatterPriceProduct = formatter.format(product.getPrice() - (product.getPrice() * product.getDiscount() / 100));
         holder.price.setText(formatterPriceProduct + "đ");
+        holder.likeCount.setText(product.getLikeCount()+"");
         if (product.getDiscount() != 0) {
             String formatterCurrentPriceProduct = formatter.format(product.getPrice());
             holder.currentPrice.setText(formatterCurrentPriceProduct + "đ");
@@ -66,7 +67,7 @@ public class PopularProductAdapter extends RecyclerView.Adapter<PopularProductAd
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
-        TextView name, currentPrice, price, discount;
+        TextView name, currentPrice, price, discount, likeCount;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -75,6 +76,7 @@ public class PopularProductAdapter extends RecyclerView.Adapter<PopularProductAd
             price = itemView.findViewById(R.id.all_price);
             discount = itemView.findViewById(R.id.all_discount);
             currentPrice = itemView.findViewById(R.id.current_price);
+            likeCount = itemView.findViewById(R.id.like_count);
         }
     }
 }

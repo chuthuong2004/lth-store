@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.3485" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_favorite_24_pink.xml" value="0.3485" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_home_bottom_navigation.xml" value="0.1935" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/image_view_bg_circle.xml" value="0.3635" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/strikethrough_foreground.xml" value="0.3635" />
@@ -19,7 +21,7 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_tab3.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/item.xml" value="0.30277777777777776" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/new_products.xml" value="0.25" />
-        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/popular_product_items.xml" value="0.9" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/popular_product_items.xml" value="0.75" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/menu/menu_botom_navigation.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/menu/menu_main.xml" value="0.30277777777777776" />
       </map>

@@ -125,7 +125,7 @@ public class HomeFragment extends Fragment {
 
         // new Products
         newProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
-        ApiService.apiService.getAllProducts().enqueue(new Callback<ListProduct>() {
+        ApiService.apiService.getAllProducts("20","1","-createdAt","0").enqueue(new Callback<ListProduct>() {
             @Override
             public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
                 if (response.isSuccessful()) {
@@ -162,7 +162,7 @@ public class HomeFragment extends Fragment {
 //        popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
 //        popularRecycleView.setAdapter(popularProductAdapter);
 
-        ApiService.apiService.getAllProducts().enqueue(new Callback<ListProduct>() {
+        ApiService.apiService.getAllProducts("0","1","-likeCount","0").enqueue(new Callback<ListProduct>() {
             @Override
             public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
                 if (response.isSuccessful()) {

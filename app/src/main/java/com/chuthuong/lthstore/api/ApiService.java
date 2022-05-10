@@ -17,6 +17,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 public interface ApiService {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
@@ -77,6 +79,9 @@ public interface ApiService {
     @GET("categories")
     Call<ListCategory> getAllCategories();
 
-    @GET("products")
-    Call<ListProduct> getAllProducts();
+    @GET("products?")
+    Call<ListProduct> getAllProducts(@Query("limit") String limit,
+                                     @Query("page") String page,
+                                     @Query("sort") String sort,
+                                     @Query("discount[gte]") String filterDiscount);
 }

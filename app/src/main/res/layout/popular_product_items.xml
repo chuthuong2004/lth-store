@@ -2,11 +2,11 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
 xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="130dp"
+    android:layout_width="175dp"
 android:layout_height="wrap_content"
-android:layout_margin="10dp"
+android:layout_margin="5dp"
 android:padding="5dp"
-app:cardCornerRadius="5dp">
+app:cardCornerRadius="10dp">
 <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -15,7 +15,7 @@ app:cardCornerRadius="5dp">
     <ImageView
         android:id="@+id/all_img"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="180dp"
         android:scaleType="centerCrop"
         android:src="@drawable/milk"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,23 +49,25 @@ app:cardCornerRadius="5dp">
     <TextView
         android:id="@+id/all_product_name"
         android:layout_width="0dp"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingLeft="5dp"
-        android:paddingEnd="2dp"
-        android:layout_height="wrap_content"
+        android:layout_height="54dp"
+        android:ellipsize="end"
         android:fontFamily="@font/amethysta"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:paddingLeft="5dp"
+        android:paddingTop="10dp"
+        android:paddingEnd="2dp"
+        android:paddingBottom="10dp"
         android:text="Product Name"
         android:textSize="14sp"
-        android:ellipsize="end"
-        android:maxLines="2"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.538"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/all_img" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="@+id/all_product_name"
@@ -76,10 +78,10 @@ app:cardCornerRadius="5dp">
             android:id="@+id/current_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
             android:fontFamily="@font/amethysta"
             android:foreground="@drawable/strikethrough_foreground"
             android:text="100.000đ"
-            android:layout_marginStart="5dp"
             android:textColor="@color/grey"
             android:textSize="12sp"
             android:textStyle="bold"
@@ -90,9 +92,9 @@ app:cardCornerRadius="5dp">
             android:id="@+id/all_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
             android:fontFamily="@font/amethysta"
             android:text="20.000đ"
-            android:layout_marginEnd="5dp"
             android:textColor="@color/pink"
             android:textSize="14sp"
             android:textStyle="bold"
@@ -102,5 +104,134 @@ app:cardCornerRadius="5dp">
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <RelativeLayout
+        android:id="@+id/relative_layout_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout">
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/like_count"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="5dp"
+            android:fontFamily="@font/amethysta"
+            android:text="Đã bán"
+            android:textColor="@color/grey"
+            android:textSize="7sp"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/all_sold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/amethysta"
+            android:layout_toEndOf="@+id/textView3"
+            android:text="2"
+            android:layout_marginStart="2sp"
+            android:textColor="@color/grey"
+            android:textSize="7sp"
+            android:layout_alignBaseline="@+id/like_count"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints" />
+        <ImageView
+            android:id="@+id/img_like_count"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:layout_alignParentTop="true"
+            android:layout_toStartOf="@+id/like_count"
+            android:src="@drawable/ic_baseline_favorite_24"
+            app:tint="@color/pink"
+            tools:ignore="MissingConstraints" />
+
+        <TextView
+            android:id="@+id/like_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="5dp"
+            android:fontFamily="@font/amethysta"
+            android:text="20"
+            android:textColor="@color/grey"
+            android:textSize="9sp"
+            android:textStyle="bold"
+            tools:ignore="MissingConstraints" />
+
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginBottom="2dp"
+        app:layout_constraintTop_toBottomOf="@+id/relative_layout_favorite">
+
+        <ImageView
+            android:id="@+id/img_add_to_cart"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginStart="5dp"
+            android:src="@drawable/ic_baseline_add_shopping_cart_24"
+            tools:ignore="MissingConstraints"
+            app:tint="@color/pink" />
+
+        <ImageView
+            android:id="@+id/img_star1"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:layout_alignBaseline="@id/img_star5"
+            android:layout_alignBottom="@+id/img_add_to_cart"
+            android:layout_toStartOf="@+id/img_star2"
+            android:src="@drawable/ic_baseline_star_24"
+            app:tint="@color/yellow"
+            tools:ignore="MissingConstraints" />
+        <ImageView
+            android:id="@+id/img_star2"
+            android:layout_width="11dp"
+            android:layout_height="11dp"
+            android:layout_toStartOf="@+id/img_star3"
+            android:src="@drawable/ic_baseline_star_24"
+            app:tint="@color/yellow"
+            android:layout_alignBottom="@+id/img_add_to_cart"
+            tools:ignore="MissingConstraints" />
+        <ImageView
+            android:id="@+id/img_star3"
+            android:layout_width="12dp"
+            android:layout_height="12dp"
+            android:layout_toStartOf="@+id/img_star4"
+            android:src="@drawable/ic_baseline_star_24"
+            app:tint="@color/yellow"
+            android:layout_alignBottom="@+id/img_add_to_cart"
+            tools:ignore="MissingConstraints" />
+        <ImageView
+            android:id="@+id/img_star4"
+            android:layout_width="13dp"
+            android:layout_height="13dp"
+            android:layout_toStartOf="@+id/img_star5"
+            android:src="@drawable/ic_baseline_star_24"
+            android:layout_alignBottom="@+id/img_add_to_cart"
+            app:tint="@color/yellow"
+            tools:ignore="MissingConstraints" />
+        <ImageView
+            android:id="@+id/img_star5"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignBottom="@+id/img_add_to_cart"
+            android:layout_marginEnd="5dp"
+            android:src="@drawable/ic_baseline_star_24"
+            app:tint="@color/yellow"
+            tools:ignore="MissingConstraints" />
+    </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>
