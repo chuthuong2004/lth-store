@@ -13,26 +13,25 @@ import android.view.ViewGroup;
 
 import com.chuthuong.lthstore.R;
 
-public class ProductFragment extends Fragment {
-    public ProductFragment() {
+public class ProfileFragment extends Fragment {
+    public ProfileFragment() {
         // Required empty public constructor
     }
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        Log.e("ProductFragment", "Fragment 2");
+        Log.e("ProfileFragment", "Fragment 4");
     }
-
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("Thuong","Reload FragmentProduct");
+        Log.e("Thuong","Reload FragmentProfile");
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_product, container, false);
+        return inflater.inflate(R.layout.fragment_profile, container, false);
     }
 }

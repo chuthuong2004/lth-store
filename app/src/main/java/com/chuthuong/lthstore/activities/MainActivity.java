@@ -5,7 +5,9 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.viewpager.widget.ViewPager;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,10 +26,12 @@ import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.authActivities.ChangePasswordActivity;
 import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
+import com.chuthuong.lthstore.adapter.ViewPagerAdapter;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.fragments.HomeFragment;
 import com.chuthuong.lthstore.fragments.OrderFragment;
 import com.chuthuong.lthstore.fragments.ProductFragment;
+import com.chuthuong.lthstore.fragments.ProfileFragment;
 import com.chuthuong.lthstore.model.ListUser;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
@@ -48,11 +52,15 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
+
+
     User user = null;
     String nameSharePreference = "account";
     ImageView avt;
     ArrayAdapter<String> userAdapter;
-    Fragment homeFragment, orderFragment, productFragment ;
+    Fragment homeFragment, orderFragment, productFragment, profileFragment;
+
+    ViewPager mViewPager;
     BottomNavigationView bottomNavigationView;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -65,12 +73,15 @@ public class MainActivity extends AppCompatActivity {
         Intent intentReceiveFromUser = getIntent();
         user = (User) intentReceiveFromUser.getSerializableExtra("user");
         if (user == null) {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         }
         showToken();
 
         homeFragment = new HomeFragment();
         loadFragment(homeFragment);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        mViewPager.setAdapter(viewPagerAdapter);
+        mViewPager.setOffscreenPageLimit(2); //só lượng page load
     }
 
     private void addEvents() {
@@ -79,25 +90,58 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.mnu_home_navigation:
-                        homeFragment = new HomeFragment();
-                        loadFragment(homeFragment);
-                        Toast.makeText(MainActivity.this, "Trang chủ", Toast.LENGTH_SHORT).show();
+                        mViewPager.setCurrentItem(0);
+                        HomeFragment homeFragment1 = (HomeFragment) mViewPager.getAdapter().instantiateItem(mViewPager, 0);
+                        homeFragment1.reloadData();
+//                        homeFragment = new HomeFragment();
+//                        loadFragment(homeFragment);
                         break;
                     case R.id.mnu_product_navigation:
-                        productFragment = new ProductFragment();
-                        loadFragment(productFragment);
-                        Toast.makeText(MainActivity.this, "Sản phẩm", Toast.LENGTH_SHORT).show();
+                        mViewPager.setCurrentItem(1);
+//                        productFragment = new ProductFragment();
+//                        loadFragment(productFragment);
                         break;
                     case R.id.mnu_order_navigation:
-                        orderFragment = new OrderFragment();
-                        loadFragment(orderFragment);
-                        Toast.makeText(MainActivity.this, "Đơn hàng", Toast.LENGTH_SHORT).show();
+                        mViewPager.setCurrentItem(2);
+//                        orderFragment = new OrderFragment();
+//                        loadFragment(orderFragment);
                         break;
                     case R.id.mnu_profile_navigation:
-                        Toast.makeText(MainActivity.this, "Tài khoản", Toast.LENGTH_SHORT).show();
+                        mViewPager.setCurrentItem(3);
+//                        profileFragment = new ProfileFragment();
+//                        loadFragment(profileFragment);
                         break;
                 }
                 return true;
+            }
+        });
+        mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                switch (position) {
+                    case 0:
+                        bottomNavigationView.getMenu().findItem(R.id.mnu_home_navigation).setChecked(true);
+                        break;
+                    case 1:
+                        bottomNavigationView.getMenu().findItem(R.id.mnu_product_navigation).setChecked(true);
+                        break;
+                    case 2:
+                        bottomNavigationView.getMenu().findItem(R.id.mnu_order_navigation).setChecked(true);
+                        break;
+                    case 3:
+                        bottomNavigationView.getMenu().findItem(R.id.mnu_profile_navigation).setChecked(true);
+                        break;
+                }
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
             }
         });
     }
@@ -120,6 +164,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addControls() {
+        mViewPager = findViewById(R.id.view_pager_home);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
     }
 
@@ -143,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         ApiToken apiToken = getToken("account");
         String accessToken = apiToken.getAccessToken();
         if (accessToken == "") {
-            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//            startActivity(new Intent(MainActivity.this, LoginActivity.class));
         } else {
             Base64.Decoder decoder = Base64.getUrlDecoder();
             String[] verifyTokens = accessToken.split("\\.");
@@ -223,49 +268,4 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
-
-    public void getAllUser(View view) {
-        ApiToken apiToken = getToken("account");
-        String accessToken = "Bearer " + apiToken.getAccessToken();
-        String access = "application/json;versions=1";
-        callApiGetAllUser(access, accessToken);
-    }
-
-    private void callApiGetAllUser(String access, String accessToken) {
-        ApiService.apiService.getAllUser(access, accessToken).enqueue(new Callback<ListUser>() {
-            @Override
-            public void onResponse(Call<ListUser> call, Response<ListUser> response) {
-                if (response.isSuccessful()) {
-                    ListUser users = response.body();
-//                    Log.e("ID:", users.getId());
-//                    Log.e("Username:", user.getUsername());
-//                    Log.e("Email:", user.getEmail());
-//                    Log.e("IsAdmin:", user.isAdmin() + "");
-//                    Log.e("createdAt:", user.getCreatedAt());
-//                    Log.e("updatedAt:", user.getUpdatedAt());
-//                    Log.e("accessToken:", user.getAccessToken());
-//                    Log.e("refreshToken:", user.getRefreshToken());
-                    Log.e("users:", users.getUsers().get(0).toString());
-                    String avtURL = users.getUsers().get(0).getAvatar();
-                    Log.e("AVT", avtURL);
-                    Glide.with(MainActivity.this).load(avtURL).into(avt);
-                } else {
-                    try {
-                        Gson gson = new Gson();
-                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(MainActivity.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ListUser> call, Throwable t) {
-                Log.e("Main", t.getMessage());
-            }
-        });
-    }
-
 }

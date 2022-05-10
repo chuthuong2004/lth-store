@@ -1,8 +1,11 @@
 package com.chuthuong.lthstore.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,6 +18,7 @@ import android.widget.Toast;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.adapter.CategoryAdapter;
 import com.chuthuong.lthstore.adapter.NewProductsAdapter;
+import com.chuthuong.lthstore.adapter.PopularProductAdapter;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.model.ListCategory;
 import com.chuthuong.lthstore.model.ListProduct;
@@ -34,7 +38,7 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
-    RecyclerView catRecyclerView, newProductRecycleView;
+    RecyclerView catRecyclerView, newProductRecycleView, popularRecycleView;
 
     // Category RecycleView
     CategoryAdapter categoryAdapter;
@@ -44,8 +48,24 @@ public class HomeFragment extends Fragment {
     NewProductsAdapter newProductsAdapter;
     ListProduct newProductList;
 
+    // Popular product RecycleView
+    PopularProductAdapter popularProductAdapter;
+    ListProduct popularProductList;
+
     public HomeFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        Log.e("HomeFragment", "Fragment 1");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.e("Thuong","Reload FragmentHome");
     }
 
     @Override
@@ -56,6 +76,7 @@ public class HomeFragment extends Fragment {
 
         catRecyclerView = root.findViewById(R.id.rec_category);
         newProductRecycleView= root.findViewById(R.id.new_product_rec);
+        popularRecycleView= root.findViewById(R.id.popular_rec);
 
 
         // image slider
@@ -71,7 +92,7 @@ public class HomeFragment extends Fragment {
         catRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL, false));
         categoryList = new ListCategory();
 //        categoryAdapter = new CategoryAdapter(getContext(), categoryList);
-//        catRecyclerView.setAdapter(categoryAdapter);
+//        catRecyclerView.setAdapter(categoryAdapter)
         ApiService.apiService.getAllCategories().enqueue(new Callback<ListCategory>() {
             @Override
             public void onResponse(Call<ListCategory> call, Response<ListCategory> response) {
@@ -104,8 +125,6 @@ public class HomeFragment extends Fragment {
 
         // new Products
         newProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
-
-
         ApiService.apiService.getAllProducts().enqueue(new Callback<ListProduct>() {
             @Override
             public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
@@ -135,6 +154,48 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
             }
         });
+
+
+        // popular products
+        popularRecycleView.setLayoutManager(new GridLayoutManager(getContext(),2));
+//        popularProductList = new ListProduct();
+//        popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
+//        popularRecycleView.setAdapter(popularProductAdapter);
+
+        ApiService.apiService.getAllProducts().enqueue(new Callback<ListProduct>() {
+            @Override
+            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
+                if (response.isSuccessful()) {
+                    ListProduct products= response.body();
+                    popularProductList = new ListProduct();
+                    popularProductList = products;
+                    popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
+                    popularRecycleView.setAdapter(popularProductAdapter);
+                    popularProductAdapter.notifyDataSetChanged();
+                    Log.e("Products", products.getProducts().get(0).getName()+ "");
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        Log.e("Message", apiError.getMessage());
+//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProduct> call, Throwable t) {
+                Log.e("Lỗi server ", t.toString());
+                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         return  root;
+    }
+
+    public void reloadData(){
+        Toast.makeText(getActivity(), "Reload FragmentHome", Toast.LENGTH_SHORT).show();
     }
 }
