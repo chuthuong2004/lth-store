@@ -10,6 +10,7 @@ public class Product {
     private String name;
     private String title;
     private int price;
+    private int quantitySold;
     private int discount;
     private String desProduct;
     private List<ProductDetail> detail;
@@ -26,11 +27,12 @@ public class Product {
     public Product() {
     }
 
-    public Product(String id, String name, String title, int price, int discount, String desProduct, List<ProductDetail> detail, String category, List<ProductImage> images, int likeCount, List<String> keywords, List<Review> reviews, boolean deleted, String createdAt, String updatedAt, String slug) {
+    public Product(String id, String name, String title, int price, int quantitySold, int discount, String desProduct, List<ProductDetail> detail, String category, List<ProductImage> images, int likeCount, List<String> keywords, List<Review> reviews, boolean deleted, String createdAt, String updatedAt, String slug) {
         this.id = id;
         this.name = name;
         this.title = title;
         this.price = price;
+        this.quantitySold = quantitySold;
         this.discount = discount;
         this.desProduct = desProduct;
         this.detail = detail;
@@ -75,6 +77,14 @@ public class Product {
 
     public void setPrice(int price) {
         this.price = price;
+    }
+
+    public int getQuantitySold() {
+        return quantitySold;
+    }
+
+    public void setQuantitySold(int quantitySold) {
+        this.quantitySold = quantitySold;
     }
 
     public int getDiscount() {
@@ -180,6 +190,7 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", title='" + title + '\'' +
                 ", price=" + price +
+                ", quantitySold=" + quantitySold +
                 ", discount=" + discount +
                 ", desProduct='" + desProduct + '\'' +
                 ", detail=" + detail +

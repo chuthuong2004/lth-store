@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.adapter.CategoryAdapter;
+import com.chuthuong.lthstore.adapter.FlashSaleProductAdapter;
 import com.chuthuong.lthstore.adapter.NewProductsAdapter;
 import com.chuthuong.lthstore.adapter.PopularProductAdapter;
 import com.chuthuong.lthstore.api.ApiService;
@@ -38,7 +39,7 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
-    RecyclerView catRecyclerView, newProductRecycleView, popularRecycleView;
+    RecyclerView catRecyclerView, newProductRecycleView, flashSaleProductRecycleView, popularRecycleView;
 
     // Category RecycleView
     CategoryAdapter categoryAdapter;
@@ -47,6 +48,10 @@ public class HomeFragment extends Fragment {
     // New product RecycleView
     NewProductsAdapter newProductsAdapter;
     ListProduct newProductList;
+
+    // Flash Sale product RecycleView
+    FlashSaleProductAdapter flashSaleProductAdapter;
+    ListProduct flashSaleProductList;
 
     // Popular product RecycleView
     PopularProductAdapter popularProductAdapter;
@@ -77,6 +82,7 @@ public class HomeFragment extends Fragment {
         catRecyclerView = root.findViewById(R.id.rec_category);
         newProductRecycleView= root.findViewById(R.id.new_product_rec);
         popularRecycleView= root.findViewById(R.id.popular_rec);
+        flashSaleProductRecycleView= root.findViewById(R.id.sale_product_rec);
 
 
         // image slider
@@ -155,6 +161,37 @@ public class HomeFragment extends Fragment {
             }
         });
 
+        // Flash Sale Products
+        flashSaleProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
+        ApiService.apiService.getAllProducts("0","1","-discount","20").enqueue(new Callback<ListProduct>() {
+            @Override
+            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
+                if (response.isSuccessful()) {
+                    ListProduct products= response.body();
+                    flashSaleProductList = new ListProduct();
+                    flashSaleProductList = products;
+                    flashSaleProductAdapter = new FlashSaleProductAdapter(getContext(),flashSaleProductList);
+                    flashSaleProductRecycleView.setAdapter(flashSaleProductAdapter);
+                    flashSaleProductAdapter.notifyDataSetChanged();
+                    Log.e("Products", products.getProducts().get(0).getName()+ "");
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        Log.e("Message", apiError.getMessage());
+//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProduct> call, Throwable t) {
+                Log.e("Lỗi server ", t.toString());
+                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // popular products
         popularRecycleView.setLayoutManager(new GridLayoutManager(getContext(),2));
