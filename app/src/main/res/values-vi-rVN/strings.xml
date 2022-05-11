@@ -45,5 +45,7 @@
     <string name="strTitleOrderNavigation">Đơn hàng</string>
     <string name="strTitleProfileNavigation">Tài khoản</string>
 
-    <string name="strTitlesaleProducts">Flash Sale</string>
+    <string name="strTitleFlashSaleProducts">Flash Sale</string>
+
+    <string name="strTitleSearchHome">Tìm kiếm</string>
 </resources>
