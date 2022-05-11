@@ -37,6 +37,8 @@ import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.gson.Gson;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -190,11 +192,21 @@ public class HomeFragment extends Fragment {
         callApiGetAllPopularProducts();
         SearchView searchView= root.findViewById(R.id.search_view_home);
         CardView cardView = root.findViewById(R.id.card_view_search_home);
+        TextView textView=  root.findViewById(R.id.text_view_hint_search);
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 searchView.setIconified(false);
+                textView.setVisibility(View.GONE);
 //                getActivity().onSearchRequested();
+            }
+        });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                textView.setVisibility(View.VISIBLE);
+                return false;
             }
         });
         return root;

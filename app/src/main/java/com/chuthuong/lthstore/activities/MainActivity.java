@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
         loadFragment(homeFragment);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mViewPager.setAdapter(viewPagerAdapter);
-        mViewPager.setOffscreenPageLimit(2); //só lượng page load
+        mViewPager.setOffscreenPageLimit(3); //só lượng page load
     }
 
     private void addEvents() {
