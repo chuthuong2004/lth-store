@@ -13,7 +13,7 @@ app:cardCornerRadius="10dp">
     android:background="#EDEDED">
 
     <ImageView
-        android:id="@+id/all_img"
+        android:id="@+id/popular_product_img"
         android:layout_width="0dp"
         android:layout_height="180dp"
         android:scaleType="centerCrop"
@@ -24,7 +24,7 @@ app:cardCornerRadius="10dp">
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/all_discount"
+        android:id="@+id/popular_product_discount"
         android:layout_width="35dp"
         android:layout_height="35dp"
         android:background="@drawable/text_view_bg_circle"
@@ -43,11 +43,11 @@ app:cardCornerRadius="10dp">
         android:layout_height="20dp"
         android:src="@drawable/ic_baseline_favorite_24"
         android:background="@drawable/image_view_bg_circle"
-        app:layout_constraintBottom_toBottomOf="@+id/all_img"
+        app:layout_constraintBottom_toBottomOf="@+id/popular_product_img"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <TextView
-        android:id="@+id/all_product_name"
+        android:id="@+id/popular_product_name"
         android:layout_width="0dp"
         android:layout_height="54dp"
         android:ellipsize="end"
@@ -64,18 +64,18 @@ app:cardCornerRadius="10dp">
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/all_img" />
+        app:layout_constraintTop_toBottomOf="@+id/popular_product_img" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/all_product_name"
-        app:layout_constraintStart_toStartOf="@+id/all_product_name"
-        app:layout_constraintTop_toBottomOf="@+id/all_product_name">
+        app:layout_constraintEnd_toEndOf="@+id/popular_product_name"
+        app:layout_constraintStart_toStartOf="@+id/popular_product_name"
+        app:layout_constraintTop_toBottomOf="@+id/popular_product_name">
 
         <TextView
-            android:id="@+id/current_price"
+            android:id="@+id/popular_product_current_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="5dp"
@@ -89,7 +89,7 @@ app:cardCornerRadius="10dp">
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/all_price"
+            android:id="@+id/popular_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
@@ -116,7 +116,7 @@ app:cardCornerRadius="10dp">
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/like_count"
+            android:layout_alignBaseline="@+id/popular_product_like_count"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="5dp"
@@ -131,7 +131,7 @@ app:cardCornerRadius="10dp">
             android:id="@+id/popular_product_sold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/like_count"
+            android:layout_alignBaseline="@+id/popular_product_like_count"
             android:layout_marginStart="2sp"
             android:layout_toEndOf="@+id/textView3"
             android:fontFamily="@font/amethysta"
@@ -145,13 +145,13 @@ app:cardCornerRadius="10dp">
             android:layout_width="11dp"
             android:layout_height="11dp"
             android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/like_count"
+            android:layout_toStartOf="@+id/popular_product_like_count"
             android:src="@drawable/ic_baseline_favorite_24"
             app:tint="@color/pink"
             tools:ignore="MissingConstraints" />
 
         <TextView
-            android:id="@+id/like_count"
+            android:id="@+id/popular_product_like_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -176,7 +176,7 @@ app:cardCornerRadius="10dp">
         app:layout_constraintTop_toBottomOf="@+id/relative_layout_favorite">
 
         <ImageView
-            android:id="@+id/img_add_to_cart"
+            android:id="@+id/popular_product_img_add_to_cart"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_alignParentTop="true"
@@ -185,54 +185,18 @@ app:cardCornerRadius="10dp">
             android:src="@drawable/ic_baseline_add_shopping_cart_24"
             tools:ignore="MissingConstraints"
             app:tint="@color/pink" />
-
-        <ImageView
-            android:id="@+id/img_star1"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_alignBaseline="@id/img_star5"
-            android:layout_alignBottom="@+id/img_add_to_cart"
-            android:layout_toStartOf="@+id/img_star2"
-            android:src="@drawable/ic_baseline_star_24"
-            app:tint="@color/yellow"
-            tools:ignore="MissingConstraints" />
-        <ImageView
-            android:id="@+id/img_star2"
-            android:layout_width="11dp"
-            android:layout_height="11dp"
-            android:layout_toStartOf="@+id/img_star3"
-            android:src="@drawable/ic_baseline_star_24"
-            app:tint="@color/yellow"
-            android:layout_alignBottom="@+id/img_add_to_cart"
-            tools:ignore="MissingConstraints" />
-        <ImageView
-            android:id="@+id/img_star3"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_toStartOf="@+id/img_star4"
-            android:src="@drawable/ic_baseline_star_24"
-            app:tint="@color/yellow"
-            android:layout_alignBottom="@+id/img_add_to_cart"
-            tools:ignore="MissingConstraints" />
-        <ImageView
-            android:id="@+id/img_star4"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:layout_toStartOf="@+id/img_star5"
-            android:src="@drawable/ic_baseline_star_24"
-            android:layout_alignBottom="@+id/img_add_to_cart"
-            app:tint="@color/yellow"
-            tools:ignore="MissingConstraints" />
-        <ImageView
-            android:id="@+id/img_star5"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+        <RatingBar
+            android:id="@+id/popular_product_rating_bar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:layout_alignBottom="@+id/img_add_to_cart"
-            android:layout_marginEnd="5dp"
-            android:src="@drawable/ic_baseline_star_24"
-            app:tint="@color/yellow"
-            tools:ignore="MissingConstraints" />
+            android:isIndicator="true"
+            android:numStars="5"
+            android:focusable="true"
+            android:clickable="true"
+            android:layout_alignBottom="@+id/popular_product_img_add_to_cart"
+            android:stepSize="0.1" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

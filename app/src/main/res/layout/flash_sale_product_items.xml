@@ -185,54 +185,18 @@ app:cardCornerRadius="10dp">
             android:src="@drawable/ic_baseline_add_shopping_cart_24"
             tools:ignore="MissingConstraints"
             app:tint="@color/pink" />
-
-        <ImageView
-            android:id="@+id/img_star1"
-            android:layout_width="10dp"
-            android:layout_height="10dp"
-            android:layout_alignBaseline="@id/img_star5"
-            android:layout_alignBottom="@+id/flash_sale_product_img_add_to_cart"
-            android:layout_toStartOf="@+id/img_star2"
-            android:src="@drawable/ic_baseline_star_24"
-            app:tint="@color/yellow"
-            tools:ignore="MissingConstraints" />
-        <ImageView
-            android:id="@+id/img_star2"
-            android:layout_width="11dp"
-            android:layout_height="11dp"
-            android:layout_toStartOf="@+id/img_star3"
-            android:src="@drawable/ic_baseline_star_24"
-            app:tint="@color/yellow"
-            android:layout_alignBottom="@+id/flash_sale_product_img_add_to_cart"
-            tools:ignore="MissingConstraints" />
-        <ImageView
-            android:id="@+id/img_star3"
-            android:layout_width="12dp"
-            android:layout_height="12dp"
-            android:layout_toStartOf="@+id/img_star4"
-            android:src="@drawable/ic_baseline_star_24"
-            app:tint="@color/yellow"
-            android:layout_alignBottom="@+id/flash_sale_product_img_add_to_cart"
-            tools:ignore="MissingConstraints" />
-        <ImageView
-            android:id="@+id/img_star4"
-            android:layout_width="13dp"
-            android:layout_height="13dp"
-            android:layout_toStartOf="@+id/img_star5"
-            android:src="@drawable/ic_baseline_star_24"
-            android:layout_alignBottom="@+id/flash_sale_product_img_add_to_cart"
-            app:tint="@color/yellow"
-            tools:ignore="MissingConstraints" />
-        <ImageView
-            android:id="@+id/img_star5"
-            android:layout_width="14dp"
-            android:layout_height="14dp"
+        <RatingBar
+            android:id="@+id/flash_sale_product_rating_bar"
+            style="?android:attr/ratingBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:focusable="true"
+            android:clickable="true"
             android:layout_alignBottom="@+id/flash_sale_product_img_add_to_cart"
-            android:layout_marginEnd="5dp"
-            android:src="@drawable/ic_baseline_star_24"
-            app:tint="@color/yellow"
-            tools:ignore="MissingConstraints" />
+            android:stepSize="0.1" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

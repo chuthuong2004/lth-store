@@ -1,10 +1,13 @@
 package com.chuthuong.lthstore.model;
 
+import androidx.core.graphics.PathParser;
+
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Product {
+public class Product implements Serializable{
     @SerializedName("_id")
     private String id;
     private String name;
@@ -13,21 +16,22 @@ public class Product {
     private int quantitySold;
     private int discount;
     private String desProduct;
-    private List<ProductDetail> detail;
+    private  List<ProductDetail> detail;
     private String category;
-    private List<ProductImage> images;
+    private  List<ProductImage> images;
     private int likeCount;
     private List<String> keywords;
-    private List<Review> reviews;
+    private List<String> reviews;
     private boolean deleted;
     private String createdAt;
     private String updatedAt;
     private String slug;
+    private Float rate;
 
     public Product() {
     }
 
-    public Product(String id, String name, String title, int price, int quantitySold, int discount, String desProduct, List<ProductDetail> detail, String category, List<ProductImage> images, int likeCount, List<String> keywords, List<Review> reviews, boolean deleted, String createdAt, String updatedAt, String slug) {
+    public Product(String id, String name, String title, int price, int quantitySold, int discount, String desProduct, List<ProductDetail> detail, String category, List<ProductImage> images, int likeCount, List<String> keywords, List<String> reviews, boolean deleted, String createdAt, String updatedAt, String slug, Float rate) {
         this.id = id;
         this.name = name;
         this.title = title;
@@ -45,6 +49,7 @@ public class Product {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.slug = slug;
+        this.rate = rate;
     }
 
     public String getId() {
@@ -143,11 +148,11 @@ public class Product {
         this.keywords = keywords;
     }
 
-    public List<Review> getReviews() {
+    public List<String> getReviews() {
         return reviews;
     }
 
-    public void setReviews(List<Review> reviews) {
+    public void setReviews(List<String> reviews) {
         this.reviews = reviews;
     }
 
@@ -183,6 +188,14 @@ public class Product {
         this.slug = slug;
     }
 
+    public Float getRate() {
+        return rate;
+    }
+
+    public void setRate(Float rate) {
+        this.rate = rate;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -203,6 +216,7 @@ public class Product {
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
                 ", slug='" + slug + '\'' +
+                ", rate=" + rate +
                 '}';
     }
 }

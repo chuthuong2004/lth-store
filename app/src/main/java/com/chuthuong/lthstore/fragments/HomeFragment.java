@@ -1,6 +1,8 @@
 package com.chuthuong.lthstore.fragments;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -13,9 +15,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chuthuong.lthstore.R;
+import com.chuthuong.lthstore.activities.detailActivities.ShowAllActivity;
 import com.chuthuong.lthstore.adapter.CategoryAdapter;
 import com.chuthuong.lthstore.adapter.FlashSaleProductAdapter;
 import com.chuthuong.lthstore.adapter.NewProductsAdapter;
@@ -30,6 +35,7 @@ import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +45,12 @@ import retrofit2.Response;
 
 public class HomeFragment extends Fragment {
 
+    LinearLayout homeLayout;
+    ProgressDialog progressDialog;
+
     RecyclerView catRecyclerView, newProductRecycleView, flashSaleProductRecycleView, popularRecycleView;
+
+    TextView categoryShowAll, newProductShowALl, flashSaleProductShowAll, popularProductShowAll;
 
     // Category RecycleView
     CategoryAdapter categoryAdapter;
@@ -70,45 +81,220 @@ public class HomeFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("Thuong","Reload FragmentHome");
+        Log.e("Thuong", "Reload FragmentHome");
+    }
+
+    public void addControls(View view) {
+        catRecyclerView = view.findViewById(R.id.rec_category);
+        newProductRecycleView = view.findViewById(R.id.new_product_rec);
+        popularRecycleView = view.findViewById(R.id.popular_rec);
+        flashSaleProductRecycleView = view.findViewById(R.id.sale_product_rec);
+        categoryShowAll = view.findViewById(R.id.category_see_all);
+        newProductShowALl = view.findViewById(R.id.new_product_see_all);
+        flashSaleProductShowAll = view.findViewById(R.id.flash_sale_product_see_all);
+        popularProductShowAll = view.findViewById(R.id.popular_see_all);
+        homeLayout = view.findViewById(R.id.home_layout);
+    }
+
+    ;
+
+    private void addEvents() {
+        categoryShowAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                Intent intent = new Intent(getContext(), ShowAllActivity.class);
+//                intent.putExtra("list_see_all", categoryList);
+//                startActivity(intent);
+                Toast.makeText(getContext(), "Đang bảo trì !", Toast.LENGTH_SHORT).show();
+            }
+        });
+        newProductShowALl.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ShowAllActivity.class);
+                intent.putExtra("list_see_all", newProductList);
+                startActivity(intent);
+            }
+        });
+        flashSaleProductShowAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ShowAllActivity.class);
+                intent.putExtra("list_see_all", flashSaleProductList);
+                startActivity(intent);
+            }
+        });
+        popularProductShowAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getContext(), ShowAllActivity.class);
+                intent.putExtra("list_see_all", popularProductList);
+                startActivity(intent);
+            }
+        });
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root =  inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        catRecyclerView = root.findViewById(R.id.rec_category);
-        newProductRecycleView= root.findViewById(R.id.new_product_rec);
-        popularRecycleView= root.findViewById(R.id.popular_rec);
-        flashSaleProductRecycleView= root.findViewById(R.id.sale_product_rec);
+        progressDialog = new ProgressDialog(getActivity());
 
+        addControls(root);
+        addEvents();
+        homeLayout.setVisibility(View.GONE);
 
         // image slider
         ImageSlider imageSlider = root.findViewById(R.id.image_slider);
         List<SlideModel> slideModelList = new ArrayList<>();
-        slideModelList.add(new SlideModel(R.drawable.banner1,"Discount On Shoes Items", ScaleTypes.CENTER_CROP));
-        slideModelList.add(new SlideModel(R.drawable.banner2,"Discount On Perfume", ScaleTypes.CENTER_CROP));
-        slideModelList.add(new SlideModel(R.drawable.banner3,"70% OFF", ScaleTypes.CENTER_CROP));
+        slideModelList.add(new SlideModel(R.drawable.banner1, "Discount On Shoes Items", ScaleTypes.CENTER_CROP));
+        slideModelList.add(new SlideModel(R.drawable.banner2, "Discount On Perfume", ScaleTypes.CENTER_CROP));
+        slideModelList.add(new SlideModel(R.drawable.banner3, "70% OFF", ScaleTypes.CENTER_CROP));
         imageSlider.setImageList(slideModelList);
 
+        progressDialog.setTitle("Welcome to LTH Store");
+        progressDialog.setMessage("Please wait....");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
 
         // Category
-        catRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(),RecyclerView.HORIZONTAL, false));
+        catRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         categoryList = new ListCategory();
 //        categoryAdapter = new CategoryAdapter(getContext(), categoryList);
 //        catRecyclerView.setAdapter(categoryAdapter)
+        callApiGetAllCategories();
+
+        // new Products
+        newProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        callApiGetAllNewProducts();
+
+        // Flash Sale Products
+        flashSaleProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        callApiGetAllFlashSaleProducts();
+
+        // popular products
+        popularRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+//        popularProductList = new ListProduct();
+//        popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
+//        popularRecycleView.setAdapter(popularProductAdapter);
+        callApiGetAllPopularProducts();
+
+        return root;
+    }
+
+
+    private void callApiGetAllPopularProducts() {
+        ApiService.apiService.getAllProducts("0", "1", "-likeCount", "0").enqueue(new Callback<ListProduct>() {
+            @Override
+            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
+                if (response.isSuccessful()) {
+                    ListProduct products = response.body();
+                    popularProductList = new ListProduct();
+                    popularProductList = products;
+                    popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
+                    popularRecycleView.setAdapter(popularProductAdapter);
+                    popularProductAdapter.notifyDataSetChanged();
+                    Log.e("Products", products.getProducts().get(0).getName() + "");
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        Log.e("Message", apiError.getMessage());
+//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProduct> call, Throwable t) {
+                Log.e("Lỗi server ", t.toString());
+                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void callApiGetAllFlashSaleProducts() {
+        ApiService.apiService.getAllProducts("0", "1", "-discount", "20").enqueue(new Callback<ListProduct>() {
+            @Override
+            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
+                if (response.isSuccessful()) {
+                    ListProduct products = response.body();
+                    flashSaleProductList = new ListProduct();
+                    flashSaleProductList = products;
+                    flashSaleProductAdapter = new FlashSaleProductAdapter(getContext(), flashSaleProductList);
+                    flashSaleProductRecycleView.setAdapter(flashSaleProductAdapter);
+                    flashSaleProductAdapter.notifyDataSetChanged();
+                    Log.e("Products", products.getProducts().get(0).getName() + "");
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        Log.e("Message", apiError.getMessage());
+//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProduct> call, Throwable t) {
+                Log.e("Lỗi server ", t.toString());
+                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void callApiGetAllNewProducts() {
+        ApiService.apiService.getAllProducts("0", "1", "-createdAt", "0").enqueue(new Callback<ListProduct>() {
+            @Override
+            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
+                if (response.isSuccessful()) {
+                    ListProduct products = response.body();
+                    newProductList = new ListProduct();
+                    newProductList = products;
+                    newProductsAdapter = new NewProductsAdapter(getContext(), newProductList);
+                    newProductRecycleView.setAdapter(newProductsAdapter);
+                    newProductsAdapter.notifyDataSetChanged();
+                    Log.e("Products", products.getProducts().get(0).getName() + "");
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        Log.e("Message", apiError.getMessage());
+//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProduct> call, Throwable t) {
+                Log.e("Lỗi server ", t.toString());
+                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void callApiGetAllCategories() {
         ApiService.apiService.getAllCategories().enqueue(new Callback<ListCategory>() {
             @Override
             public void onResponse(Call<ListCategory> call, Response<ListCategory> response) {
                 if (response.isSuccessful()) {
-                    ListCategory categories= response.body();
+                    ListCategory categories = response.body();
                     categoryList = categories;
                     categoryAdapter = new CategoryAdapter(getContext(), categoryList);
                     catRecyclerView.setAdapter(categoryAdapter);
                     categoryAdapter.notifyDataSetChanged();
-                    Log.e("Categories", categoryList.getCategories().get(0).getId()+ "");
+                    homeLayout.setVisibility(View.VISIBLE);
+                    progressDialog.dismiss();
+                    Log.e("Categories", categoryList.getCategories().get(0).getId() + "");
                 } else {
                     try {
                         Gson gson = new Gson();
@@ -127,112 +313,9 @@ public class HomeFragment extends Fragment {
                 Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
             }
         });
-
-
-        // new Products
-        newProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
-        ApiService.apiService.getAllProducts("20","1","-createdAt","0").enqueue(new Callback<ListProduct>() {
-            @Override
-            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
-                if (response.isSuccessful()) {
-                    ListProduct products= response.body();
-                    newProductList = new ListProduct();
-                    newProductList = products;
-                    newProductsAdapter = new NewProductsAdapter(getContext(),newProductList);
-                    newProductRecycleView.setAdapter(newProductsAdapter);
-                    newProductsAdapter.notifyDataSetChanged();
-                    Log.e("Products", products.getProducts().get(0).getName()+ "");
-                } else {
-                    try {
-                        Gson gson = new Gson();
-                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ListProduct> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Flash Sale Products
-        flashSaleProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(),RecyclerView.HORIZONTAL,false));
-        ApiService.apiService.getAllProducts("0","1","-discount","20").enqueue(new Callback<ListProduct>() {
-            @Override
-            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
-                if (response.isSuccessful()) {
-                    ListProduct products= response.body();
-                    flashSaleProductList = new ListProduct();
-                    flashSaleProductList = products;
-                    flashSaleProductAdapter = new FlashSaleProductAdapter(getContext(),flashSaleProductList);
-                    flashSaleProductRecycleView.setAdapter(flashSaleProductAdapter);
-                    flashSaleProductAdapter.notifyDataSetChanged();
-                    Log.e("Products", products.getProducts().get(0).getName()+ "");
-                } else {
-                    try {
-                        Gson gson = new Gson();
-                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ListProduct> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // popular products
-        popularRecycleView.setLayoutManager(new GridLayoutManager(getContext(),2));
-//        popularProductList = new ListProduct();
-//        popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
-//        popularRecycleView.setAdapter(popularProductAdapter);
-
-        ApiService.apiService.getAllProducts("0","1","-likeCount","0").enqueue(new Callback<ListProduct>() {
-            @Override
-            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
-                if (response.isSuccessful()) {
-                    ListProduct products= response.body();
-                    popularProductList = new ListProduct();
-                    popularProductList = products;
-                    popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
-                    popularRecycleView.setAdapter(popularProductAdapter);
-                    popularProductAdapter.notifyDataSetChanged();
-                    Log.e("Products", products.getProducts().get(0).getName()+ "");
-                } else {
-                    try {
-                        Gson gson = new Gson();
-                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ListProduct> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        return  root;
     }
 
-    public void reloadData(){
+    public void reloadData() {
         Toast.makeText(getActivity(), "Reload FragmentHome", Toast.LENGTH_SHORT).show();
     }
 }

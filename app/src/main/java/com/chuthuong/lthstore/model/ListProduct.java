@@ -1,8 +1,9 @@
 package com.chuthuong.lthstore.model;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ListProduct {
+public class ListProduct implements Serializable {
     private List<Product> products;
     private boolean success;
     private  int countDocument;
