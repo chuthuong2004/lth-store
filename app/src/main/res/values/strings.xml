@@ -48,5 +48,7 @@
     <string name="strTitleSearchHome">Search</string>
     <string name="strSize">Size</string>
     <string name="strColor">Color</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>
