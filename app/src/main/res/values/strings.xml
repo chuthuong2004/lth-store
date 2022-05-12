@@ -46,5 +46,7 @@
     <string name="strTitleOrderNavigation">Orders</string>
     <string name="strTitleProfileNavigation">Profile</string>
     <string name="strTitleSearchHome">Search</string>
+    <string name="strSize">Size</string>
+    <string name="strColor">Color</string>
 
 </resources>

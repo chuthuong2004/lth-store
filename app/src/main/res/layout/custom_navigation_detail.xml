@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:elevation="6dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="200dp"
+            android:layout_height="match_parent"
+            android:background="@color/gray"
+            android:textColor="@color/white_g"
+            android:padding="5dp"
+            android:drawableLeft="@drawable/ic_baseline_add_shopping_cart_24"
+            android:drawableTint="@color/white_g"
+            android:gravity="center"
+            android:text="Thêm vào giỏ hàng"
+            android:textSize="18dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="210dp"
+            android:layout_height="match_parent"
+            android:background="@color/pink"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="Mua ngay"
+            android:textSize="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="@+id/textView5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

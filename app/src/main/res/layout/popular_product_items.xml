@@ -185,17 +185,18 @@ app:cardCornerRadius="10dp">
             android:src="@drawable/ic_baseline_add_shopping_cart_24"
             tools:ignore="MissingConstraints"
             app:tint="@color/pink" />
+
         <RatingBar
             android:id="@+id/popular_product_rating_bar"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/popular_product_img_add_to_cart"
             android:layout_alignParentEnd="true"
+            android:clickable="true"
+            android:focusable="true"
             android:isIndicator="true"
             android:numStars="5"
-            android:focusable="true"
-            android:clickable="true"
-            android:layout_alignBottom="@+id/popular_product_img_add_to_cart"
             android:stepSize="0.1" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
