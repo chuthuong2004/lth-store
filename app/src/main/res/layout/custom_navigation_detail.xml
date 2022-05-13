@@ -6,44 +6,50 @@
     android:elevation="6dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="3"
         android:layout_height="50dp">
 
         <TextView
-            android:id="@+id/textView5"
-            android:layout_width="200dp"
+            android:id="@+id/txt_chat_message_navigation_detail"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:background="@drawable/back"
+            android:textColor="@color/white_g"
+            android:padding="6dp"
+            android:layout_weight="1"
+            android:drawableLeft="@drawable/ic_baseline_message_24"
+            android:drawableTint="@color/white_g"
+            android:gravity="center"
+            android:text="Chat ngay với shop"
+            android:textSize="14dp"/>
+        <TextView
+            android:id="@+id/txt_add_to_cart_navigation_detail"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@color/gray"
             android:textColor="@color/white_g"
             android:padding="5dp"
+            android:layout_weight="1"
             android:drawableLeft="@drawable/ic_baseline_add_shopping_cart_24"
             android:drawableTint="@color/white_g"
             android:gravity="center"
             android:text="Thêm vào giỏ hàng"
-            android:textSize="18dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
+            android:textSize="14dp"/>
 
         <TextView
-            android:id="@+id/textView4"
-            android:layout_width="210dp"
+            android:id="@+id/txt_buy_now_navigation_detail"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:background="@color/pink"
             android:textColor="@color/white"
             android:textStyle="bold"
+            android:textAllCaps="true"
             android:gravity="center"
             android:text="Mua ngay"
-            android:textSize="20dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/textView5"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" />
-    </androidx.constraintlayout.widget.ConstraintLayout>
+            android:textSize="15dp"
+            android:layout_weight="1" />
+    </LinearLayout>
 </androidx.cardview.widget.CardView>

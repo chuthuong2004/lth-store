@@ -1,70 +1,232 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:background="@color/pink"
     android:layout_height="match_parent"
+    android:layout_width="match_parent"
     tools:context=".fragments.DescriptionProductFragment">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <RelativeLayout
+        android:id="@+id/relative_layout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_view1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Mô tả sản phẩm"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/txt_description_product_detail"
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view1"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginEnd="17dp"
+            android:text="CHI TIẾT SẢN PHẨM
+            \n- Size: S, M, L
+            \n- Chất liệu: Cotton 100% chính phẩm co dãn, vải dày, mềm mịn, thoáng mát và không xù lông
+            \n- Hình chất lượng cao, không bong tróc, sắc nét, bền bỉ theo thời gian
+            \n- Đường may sắc sảo, chi tiết
+            \nHƯỚNG DẪN GIẶT/BẢO QUẢN:
+            \n- Lộn trái áo trước khi giặt và không giặt ngâm
+            \n- Không tẩy và sử dụng thuốc tẩy (thuốc tẩy ảnh hưởng đến độ bền của áo và sức khỏe người mặc)
+            \n- Không dùng bàn chải chà/vò mạnh trực tiếp lên hình in
+            \n- Khuyến khích giặt tay, không sấy nóng vì sẽ làm hỏng hình in
+            \n- Để áo khô tự nhiên - phơi áo ở nơi có bóng râm. Tránh ánh nắng trực tiếp vì sẽ làm áo mau phai màu
+            \n- Ủi mặt trái áo ở nhiệt độ thấp, không ủi trực tiếp lên hình in"
+            android:textSize="15sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/relative_layout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relative_layout1">
+
+        <TextView
+            android:id="@+id/text_view21"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Thông tin giao hàng dự kiến"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view21"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginEnd="17dp"
+            android:text="COD\nGiao hàng từ TP.HCM"
+            android:textSize="15sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/relative_layout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relative_layout2">
+
+        <TextView
+            android:id="@+id/sdfsdf"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Quy cách chọn size"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/sdfsdf"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginEnd="17dp"
+            android:text="S/M/L\nVui lòng inb để được tư vấn"
+            android:textSize="15sp" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/relative_layout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/relative_layout3">
+
+        <TextView
+            android:id="@+id/text_view2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="9dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="20dp"
+            android:text="Chính sách đổi trả"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="380dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/text_view2"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="18dp"
+            android:layout_marginTop="-10dp"
+            android:layout_marginEnd="17dp"
+            android:text="CHÍNH SÁCH ĐỔI HÀNG
+                \n- Sản phẩm được đổi trong vòng 2 ngày (tính từ thời điểm khách nhận được hàng và không kể thời gian giao hàng)
+                \n- Đối với mỗi sản phẩm, khách hàng được đổi duy nhất 1 lần nếu lỗi không thuộc về shop - các sản phẩm được khuyến mãi, giảm giá sẽ không được hỗ trở đổi
+                \n*** Điều kiện đổi hàng
+                \n- Sản phẩm trong tình trạng còn nguyên vẹn, còn nguyên tem - mạc và phụ kiện
+                \n- Sản phẩm chưa qua sử dụng (chưa giặt ủi/không bẩn/hư hỏng/có mùi lạ)
+                \nLƯU Ý: Trong các trường hợp đổi sản phẩm không phải do lỗi Shop, phí vận chuyển sẽ được tính cho khách hàng Shop khuyến khích các bạn tham khảo bảng size thật kỹ trước khi mua hàng
+                \nKhách hàng được FREESHIP ĐỔI HÀNG trong các trường hợp sau:
+                \n- Sản phẩm được nhận bị lỗi
+                \n- Sản phẩm được nhận không đúng với sản phẩm đã yêu cầu (Sai mẫu/màu/size)\n"
+            android:textSize="15sp" />
+    </RelativeLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="6dp"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintTop_toBottomOf="@id/relative_layout4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Ok"/>    <Button
-            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Ok"/>    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok"/>    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok"/>    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok"/>    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok"/>    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok"/>
+            android:orientation="vertical"
+            android:weightSum="2">
 
-            <Button
+            <RelativeLayout
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/amethysta"
+                    android:text="Sản phẩm tương tự"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="9dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/category_see_all"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginRight="8dp"
+                    android:fontFamily="@font/amethysta"
+                    android:gravity="end"
+                    android:text="@string/strTitleSeeAll"
+                    android:textColor="@color/pink"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </RelativeLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rec_product_same"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ok" />    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok" />    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok" />    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok" />    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok" />    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok" />    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok" />    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok" />    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok" />    <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Ok" />
+                android:layout_marginLeft="18dp"
+                android:layout_marginTop="10dp" />
         </LinearLayout>
-
-
-
-</FrameLayout>
+    </androidx.cardview.widget.CardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

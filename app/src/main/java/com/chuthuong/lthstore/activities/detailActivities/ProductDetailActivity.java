@@ -1,7 +1,10 @@
 package com.chuthuong.lthstore.activities.detailActivities;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -26,6 +29,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.adapter.ViewPagerDetailProductAdapter;
+import com.chuthuong.lthstore.fragments.DescriptionProductFragment;
 import com.chuthuong.lthstore.model.Product;
 import com.chuthuong.lthstore.model.ProductDetail;
 import com.chuthuong.lthstore.model.ProductImage;
@@ -66,9 +70,12 @@ public class ProductDetailActivity extends AppCompatActivity {
         Log.e("obj","Ok");
         if(product!=null){
             addData();
+            DescriptionProductFragment descriptionProductFragment = new DescriptionProductFragment();
+            loadFragment(descriptionProductFragment);
             viewPagerDetailProductAdapter = new ViewPagerDetailProductAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             viewPager.setAdapter(viewPagerDetailProductAdapter);
             tabLayout.setupWithViewPager(viewPager);
+
         }
     }
 
@@ -147,5 +154,11 @@ public class ProductDetailActivity extends AppCompatActivity {
         tabLayout = findViewById(R.id.tab_layout_detail);
         viewPager = findViewById(R.id.view_pager_detail);
 
+    }
+    private void loadFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragment_container_detail_product, fragment);
+        transaction.commit();
     }
 }
