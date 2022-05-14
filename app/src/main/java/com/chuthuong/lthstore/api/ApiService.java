@@ -2,6 +2,7 @@ package com.chuthuong.lthstore.api;
 
 import com.chuthuong.lthstore.model.ListCategory;
 import com.chuthuong.lthstore.model.ListProduct;
+import com.chuthuong.lthstore.model.ListReview;
 import com.chuthuong.lthstore.model.ListUser;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
@@ -79,9 +80,12 @@ public interface ApiService {
     @GET("categories")
     Call<ListCategory> getAllCategories();
 
-    @GET("products?")
+    @GET("products")
     Call<ListProduct> getAllProducts(@Query("limit") String limit,
                                      @Query("page") String page,
                                      @Query("sort") String sort,
                                      @Query("discount[gte]") String filterDiscount);
+
+    @GET("reviews/{idProduct}")
+    Call<ListReview> getAllReviewByProduct(@Path("idProduct") String productID);
 }

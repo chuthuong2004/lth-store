@@ -2,6 +2,8 @@ package com.chuthuong.lthstore.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.Date;
+
 public class Review {
     @SerializedName("_id")
     private String id;
@@ -10,10 +12,15 @@ public class Review {
     private int star;
     private User user;
     private boolean deleted;
-    private String createdAt;
-    private String updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
+    @SerializedName("infoProductOrdered")
+    private ReviewInfoProductOrdered reviewInfoProductOrdered;
 
-    public Review(String id, String content, Product product, int star, User user, boolean deleted, String createdAt, String updatedAt) {
+    public Review() {
+    }
+
+    public Review(String id, String content, Product product, int star, User user, boolean deleted, Date createdAt, Date updatedAt, ReviewInfoProductOrdered reviewInfoProductOrdered) {
         this.id = id;
         this.content = content;
         this.product = product;
@@ -22,9 +29,7 @@ public class Review {
         this.deleted = deleted;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-    public Review() {
+        this.reviewInfoProductOrdered = reviewInfoProductOrdered;
     }
 
     public String getId() {
@@ -75,19 +80,42 @@ public class Review {
         this.deleted = deleted;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public ReviewInfoProductOrdered getReviewInfoProductOrdered() {
+        return reviewInfoProductOrdered;
+    }
+
+    public void setReviewInfoProductOrdered(ReviewInfoProductOrdered reviewInfoProductOrdered) {
+        this.reviewInfoProductOrdered = reviewInfoProductOrdered;
+    }
+
+    @Override
+    public String toString() {
+        return "Review{" +
+                "id='" + id + '\'' +
+                ", content='" + content + '\'' +
+                ", product=" + product +
+                ", star=" + star +
+                ", user=" + user +
+                ", deleted=" + deleted +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", reviewInfoProductOrdered=" + reviewInfoProductOrdered +
+                '}';
     }
 }

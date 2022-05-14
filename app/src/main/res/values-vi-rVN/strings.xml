@@ -51,4 +51,6 @@
 
     <string name="strSize">Kích thước</string>
     <string name="strColor">Màu</string>
+
+    <string name="strTitleReviewNull">Hiện tại chưa có đánh giá nào </string>
 </resources>

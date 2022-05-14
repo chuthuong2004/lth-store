@@ -9,6 +9,7 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -25,11 +26,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
+import com.chuthuong.lthstore.activities.MainActivity;
 import com.chuthuong.lthstore.adapter.ViewPagerDetailProductAdapter;
 import com.chuthuong.lthstore.fragments.DescriptionProductFragment;
+import com.chuthuong.lthstore.fragments.HomeFragment;
+import com.chuthuong.lthstore.fragments.SearchFragment;
 import com.chuthuong.lthstore.model.Product;
 import com.chuthuong.lthstore.model.ProductDetail;
 import com.chuthuong.lthstore.model.ProductImage;
@@ -75,10 +80,50 @@ public class ProductDetailActivity extends AppCompatActivity {
             viewPagerDetailProductAdapter = new ViewPagerDetailProductAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
             viewPager.setAdapter(viewPagerDetailProductAdapter);
             tabLayout.setupWithViewPager(viewPager);
+            handleToolbar();
 
         }
     }
 
+    private void handleToolbar() {
+        ImageView imgBack, imgSearch, imgHome;
+        imgBack = findViewById(R.id.img_back_detail_toolbar);
+        imgBack.setOnClickListener(new View.OnClickListener()  {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        imgSearch = findViewById(R.id.search_img_toolbar);
+        imgSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                FragmentManager fragmentManager = getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                Fragment searchFragment = new SearchFragment();
+//                fragmentTransaction.add(R.id.search_container,searchFragment );
+////                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_out_right,
+////                        R.anim.slide_out_right);
+//                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right,0);
+//                fragmentTransaction.show(searchFragment);
+//                fragmentTransaction.addToBackStack(null);
+//                fragmentTransaction.commit();
+                Toast.makeText(ProductDetailActivity.this, "Chức năng tìm kiếm đang cập nhật !", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        imgHome = findViewById(R.id.home_img_toolbar);
+        imgHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
+
+    public Product getProduct() {
+        return product;
+    }
     private void addData() {
         List<ProductImage> productImages = product.getImages();
         // image slider

@@ -6,7 +6,7 @@ import java.util.List;
 public class ListProduct implements Serializable {
     private List<Product> products;
     private boolean success;
-    private  int countDocument;
+    private  int countDocuments;
     private int resultPerPage;
 
     public ListProduct() {
@@ -15,7 +15,7 @@ public class ListProduct implements Serializable {
     public ListProduct(List<Product> products, boolean success, int countDocument, int resultPerPage) {
         this.products = products;
         this.success = success;
-        this.countDocument = countDocument;
+        this.countDocuments = countDocument;
         this.resultPerPage = resultPerPage;
     }
 
@@ -36,11 +36,11 @@ public class ListProduct implements Serializable {
     }
 
     public int getCountDocument() {
-        return countDocument;
+        return countDocuments;
     }
 
     public void setCountDocument(int countDocument) {
-        this.countDocument = countDocument;
+        this.countDocuments = countDocument;
     }
 
     public int getResultPerPage() {

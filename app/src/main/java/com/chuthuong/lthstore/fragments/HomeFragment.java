@@ -190,6 +190,7 @@ public class HomeFragment extends Fragment {
 //        popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
 //        popularRecycleView.setAdapter(popularProductAdapter);
         callApiGetAllPopularProducts();
+
         SearchView searchView= root.findViewById(R.id.search_view_home);
         CardView cardView = root.findViewById(R.id.card_view_search_home);
         TextView textView=  root.findViewById(R.id.text_view_hint_search);
@@ -219,7 +220,6 @@ public class HomeFragment extends Fragment {
             public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
                 if (response.isSuccessful()) {
                     ListProduct products = response.body();
-                    popularProductList = new ListProduct();
                     popularProductList = products;
                     popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
                     popularRecycleView.setAdapter(popularProductAdapter);

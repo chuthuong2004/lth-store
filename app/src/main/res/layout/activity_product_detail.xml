@@ -357,7 +357,7 @@
                 <FrameLayout
                     android:id="@+id/fragment_container_detail_product"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="match_parent">
                 </FrameLayout>
             </androidx.viewpager.widget.ViewPager>
 

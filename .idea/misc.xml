@@ -25,6 +25,8 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_profile_bottom_nav.xml" value="0.3095" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/image_view_bg_circle.xml" value="0.25" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/image_view_bg_circle_pink.xml" value="0.3095" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/line_bottom.xml" value="0.3055" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/line_bottom_review.xml" value="0.3055" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/mycart.xml" value="0.3095" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/strikethrough_foreground.xml" value="0.3635" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/text_view_bg_circle.xml" value="0.106" />
@@ -51,6 +53,8 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_tab2.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_tab3.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/item.xml" value="0.30277777777777776" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/item_review_product.xml" value="0.35833333333333334" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/line_bottom.xml" value="0.35833333333333334" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/new_products.xml" value="0.67" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/popular_product_items.xml" value="0.75" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/show_all_item.xml" value="0.3625" />
