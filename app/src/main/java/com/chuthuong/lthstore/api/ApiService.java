@@ -88,4 +88,7 @@ public interface ApiService {
 
     @GET("reviews/{idProduct}")
     Call<ListReview> getAllReviewByProduct(@Path("idProduct") String productID);
+
+    @GET("products/{idCate}")
+    Call<ListProduct> getAllProductByCategory(@Path("idCate") String categoryID);
 }

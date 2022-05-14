@@ -10,18 +10,22 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.chuthuong.lthstore.fragments.DescriptionProductFragment;
 import com.chuthuong.lthstore.fragments.ReviewProductFragment;
+import com.chuthuong.lthstore.fragments.SuggestionProductFragment;
 
-public class ViewPagerDetailProductAdapter extends FragmentStatePagerAdapter {
-    public ViewPagerDetailProductAdapter(@NonNull FragmentManager fm, int behavior) {
-        super(fm, behavior);
+public class ViewPagerDetailProductAdapter extends FragmentStateAdapter {
+
+    public ViewPagerDetailProductAdapter(@NonNull FragmentActivity fragmentActivity) {
+        super(fragmentActivity);
     }
 
     @NonNull
     @Override
-    public Fragment getItem(int position) {
+    public Fragment createFragment(int position) {
         switch (position){
             case 1:
                 return new ReviewProductFragment();
+            case 2:
+                return new SuggestionProductFragment();
             case 0:
             default:
                 return new DescriptionProductFragment();
@@ -29,24 +33,7 @@ public class ViewPagerDetailProductAdapter extends FragmentStatePagerAdapter {
     }
 
     @Override
-    public int getCount() {
-        return 2;
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        String title = "";
-        switch (position) {
-            case 1:
-                title= "Đánh giá";
-                break;
-            case  0:
-            default:
-                title = "Sản phẩm";
-                break;
-
-        }
-        return title;
+    public int getItemCount() {
+        return 3;
     }
 }

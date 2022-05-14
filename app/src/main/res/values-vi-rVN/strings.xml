@@ -53,4 +53,25 @@
     <string name="strColor">Màu</string>
 
     <string name="strTitleReviewNull">Hiện tại chưa có đánh giá nào </string>
+
+
+    <string name="strTitleProductTablayout">Sản phẩm</string>
+
+    <string name="strTitleReviewTablayout">Đánh giá</string>
+
+    <string name="strTitleSuggesForYou">Gợi ý dành cho bạn</string>
+
+    <string name="strTitleSameProductDetail">Sản phẩm tương tự</string>
+    <string name="strTitleProductOfShop">Sản phẩm của shop</string>
+    <string name="strTitleProductDescription">Mô tả sản phẩm</string>
+    <string name="strTitleEstimatedDeliveryInformation">Thông tin giao hàng dự kiến</string>
+    <string name="strTitleChooseSize">Quy cách chọn size</string>
+    <string name="strTitleReturnPolicy">Chính sách đổi trả</string>
+
+    <string name="strTitleReviewProduct">ĐÁNH GIÁ SẢN PHẢM</string>
+
+    <string name="strTitleChatWithShop">Chat ngay với shop</string>
+
+    <string name="strTitleAddToCart">Thêm vào giỏ hàng</string>
+    <string name="strTitleBuyNow">MUA NGAY</string>
 </resources>

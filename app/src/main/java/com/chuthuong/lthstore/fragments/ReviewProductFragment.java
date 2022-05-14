@@ -37,12 +37,11 @@ public class ReviewProductFragment extends Fragment {
         RecyclerView recyclerViewReview;
         ReviewProductAdapter reviewProductAdapter ;
         ListReview listReview;
-        private Product product;
-        private ProductDetailActivity productDetailActivity;
-
+         Product product;
         RatingBar ratingBar;
         TextView rating, quantityReviewProduct, reviewNull;
         LinearLayout layoutReview;
+        ProductDetailActivity productDetailActivity;
         public ReviewProductFragment() {
             // Required empty public constructor
         }
@@ -51,7 +50,7 @@ public class ReviewProductFragment extends Fragment {
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
             productDetailActivity = (ProductDetailActivity) getActivity();
-            product= productDetailActivity.getProduct();
+            product = productDetailActivity.getProduct();
             View view =inflater.inflate(R.layout.fragment_review_product, container, false);
             ratingBar = view.findViewById(R.id.detail_product_review_rating_bar);
             ratingBar.setRating(product.getRate());

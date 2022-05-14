@@ -23,7 +23,7 @@
             android:drawableLeft="@drawable/ic_baseline_message_24"
             android:drawableTint="@color/white_g"
             android:gravity="center"
-            android:text="Chat ngay với shop"
+            android:text="@string/strTitleChatWithShop"
             android:textSize="14dp"/>
         <TextView
             android:id="@+id/txt_add_to_cart_navigation_detail"
@@ -36,7 +36,7 @@
             android:drawableLeft="@drawable/ic_baseline_add_shopping_cart_24"
             android:drawableTint="@color/white_g"
             android:gravity="center"
-            android:text="Thêm vào giỏ hàng"
+            android:text="@string/strTitleAddToCart"
             android:textSize="14dp"/>
 
         <TextView
@@ -48,7 +48,7 @@
             android:textStyle="bold"
             android:textAllCaps="true"
             android:gravity="center"
-            android:text="Mua ngay"
+            android:text="@string/strTitleBuyNow"
             android:textSize="15dp"
             android:layout_weight="1" />
     </LinearLayout>

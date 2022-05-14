@@ -1,5 +1,6 @@
 package com.chuthuong.lthstore.activities.detailActivities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -34,7 +35,9 @@ import com.chuthuong.lthstore.activities.MainActivity;
 import com.chuthuong.lthstore.adapter.ViewPagerDetailProductAdapter;
 import com.chuthuong.lthstore.fragments.DescriptionProductFragment;
 import com.chuthuong.lthstore.fragments.HomeFragment;
+import com.chuthuong.lthstore.fragments.ReviewProductFragment;
 import com.chuthuong.lthstore.fragments.SearchFragment;
+import com.chuthuong.lthstore.model.Account;
 import com.chuthuong.lthstore.model.Product;
 import com.chuthuong.lthstore.model.ProductDetail;
 import com.chuthuong.lthstore.model.ProductImage;
@@ -42,6 +45,7 @@ import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
 import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -50,9 +54,10 @@ import java.util.List;
 
 public class ProductDetailActivity extends AppCompatActivity {
     TextView rating, name, description,currentPrice, price, discount, quantitySold, likeCount;
-    Button btnAddToCart, btnBuyNow;
-    ImageView imgAddToCart, imgRemoveItemCart;
+    ImageView imgFavoriteProduct;
     RatingBar ratingBar;
+    
+    TextView chatWithShop, addToCart, buyNow;
 
     LinearLayout linearLayoutSize;
     // Product
@@ -60,13 +65,14 @@ public class ProductDetailActivity extends AppCompatActivity {
     private int count = 0;
 
     private TabLayout tabLayout;
-    private ViewPager viewPager;
+    private ViewPager2 viewPager2;
     private ViewPagerDetailProductAdapter viewPagerDetailProductAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
         addControls();
+        addEvents();
         final Product obj = (Product) getIntent().getSerializableExtra("product_detail");
         if (obj instanceof Product) {
             product = (Product) obj;
@@ -74,15 +80,57 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
         Log.e("obj","Ok");
         if(product!=null){
-            addData();
-            DescriptionProductFragment descriptionProductFragment = new DescriptionProductFragment();
-            loadFragment(descriptionProductFragment);
-            viewPagerDetailProductAdapter = new ViewPagerDetailProductAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-            viewPager.setAdapter(viewPagerDetailProductAdapter);
-            tabLayout.setupWithViewPager(viewPager);
+            loadData();
+//            ReviewProductFragment reviewProductFragment = new ReviewProductFragment();
+//            loadFragment(reviewProductFragment);
+//            DescriptionProductFragment descriptionProductFragment = new DescriptionProductFragment();
+//            loadFragment(descriptionProductFragment);
+            viewPagerDetailProductAdapter = new ViewPagerDetailProductAdapter(this);
+            viewPager2.setAdapter(viewPagerDetailProductAdapter);
+            new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
+                switch (position) {
+                    case 1:
+                        tab.setText(R.string.strTitleReviewTablayout);
+                        break;
+                    case 2:
+                        tab.setText(R.string.strTitleSuggesForYou);
+                        break;
+                    case 0:
+                    default:
+                        tab.setText(R.string.strTitleProductTablayout);
+                        break;
+                }
+            }).attach();
             handleToolbar();
 
         }
+    }
+
+    private void addEvents() {
+        imgFavoriteProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProductDetailActivity.this, "Chức năng yêu thích sản phẩm đang cập nhật !", Toast.LENGTH_SHORT).show();
+            }
+        });
+        chatWithShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProductDetailActivity.this, "Chức năng chat với shop đang cập nhật !", Toast.LENGTH_SHORT).show();
+            }
+        });
+        addToCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProductDetailActivity.this, "Thêm vào giỏ hàng không thành công ! Chức năng thêm đang cập nhật !", Toast.LENGTH_SHORT).show();
+            }
+        });
+        buyNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(ProductDetailActivity.this, "Chức năng mua ngay đang cập nhật !", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void handleToolbar() {
@@ -121,10 +169,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
     }
 
-    public Product getProduct() {
-        return product;
-    }
-    private void addData() {
+    private void loadData() {
         List<ProductImage> productImages = product.getImages();
         // image slider
         ImageSlider imageSlider = findViewById(R.id.image_slider_detail);
@@ -197,13 +242,16 @@ public class ProductDetailActivity extends AppCompatActivity {
         linearLayoutSize = findViewById(R.id.linear_layout_size);
 
         tabLayout = findViewById(R.id.tab_layout_detail);
-        viewPager = findViewById(R.id.view_pager_detail);
+        viewPager2 = findViewById(R.id.view_pager_detail);
+        imgFavoriteProduct = findViewById(R.id.img_favorite_product);
+
+        chatWithShop = findViewById(R.id.txt_chat_message_navigation_detail);
+        addToCart = findViewById(R.id.txt_add_to_cart_navigation_detail);
+        buyNow = findViewById(R.id.txt_buy_now_navigation_detail);
+
 
     }
-    private void loadFragment(Fragment fragment) {
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragment_container_detail_product, fragment);
-        transaction.commit();
+    public Product getProduct() {
+        return product;
     }
 }
