@@ -1,45 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
     tools:context=".fragments.DescriptionProductFragment">
-
-    <RelativeLayout
-        android:id="@+id/relative_layout1"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/text_view1"
+        <RelativeLayout
+            android:id="@+id/relative_layout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/strTitleProductDescription"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <TextView
-            android:id="@+id/txt_description_product_detail"
-            android:layout_width="380dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_view1"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="-10dp"
-            android:layout_marginEnd="17dp"
-            android:text="CHI TIẾT SẢN PHẨM
+            <TextView
+                android:id="@+id/text_view1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/strTitleProductDescription"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/txt_description_product_detail"
+                android:layout_width="380dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view1"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="-10dp"
+                android:layout_marginEnd="17dp"
+                android:text="CHI TIẾT SẢN PHẨM
             \n- Size: S, M, L
             \n- Chất liệu: Cotton 100% chính phẩm co dãn, vải dày, mềm mịn, thoáng mát và không xù lông
             \n- Hình chất lượng cao, không bong tróc, sắc nét, bền bỉ theo thời gian
@@ -51,114 +55,114 @@
             \n- Khuyến khích giặt tay, không sấy nóng vì sẽ làm hỏng hình in
             \n- Để áo khô tự nhiên - phơi áo ở nơi có bóng râm. Tránh ánh nắng trực tiếp vì sẽ làm áo mau phai màu
             \n- Ủi mặt trái áo ở nhiệt độ thấp, không ủi trực tiếp lên hình in"
-            android:textSize="15sp" />
-    </RelativeLayout>
+                android:textSize="15sp" />
+        </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/relative_layout2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relative_layout1">
-
-        <TextView
-            android:id="@+id/text_view21"
+        <RelativeLayout
+            android:id="@+id/relative_layout2"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/strTitleEstimatedDeliveryInformation"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relative_layout1">
 
-        <TextView
+            <TextView
+                android:id="@+id/text_view21"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/strTitleEstimatedDeliveryInformation"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view21"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="-10dp"
+                android:layout_marginEnd="17dp"
+                android:text="COD\nGiao hàng từ TP.HCM"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative_layout3"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/text_view21"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="-10dp"
-            android:layout_marginEnd="17dp"
-            android:text="COD\nGiao hàng từ TP.HCM"
-            android:textSize="15sp" />
-    </RelativeLayout>
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relative_layout2">
 
-    <RelativeLayout
-        android:id="@+id/relative_layout3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relative_layout2">
+            <TextView
+                android:id="@+id/sdfsdf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/strTitleChooseSize"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/sdfsdf"
+            <TextView
+                android:layout_width="380dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/sdfsdf"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="-10dp"
+                android:layout_marginEnd="17dp"
+                android:text="S/M/L\nVui lòng inb để được tư vấn"
+                android:textSize="15sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relative_layout4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/strTitleChooseSize"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/relative_layout3">
 
-        <TextView
-            android:layout_width="380dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/sdfsdf"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="-10dp"
-            android:layout_marginEnd="17dp"
-            android:text="S/M/L\nVui lòng inb để được tư vấn"
-            android:textSize="15sp" />
-    </RelativeLayout>
+            <TextView
+                android:id="@+id/text_view2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:text="@string/strTitleReturnPolicy"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-    <RelativeLayout
-        android:id="@+id/relative_layout4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/relative_layout3">
-
-        <TextView
-            android:id="@+id/text_view2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="9dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="20dp"
-            android:text="@string/strTitleReturnPolicy"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="380dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/text_view2"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="18dp"
-            android:layout_marginTop="-10dp"
-            android:layout_marginEnd="17dp"
-            android:text="CHÍNH SÁCH ĐỔI HÀNG
+            <TextView
+                android:layout_width="380dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text_view2"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="18dp"
+                android:layout_marginTop="-10dp"
+                android:layout_marginEnd="17dp"
+                android:text="CHÍNH SÁCH ĐỔI HÀNG
                 \n- Sản phẩm được đổi trong vòng 2 ngày (tính từ thời điểm khách nhận được hàng và không kể thời gian giao hàng)
                 \n- Đối với mỗi sản phẩm, khách hàng được đổi duy nhất 1 lần nếu lỗi không thuộc về shop - các sản phẩm được khuyến mãi, giảm giá sẽ không được hỗ trở đổi
                 \n*** Điều kiện đổi hàng
@@ -168,6 +172,7 @@
                 \nKhách hàng được FREESHIP ĐỔI HÀNG trong các trường hợp sau:
                 \n- Sản phẩm được nhận bị lỗi
                 \n- Sản phẩm được nhận không đúng với sản phẩm đã yêu cầu (Sai mẫu/màu/size)\n"
-            android:textSize="15sp" />
-    </RelativeLayout>
-</androidx.constraintlayout.widget.ConstraintLayout>
+                android:textSize="15sp" />
+        </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>

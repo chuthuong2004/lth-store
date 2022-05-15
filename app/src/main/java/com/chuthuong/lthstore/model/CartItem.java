@@ -2,7 +2,9 @@ package com.chuthuong.lthstore.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class CartItem {
+import java.io.Serializable;
+
+public class CartItem implements Serializable {
     @SerializedName("_id")
     private String id;
     private Product product;
@@ -59,5 +61,16 @@ public class CartItem {
 
     public void setColor(String color) {
         this.color = color;
+    }
+
+    @Override
+    public String toString() {
+        return "CartItem{" +
+                "id='" + id + '\'' +
+                ", product=" + product +
+                ", quantity=" + quantity +
+                ", size='" + size + '\'' +
+                ", color='" + color + '\'' +
+                '}';
     }
 }

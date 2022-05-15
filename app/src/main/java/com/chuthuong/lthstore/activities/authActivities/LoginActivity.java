@@ -2,6 +2,7 @@ package com.chuthuong.lthstore.activities.authActivities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     EditText edtUsername, edtPassword;
     String nameSharePreference = "account";
+    public static User user = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,22 +59,19 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
-                    User user = response.body();
-                    saveAccount(username, password, user.getRefreshToken(), user.getAccessToken());
-                    Log.e("ID:", user.getId());
-                    Log.e("Username:", user.getUsername());
-                    Log.e("Email:", user.getEmail());
-                    Log.e("IsAdmin:", user.isAdmin() + "");
-                    Log.e("createdAt:", user.getCreatedAt());
-                    Log.e("updatedAt:", user.getUpdatedAt());
-                    Log.e("accessToken:", user.getAccessToken());
-                    Log.e("refreshToken:", user.getRefreshToken());
-                    Log.e("users:", user.toString());
+                    User newUser = response.body();
+                    user = newUser;
+                    saveAccount(username, password, newUser.getRefreshToken(), newUser.getAccessToken());
+
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công !", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("user", user);
+                    Log.e("USER", user.toString());
                     startActivity(intent);
-                    overridePendingTransition(R.anim.slide_animation, R.anim.slide_animation);
+
+//                    startActivity(Intent.getIntent());
+                    finish();
+//                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_animation);
                 } else {
                     try {
                         Gson gson = new Gson();

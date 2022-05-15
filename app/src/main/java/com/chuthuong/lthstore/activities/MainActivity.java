@@ -3,12 +3,14 @@ package com.chuthuong.lthstore.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -46,6 +48,7 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -54,12 +57,11 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
 
-    User user = null;
+    private static User user = null;
     String nameSharePreference = "account";
     ImageView avt;
     ArrayAdapter<String> userAdapter;
     Fragment homeFragment, orderFragment, productFragment, profileFragment;
-
     ViewPager mViewPager;
     BottomNavigationView bottomNavigationView;
 
@@ -68,13 +70,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        user = (User) LoginActivity.user;
         addControls();
         addEvents();
-        Intent intentReceiveFromUser = getIntent();
-        user = (User) intentReceiveFromUser.getSerializableExtra("user");
-        if (user == null) {
-//            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        }
+
         showToken();
 
         homeFragment = new HomeFragment();
@@ -172,7 +171,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     public ApiToken getToken(String nameSharePreference) {
@@ -222,7 +221,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.mnuLogout:
-                callApiLogout();
+                Toast.makeText(this, "LogOut", Toast.LENGTH_SHORT).show();
+//                callApiLogout();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -267,5 +267,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "lỗi", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    public static User getUser(){
+        if (user!=null){
+            return user;
+        }
+        return null;
     }
 }

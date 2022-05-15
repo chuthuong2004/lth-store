@@ -1,5 +1,7 @@
 package com.chuthuong.lthstore.api;
 
+import com.chuthuong.lthstore.model.Cart;
+import com.chuthuong.lthstore.model.CartResponse;
 import com.chuthuong.lthstore.model.ListCategory;
 import com.chuthuong.lthstore.model.ListProduct;
 import com.chuthuong.lthstore.model.ListReview;
@@ -18,6 +20,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -37,7 +40,7 @@ public interface ApiService {
             "secret-key: MY-SECRET-KEY",
             "application-type: REST"})
     @GET("admin/users")
-    Call<ListUser> getAllUser(@Header("Accept") String access,
+    Call<ListUser> getAllUser(@Header("Accept") String accept,
                               @Header("token") String token);
 
     // Đăng nhập
@@ -60,16 +63,16 @@ public interface ApiService {
     // Đổi mật khẩu
     @FormUrlEncoded
     @POST("password/update")
-    Call<ApiResponse> resetPassword(@Header("Accept") String access,
-                                 @Header("token") String token,
-                                 @Field("currentPassword") String currentPassword,
-                                 @Field("newPassword") String newPassword,
-                                 @Field("confirmPassword") String confirmPassword);
+    Call<ApiResponse> resetPassword(@Header("Accept") String accept,
+                                    @Header("token") String token,
+                                    @Field("currentPassword") String currentPassword,
+                                    @Field("newPassword") String newPassword,
+                                    @Field("confirmPassword") String confirmPassword);
 
     // Đăng xuất
     @POST("auth/logout")
-    Call<ApiResponse> logoutUser(@Header("Accept") String access,
-                              @Header("token") String token);
+    Call<ApiResponse> logoutUser(@Header("Accept") String accept,
+                                 @Header("token") String token);
 
     // Refresh token
     @FormUrlEncoded
@@ -91,4 +94,13 @@ public interface ApiService {
 
     @GET("products/{idCate}")
     Call<ListProduct> getAllProductByCategory(@Path("idCate") String categoryID);
+
+    @GET("cart/my-cart")
+    Call<CartResponse> getMyCart(@Header("Accept") String accept,
+                                 @Header("token") String token);
+
+    @PUT("cart/remove-item-from-cart/{id}")
+    Call<CartResponse> removeItemFromCart(@Header("Accept") String accept,
+                                 @Path("id") String itemID,
+                                 @Header("token") String token);
 }

@@ -2,25 +2,27 @@ package com.chuthuong.lthstore.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+import java.util.Date;
 import java.util.List;
 
-public class Cart {
+public class Cart implements Serializable {
     @SerializedName("_id")
     private String id;
-    private String user;
+    private User user;
     private List<CartItem> cartItems;
-    private String createdAt;
-    private String updatedAt;
+    private Date createdAt;
+    private Date updatedAt;
 
-    public Cart(String id, String user, List<CartItem> cartItems, String createdAt, String updatedAt) {
+    public Cart() {
+    }
+
+    public Cart(String id, User user, List<CartItem> cartItems, Date createdAt, Date updatedAt) {
         this.id = id;
         this.user = user;
         this.cartItems = cartItems;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-    }
-
-    public Cart() {
     }
 
     public String getId() {
@@ -31,11 +33,11 @@ public class Cart {
         this.id = id;
     }
 
-    public String getUser() {
+    public User getUser() {
         return user;
     }
 
-    public void setUser(String user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -47,19 +49,30 @@ public class Cart {
         this.cartItems = cartItems;
     }
 
-    public String getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
-    public String getUpdatedAt() {
+    public Date getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(String updatedAt) {
+    public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "Cart{" +
+                "id='" + id + '\'' +
+                ", user='" + user + '\'' +
+                ", cartItems=" + cartItems +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

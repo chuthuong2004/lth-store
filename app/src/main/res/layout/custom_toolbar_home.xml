@@ -14,7 +14,8 @@
             android:layout_alignParentEnd="true"
             android:theme="@style/Theme.AppCompat.DayNight.DarkActionBar">
 
-            <Toolbar
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar_home"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@color/white"
@@ -26,7 +27,7 @@
                     android:background="@android:color/transparent">
 
                     <ImageView
-                        android:id="@+id/img_back_detail"
+                        android:id="@+id/img_logo"
                         android:layout_width="100dp"
                         android:layout_height="match_parent"
                         android:src="@drawable/img_brand"
@@ -42,8 +43,8 @@
                         android:layout_margin="10dp"
                         app:cardCornerRadius="20dp"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/cart_img"
-                        app:layout_constraintStart_toEndOf="@+id/img_back_detail"
+                        app:layout_constraintEnd_toStartOf="@+id/cart_img_toolbar"
+                        app:layout_constraintStart_toEndOf="@+id/img_logo"
                         app:layout_constraintTop_toTopOf="parent">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -70,6 +71,7 @@
                                 android:layout_height="wrap_content"
                                 android:text="@string/strTitleSearchHome"
                                 android:textSize="20sp"
+                                android:layout_marginLeft="20dp"
                                 app:layout_constraintBottom_toBottomOf="@+id/search_view_home"
                                 app:layout_constraintEnd_toEndOf="@+id/search_view_home"
                                 app:layout_constraintStart_toStartOf="@+id/search_view_home"
@@ -79,7 +81,7 @@
                     </androidx.cardview.widget.CardView>
 
                     <ImageView
-                        android:id="@+id/cart_img"
+                        android:id="@+id/cart_img_toolbar"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="0dp"
@@ -88,25 +90,26 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/imageView"
                         app:layout_constraintHorizontal_bias="0.95"
-                        app:layout_constraintStart_toEndOf="@+id/img_back_detail"
+                        app:layout_constraintStart_toEndOf="@+id/img_logo"
                         app:layout_constraintTop_toTopOf="parent"
                         app:tint="@color/pink"
                         tools:ignore="MissingConstraints" />
 
                     <TextView
+                        android:id="@+id/quantity_cart_toolbar"
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:background="@drawable/text_view_bg_circle"
                         android:backgroundTint="@color/black"
                         android:text="12"
+                        android:visibility="gone"
                         android:gravity="center"
                         android:textColor="@color/white"
-                        app:layout_constraintBottom_toBottomOf="@+id/cart_img"
+                        app:layout_constraintBottom_toBottomOf="@+id/cart_img_toolbar"
                         app:layout_constraintEnd_toStartOf="@+id/imageView"
                         app:layout_constraintHorizontal_bias="0.9"
                         app:layout_constraintVertical_bias="0.3"
-
-                        app:layout_constraintStart_toStartOf="@+id/cart_img"
+                        app:layout_constraintStart_toStartOf="@+id/cart_img_toolbar"
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <ImageView
@@ -121,7 +124,7 @@
                         tools:ignore="MissingConstraints"
                         app:tint="@color/pink" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-            </Toolbar>
+            </androidx.appcompat.widget.Toolbar>
 
         </com.google.android.material.appbar.AppBarLayout>
 

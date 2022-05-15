@@ -66,4 +66,5 @@
     <string name="strTitleAddToCart">Add To Cart</string>
 
     <string name="strTitleBuyNow">BUY NOW</string>
+    <string name="strTitleMyCart">My Cart</string>
 </resources>

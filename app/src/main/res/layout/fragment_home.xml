@@ -138,8 +138,9 @@
                         android:id="@+id/new_product_rec"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="7dp"
                         android:layout_marginTop="6dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="10dp"
                         android:padding="5dp" />
                 </LinearLayout>
 
@@ -194,8 +195,9 @@
                         android:id="@+id/sale_product_rec"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_margin="7dp"
                         android:layout_marginTop="6dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="10dp"
                         android:padding="5dp" />
                 </LinearLayout>
 
@@ -248,8 +250,8 @@
                         android:id="@+id/popular_rec"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_margin="7dp"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginBottom="10dp"
                         android:layout_marginTop="6dp"
                         android:padding="5dp" />
                 </LinearLayout>

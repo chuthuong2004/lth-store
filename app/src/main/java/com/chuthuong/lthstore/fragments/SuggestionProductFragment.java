@@ -149,4 +149,15 @@ public class SuggestionProductFragment extends Fragment {
             }
         });
     }
+
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        Toast.makeText(productDetailActivity, "Suggest 1", Toast.LENGTH_SHORT).show();
+
+        if (isVisibleToUser) {
+            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
+            Toast.makeText(productDetailActivity, "Suggest", Toast.LENGTH_SHORT).show();
+        }
+    }
 }

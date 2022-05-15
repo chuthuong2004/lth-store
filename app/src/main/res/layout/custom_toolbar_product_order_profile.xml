@@ -47,7 +47,7 @@
                         android:layout_margin="0dp"
                         android:src="@drawable/ic_baseline_search_24"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/cart_img"
+                        app:layout_constraintEnd_toStartOf="@+id/cart_img_toolbar"
                         app:layout_constraintHorizontal_bias="0.933"
                         app:layout_constraintStart_toEndOf="@+id/title_toolbar"
                         app:layout_constraintTop_toTopOf="parent"
@@ -55,7 +55,7 @@
                         tools:ignore="MissingConstraints" />
 
                     <ImageView
-                        android:id="@+id/cart_img"
+                        android:id="@+id/cart_img_toolbar"
                         android:layout_width="25dp"
                         android:layout_height="25dp"
                         android:layout_margin="0dp"
@@ -68,24 +68,22 @@
                         app:layout_constraintTop_toTopOf="parent"
                         app:tint="@color/pink"
                         tools:ignore="MissingConstraints" />
-
-                    <androidx.cardview.widget.CardView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        app:cardCornerRadius="50dp"
-                        app:cardBackgroundColor="@color/black"
-                        app:layout_constraintBottom_toBottomOf="@+id/cart_img"
+                    <TextView
+                        android:id="@+id/quantity_cart_toolbar"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:background="@drawable/text_view_bg_circle"
+                        android:backgroundTint="@color/black"
+                        android:gravity="center"
+                        android:text="12"
+                        android:visibility="gone"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="@+id/cart_img_toolbar"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="@+id/cart_img"
-                        app:layout_constraintTop_toTopOf="parent">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:padding="1dp"
-                            android:textColor="@color/pink"
-                            android:text="12" />
-                    </androidx.cardview.widget.CardView>
+                        app:layout_constraintHorizontal_bias="0.415"
+                        app:layout_constraintStart_toStartOf="@+id/cart_img_toolbar"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintVertical_bias="0.35" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </Toolbar>
 
