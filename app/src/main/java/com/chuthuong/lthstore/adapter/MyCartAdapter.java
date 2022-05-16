@@ -30,6 +30,7 @@ import com.chuthuong.lthstore.model.CartResponse;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.chuthuong.lthstore.utils.ApiToken;
+import com.chuthuong.lthstore.widget.CustomProgressDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -48,6 +49,9 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
     ViewGroup viewGroup;
     User user = null;
     private MyCartActivity myCartActivity;
+    private CustomProgressDialog dialogUpdate;
+    private CustomProgressDialog dialogRemoveItem;
+
     public MyCartAdapter(Context context, Cart cart) {
         this.context = context;
         this.cart = cart;
@@ -102,6 +106,8 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 if (user!=null) {
+                    dialogRemoveItem = new CustomProgressDialog(context);
+                    dialogRemoveItem.show();
                     callApiRemoveItemFromCart(cartItems.getId(),"Bearer "+ user.getAccessToken());
                 }
             }
@@ -111,6 +117,8 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
             public void onClick(View v) {
                 int quantity = Integer.parseInt(holder.quantityProductItem.getText().toString()) + 1;
                 holder.quantityProductItem.setText(quantity+"");
+                dialogUpdate = new CustomProgressDialog(context);
+                dialogUpdate.show();
                 callApiUpdateQuantityCart("Bearer "+ user.getAccessToken(), cartItems.getId(),quantity);
             }
         });
@@ -119,12 +127,18 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
             public void onClick(View v) {
                 int quantity = Integer.parseInt(holder.quantityProductItem.getText().toString()) - 1;
                 holder.quantityProductItem.setText(quantity+"");
+                dialogUpdate = new CustomProgressDialog(context);
+                dialogUpdate.show();
                 callApiUpdateQuantityCart("Bearer "+ user.getAccessToken(), cartItems.getId(),quantity);
             }
         });
-
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setToast(context.getApplicationContext(), "click me");
+            }
+        });
     }
-
     private void callApiUpdateQuantityCart(String token, String id, int quantity) {
         String accept = "application/json;versions=1";
         ApiService.apiService.updateQuantityCart(accept,token,id,quantity).enqueue(new Callback<CartResponse>() {
@@ -132,13 +146,14 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
                     CartResponse cartResponse = response.body();
+                    dialogUpdate.dismiss();
                     Log.e("Cart", cartResponse.getMessage() );
                     if(cartResponse.getCart()!=null) {
                         myCartActivity.reloadAdapter(cartResponse.getCart());
                     }else {
                         myCartActivity.hideLayoutCart();
                     }
-                    setToast(context.getApplicationContext(), cartResponse.getMessage());
+//                    setToast(context.getApplicationContext(), cartResponse.getMessage());
                 } else {
                     try {
                         Gson gson = new Gson();
@@ -165,12 +180,13 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
                     CartResponse cartResponse = response.body();
+                    dialogRemoveItem.dismiss();
                     if(cartResponse.getCart()!=null) {
                         myCartActivity.reloadAdapter(cartResponse.getCart());
                     }else {
                         myCartActivity.hideLayoutCart();
                     }
-                    setToast(context.getApplicationContext(), cartResponse.getMessage());
+//                    setToast(context.getApplicationContext(), cartResponse.getMessage());
                 } else {
                     try {
                         Gson gson = new Gson();

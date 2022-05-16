@@ -25,6 +25,7 @@ import com.chuthuong.lthstore.model.Cart;
 import com.chuthuong.lthstore.model.CartResponse;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.widget.CustomProgressDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -38,21 +39,18 @@ import retrofit2.Response;
 public class MyCartActivity extends AppCompatActivity {
     RecyclerView recyclerViewCart;
     MyCartAdapter myCartAdapter;
-    TextView totalPrice, titleMyCart, findProductInCart;
+    TextView totalPrice, titleMyCart, findProductInCart, buyNow;
     ConstraintLayout layoutCart, layoutCartEmpty;
     ImageView imgBack, imgHome, imgChat, imgSearch;
     CartResponse cartResponse = null;
     private User user = null;
     private Cart cart = null;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
-
         user = MainActivity.getUser();
         Intent intent = getIntent();
-//         cartResponse = (CartResponse) intent.getSerializableExtra("my_cart");
         String title = intent.getStringExtra("title_my_cart");
         addControls();
         addEvents();
@@ -60,6 +58,7 @@ public class MyCartActivity extends AppCompatActivity {
         titleMyCart.setText(title);
 
     }
+
 
     private void renderCart(Cart mCart) {
         if (mCart != null) {
@@ -112,6 +111,7 @@ public class MyCartActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         loadCart();
+
     }
 
     public void hideLayoutCart() {
@@ -173,6 +173,12 @@ public class MyCartActivity extends AppCompatActivity {
                 setToast(MyCartActivity.this, "Tìm sản phẩm ");
             }
         });
+        buyNow.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MyCartActivity.this, PaymentActivity.class));
+            }
+        });
     }
 
     public void reloadAdapter(Cart cart) {
@@ -182,7 +188,6 @@ public class MyCartActivity extends AppCompatActivity {
         recyclerViewCart.setAdapter(myCartAdapter);
         myCartAdapter.notifyDataSetChanged();
     }
-
     private void addControls() {
         totalPrice = findViewById(R.id.txt_total_price_cart);
         imgBack = findViewById(R.id.img_back_my_cart);
@@ -193,5 +198,6 @@ public class MyCartActivity extends AppCompatActivity {
         layoutCart = findViewById(R.id.layout_cart);
         layoutCartEmpty = findViewById(R.id.layout_cart_empty);
         findProductInCart = findViewById(R.id.txt_find_product_in_cart);
+        buyNow = findViewById(R.id.txt_buy_product);
     }
 }

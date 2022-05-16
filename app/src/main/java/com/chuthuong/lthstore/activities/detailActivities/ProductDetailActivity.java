@@ -56,6 +56,7 @@ import com.chuthuong.lthstore.model.ProductDetailColor;
 import com.chuthuong.lthstore.model.ProductImage;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.widget.CustomProgressDialog;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
@@ -94,7 +95,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private ViewPagerDetailProductAdapter viewPagerDetailProductAdapter;
     private CartResponse cartResponse = null;
     private TextView txtColorProductDetail;
-
+    CustomProgressDialog dialogAddItem,dialogMyCart;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -177,6 +178,8 @@ public class ProductDetailActivity extends AppCompatActivity {
                 if (user != null) {
                     String size = product.getDetail().get(0).getSize();
                     String color = product.getDetail().get(0).getDetailColor().get(0).getColor();
+                     dialogAddItem= new CustomProgressDialog(ProductDetailActivity.this);
+                    dialogAddItem.show();
                     callApiAddItemToCart("Bearer " + user.getAccessToken(), product.getId(),
                             size, color, 1);
                 } else {
@@ -339,6 +342,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
     private void loadCart() {
         if (user != null) {
+            dialogMyCart = new CustomProgressDialog(ProductDetailActivity.this);
             callApiGetMyCart("Bearer " + user.getAccessToken());
         }
     }
@@ -360,6 +364,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
                     cartResponse = response.body();
+                    dialogAddItem.dismiss();
                     if (cartResponse.getCart().getCartItems() != null) {
                         int size = cartResponse.getCart().getCartItems().size();
                         if (size > 0) {
@@ -393,6 +398,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
                     cartResponse = response.body();
+                    dialogMyCart.dismiss();
                     if (cartResponse.getCart().getCartItems() != null) {
                         int size = cartResponse.getCart().getCartItems().size();
                         if (size > 0) {
