@@ -1,8 +1,10 @@
 package com.chuthuong.lthstore.fragments;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -100,13 +102,11 @@ public class SuggestionProductFragment extends Fragment {
                     popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
                     recyclerViewAllProduct.setAdapter(popularProductAdapter);
                     popularProductAdapter.notifyDataSetChanged();
-                    Log.e("Products", products.getProducts().get(0).getName() + "");
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(getActivity(), apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -115,8 +115,7 @@ public class SuggestionProductFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListProduct> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(getActivity(),"Lỗi server !");
             }
         });
     }
@@ -129,13 +128,11 @@ public class SuggestionProductFragment extends Fragment {
                     sameProductDetailAdapter = new SameProductDetailAdapter(getContext(), listSameProduct);
                     recyclerViewSameProductDetail.setAdapter(sameProductDetailAdapter);
                     sameProductDetailAdapter.notifyDataSetChanged();
-                    Log.e("Products", listSameProduct.getProducts().get(0).getName() + "");
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(getActivity(), apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -144,20 +141,19 @@ public class SuggestionProductFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListProduct> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(getActivity(),"Lỗi server !");
             }
         });
     }
-
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        Toast.makeText(productDetailActivity, "Suggest 1", Toast.LENGTH_SHORT).show();
-
-        if (isVisibleToUser) {
-            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-            Toast.makeText(productDetailActivity, "Suggest", Toast.LENGTH_SHORT).show();
-        }
+    private void setToast(Activity activity, String msg) {
+        Toast toast = new Toast(activity);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.custom_toast, (ViewGroup) activity.findViewById(R.id.layout_toast));
+        TextView message = view.findViewById(R.id.message_toast);
+        message.setText(msg);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

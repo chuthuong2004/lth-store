@@ -101,6 +101,24 @@ public interface ApiService {
 
     @PUT("cart/remove-item-from-cart/{id}")
     Call<CartResponse> removeItemFromCart(@Header("Accept") String accept,
-                                 @Path("id") String itemID,
+                                 @Path("id") String cartItemID,
                                  @Header("token") String token);
+
+    // Đổi mật khẩu
+    @FormUrlEncoded
+    @POST("cart/add-to-cart")
+    Call<CartResponse> addItemToCart(@Header("Accept") String accept,
+                                    @Header("token") String token,
+                                    @Field("product") String productID,
+                                    @Field("size") String size,
+                                    @Field("color") String color,
+                                    @Field("quantity") int quantity);
+
+    // Đổi mật khẩu
+    @FormUrlEncoded
+    @PUT("cart/{id}")
+    Call<CartResponse> updateQuantityCart(@Header("Accept") String accept,
+                                     @Header("token") String token,
+                                     @Path("id") String cartItemID,
+                                     @Field("quantity") int quantity);
 }

@@ -2,7 +2,9 @@ package com.chuthuong.lthstore.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProductDetailColor {
+import java.io.Serializable;
+
+public class ProductDetailColor implements Serializable {
     @SerializedName("_id")
     private String id;
     private String color;

@@ -2,13 +2,18 @@ package com.chuthuong.lthstore.activities.authActivities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chuthuong.lthstore.R;
@@ -43,31 +48,40 @@ public class ChangePasswordActivity extends AppCompatActivity {
         ShowHidePassword.showPassword(edtNewPassword);
         ShowHidePassword.showPassword(edtConfirmPassword);
     }
-
+    private void setToast(Activity activity, String msg) {
+        Toast toast = new Toast(activity);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.layout_toast));
+        TextView message = view.findViewById(R.id.message_toast);
+        message.setText(msg);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
+    }
     public void changePassword(View view) {
         String currentPassword = edtCurrentPassword.getText().toString();
         String newPassword = edtNewPassword.getText().toString();
         String confirmPassword = edtConfirmPassword.getText().toString();
-
-        if (TextUtils.isEmpty(currentPassword)) {
-            Toast.makeText(this, "Vui lòng nhập mật khẩu hiện tại !", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(newPassword)) {
-            Toast.makeText(this, "Vui lòng nhập mật khẩu mới !", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(confirmPassword)) {
-            Toast.makeText(this, "Vui lòng xác nhận mật khẩu !", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//
+//        if (TextUtils.isEmpty(currentPassword)) {
+//            Toast.makeText(this, "Vui lòng nhập mật khẩu hiện tại !", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (TextUtils.isEmpty(newPassword)) {
+//            Toast.makeText(this, "Vui lòng nhập mật khẩu mới !", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (TextUtils.isEmpty(confirmPassword)) {
+//            Toast.makeText(this, "Vui lòng xác nhận mật khẩu !", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         callApiChangePassword(currentPassword, newPassword, confirmPassword);
     }
 
     private void callApiChangePassword(String currentPassword, String newPassword, String confirmPassword) {
         Intent intentReceiveFromUser = getIntent();
         User user = (User) intentReceiveFromUser.getSerializableExtra("user");
-        Log.e("accessToken", user.getAccessToken());
         String token = user.getAccessToken();
         String accessToken = "Bearer "+token;
         String access = "application/json;versions=1";
@@ -75,8 +89,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful()) {
-                    Log.e("Message", response.body().getMessage()+"");
-                    Toast.makeText(ChangePasswordActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    setToast(ChangePasswordActivity.this, response.body().getMessage());
                     Intent intent = new Intent(ChangePasswordActivity.this, MainActivity.class);
                     intent.putExtra("user", user);
                     startActivity(new Intent(intent));
@@ -84,18 +97,15 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError =  gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-                        Toast.makeText(ChangePasswordActivity.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(ChangePasswordActivity.this,apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(ChangePasswordActivity.this, "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(ChangePasswordActivity.this, "Lỗi server !");
             }
         });
     }

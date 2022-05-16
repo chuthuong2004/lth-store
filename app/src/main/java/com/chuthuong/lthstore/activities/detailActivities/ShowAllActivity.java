@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.ActionBar;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -18,10 +19,12 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -59,7 +62,7 @@ public class ShowAllActivity extends AppCompatActivity {
     ShowAllAdapter showAllAdapter;
     ListProduct listProduct;
     private User user;
-    private CartResponse cart;
+    private CartResponse cartResponse;
     private ImageView imgCart;
     private TextView quantityCart;
 
@@ -72,7 +75,6 @@ public class ShowAllActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
         final Object obj = getIntent().getSerializableExtra("list_see_all");
         String title = getIntent().getStringExtra("title_see_all");
-        Log.e("title", title);
         if (obj instanceof ListProduct) {
             listProduct = new ListProduct();
             listProduct = (ListProduct) obj;
@@ -119,7 +121,7 @@ public class ShowAllActivity extends AppCompatActivity {
                 else {
                     // start vô cart
                     Intent intent = new Intent(ShowAllActivity.this, MyCartActivity.class);
-                    intent.putExtra("my_cart", cart.getCart());
+                    intent.putExtra("my_cart", cartResponse);
                     intent.putExtra("title_my_cart", getResources().getString(R.string.strTitleMyCart));
                     startActivity(intent);
                 }
@@ -175,37 +177,34 @@ public class ShowAllActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        Toast.makeText(this, "Thoát", Toast.LENGTH_SHORT).show();
     }
 
     private void loadCart() {
-        if (user == null) {
-            Toast.makeText(ShowAllActivity.this, "Không có user", Toast.LENGTH_SHORT).show();
-        } else {
+        if (user != null) {
             callApiGetMyCart("Bearer " + user.getAccessToken());
-
         }
     }
 
     private void callApiGetMyCart(String accessToken) {
-        Toast.makeText(this, accessToken, Toast.LENGTH_SHORT).show();
-        Log.e("ACCESS", accessToken);
         String accept = "application/json;versions=1";
         ApiService.apiService.getMyCart(accept, accessToken).enqueue(new Callback<CartResponse>() {
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
-                    cart = response.body();
-                    int size = cart.getCart().getCartItems().size();
-                    quantityCart.setText(size + "");
-                    quantityCart.setVisibility(View.VISIBLE);
-                    Log.e("cart", cart.getCart().toString());
+                    cartResponse = response.body();
+                    if (cartResponse.getCart().getCartItems() != null) {
+                        int size = cartResponse.getCart().getCartItems().size();
+                        if (size > 0) {
+                            quantityCart.setText(size + "");
+                            quantityCart.setVisibility(View.VISIBLE);
+                        }
+                    }
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-                        Toast.makeText(ShowAllActivity.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        quantityCart.setVisibility(View.GONE);
+                        setToast(ShowAllActivity.this, apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -213,10 +212,24 @@ public class ShowAllActivity extends AppCompatActivity {
             }
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(ShowAllActivity.this, "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(ShowAllActivity.this,"Lỗi server !");
             }
         });
     }
-
+    private void setToast(Activity activity, String msg) {
+        Toast toast = new Toast(activity);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.layout_toast));
+        TextView message = view.findViewById(R.id.message_toast);
+        message.setText(msg);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
+    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadCart();
+    }
 }

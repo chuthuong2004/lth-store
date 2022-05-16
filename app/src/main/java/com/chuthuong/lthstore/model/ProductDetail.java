@@ -9,7 +9,7 @@ public class ProductDetail implements Serializable {
     @SerializedName("_id")
     private String id;
     private String size;
-    private transient List<ProductDetailColor> detailColor;
+    private List<ProductDetailColor> detailColor;
 
     public ProductDetail() {
     }

@@ -1,5 +1,6 @@
 package com.chuthuong.lthstore.fragments;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -84,7 +85,8 @@ public class HomeFragment extends Fragment {
     PopularProductAdapter popularProductAdapter;
     ListProduct popularProductList;
     User user;
-    CartResponse cart;
+    CartResponse cartResponse =null;
+
 
     public HomeFragment() {
         // Required empty public constructor
@@ -125,7 +127,7 @@ public class HomeFragment extends Fragment {
 //                Intent intent = new Intent(getContext(), ShowAllActivity.class);
 //                intent.putExtra("list_see_all", categoryList);
 //                startActivity(intent);
-                Toast.makeText(getContext(), "Đang bảo trì !", Toast.LENGTH_SHORT).show();
+                setToast(getActivity(),"Đang bảo trì !");
             }
         });
         newProductShowALl.setOnClickListener(new View.OnClickListener() {
@@ -165,7 +167,7 @@ public class HomeFragment extends Fragment {
                 else {
                     // start vô cart
                     Intent intent = new Intent(getActivity(), MyCartActivity.class);
-                    intent.putExtra("my_cart", cart.getCart());
+                    intent.putExtra("my_cart", cartResponse);
                     intent.putExtra("title_my_cart", getResources().getString(R.string.strTitleMyCart));
                     startActivity(intent);
                 }
@@ -212,12 +214,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         user = LoginActivity.user;
-        if (user == null) {
-            Toast.makeText(getActivity(), "Không có user", Toast.LENGTH_SHORT).show();
-        } else {
-            callApiGetMyCart("Bearer " + user.getAccessToken());
-
-        }
+        loadCart();
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -284,25 +281,31 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
-    private void callApiGetMyCart(String accessToken) {
-        Toast.makeText(getActivity(), accessToken, Toast.LENGTH_SHORT).show();
-        Log.e("ACCESS", accessToken);
+    private void loadCart() {
+        if (user != null) {
+            callApiGetMyCart("Bearer " + user.getAccessToken());
+        }
+    }
+
+    public void callApiGetMyCart(String accessToken) {
         String accept = "application/json;versions=1";
         ApiService.apiService.getMyCart(accept, accessToken).enqueue(new Callback<CartResponse>() {
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
-                    cart = response.body();
-                    int size = cart.getCart().getCartItems().size();
-                    quantityCart.setText(size+"");
-                    quantityCart.setVisibility(View.VISIBLE);
-                    Log.e("cart", cart.getCart().toString());
+                    cartResponse = response.body();
+                    if (cartResponse.getCart().getCartItems() != null) {
+                        int size = cartResponse.getCart().getCartItems().size();
+                        if (size > 0) {
+                            quantityCart.setText(size + "");
+                            quantityCart.setVisibility(View.VISIBLE);
+                        }
+                    }
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-                        Toast.makeText(getActivity(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        quantityCart.setVisibility(View.GONE);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -311,13 +314,22 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(getActivity(),"Lỗi server !");
             }
         });
     }
 
-
+    private void setToast(Activity activity, String msg) {
+        Toast toast = new Toast(activity);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.custom_toast, (ViewGroup) activity.findViewById(R.id.layout_toast));
+        TextView message = view.findViewById(R.id.message_toast);
+        message.setText(msg);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
+    }
     private void callApiGetAllPopularProducts() {
         ApiService.apiService.getAllProducts("0", "1", "-likeCount", "0").enqueue(new Callback<ListProduct>() {
             @Override
@@ -329,13 +341,11 @@ public class HomeFragment extends Fragment {
                     popularRecycleView.setAdapter(popularProductAdapter);
                     popularProductAdapter.notifyDataSetChanged();
                     progressDialog.dismiss();
-                    Log.e("Products", products.getProducts().get(0).getName() + "");
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(getActivity(), apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -344,8 +354,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListProduct> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(getActivity(), "Lỗi server !");
             }
         });
     }
@@ -361,13 +370,11 @@ public class HomeFragment extends Fragment {
                     flashSaleProductAdapter = new FlashSaleProductAdapter(getContext(), flashSaleProductList);
                     flashSaleProductRecycleView.setAdapter(flashSaleProductAdapter);
                     flashSaleProductAdapter.notifyDataSetChanged();
-                    Log.e("Products", products.getProducts().get(0).getName() + "");
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(getActivity(),apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -376,8 +383,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListProduct> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(getActivity(),"Lỗi server !");
             }
         });
     }
@@ -393,13 +399,11 @@ public class HomeFragment extends Fragment {
                     newProductsAdapter = new NewProductsAdapter(getContext(), newProductList);
                     newProductRecycleView.setAdapter(newProductsAdapter);
                     newProductsAdapter.notifyDataSetChanged();
-                    Log.e("Products", products.getProducts().get(0).getName() + "");
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(getActivity(),apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -408,8 +412,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListProduct> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(getActivity(),"Lỗi server !");
             }
         });
     }
@@ -425,13 +428,11 @@ public class HomeFragment extends Fragment {
                     catRecyclerView.setAdapter(categoryAdapter);
                     categoryAdapter.notifyDataSetChanged();
                     homeLayout.setVisibility(View.VISIBLE);
-                    Log.e("Categories", categoryList.getCategories().get(0).getId() + "");
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(getActivity(),apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -440,13 +441,18 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListCategory> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(getActivity(),"Lỗi server !");
             }
         });
     }
 
     public void reloadData() {
-        Toast.makeText(getActivity(), "Reload FragmentHome", Toast.LENGTH_SHORT).show();
+        setToast(getActivity(),"Reload Fragment Homt");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadCart();
     }
 }

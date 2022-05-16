@@ -2,13 +2,18 @@ package com.chuthuong.lthstore.activities.authActivities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chuthuong.lthstore.R;
@@ -53,7 +58,17 @@ public class LoginActivity extends AppCompatActivity {
         String password = edtPassword.getText().toString();
         callApiLogin(username, password);
     }
-
+    private void setToast(Activity activity, String msg) {
+        Toast toast = new Toast(activity);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.layout_toast));
+        TextView message = view.findViewById(R.id.message_toast);
+        message.setText(msg);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
+    }
     private void callApiLogin(String username, String password) {
         ApiService.apiService.loginUser(username, password).enqueue(new Callback<User>() {
             @Override
@@ -62,11 +77,9 @@ public class LoginActivity extends AppCompatActivity {
                     User newUser = response.body();
                     user = newUser;
                     saveAccount(username, password, newUser.getRefreshToken(), newUser.getAccessToken());
-
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công !", Toast.LENGTH_SHORT).show();
+                    setToast(LoginActivity.this,"Đăng nhập thành công !");
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     intent.putExtra("user", user);
-                    Log.e("USER", user.toString());
                     startActivity(intent);
 
 //                    startActivity(Intent.getIntent());
@@ -76,8 +89,7 @@ public class LoginActivity extends AppCompatActivity {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-                        Toast.makeText(LoginActivity.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(LoginActivity.this, apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -86,8 +98,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<User> call, Throwable t) {
-                Log.e("Lỗi", t.toString());
-                Toast.makeText(LoginActivity.this, "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(LoginActivity.this,"Lỗi server !");
             }
         });
     }

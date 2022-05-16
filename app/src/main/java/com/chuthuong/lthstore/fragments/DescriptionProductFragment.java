@@ -62,10 +62,8 @@ public class DescriptionProductFragment extends Fragment {
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        Toast.makeText(productDetailActivity, "Des 1", Toast.LENGTH_SHORT).show();
         if (isVisibleToUser) {
             getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-            Toast.makeText(productDetailActivity, "Des", Toast.LENGTH_SHORT).show();
         }
     }
 }

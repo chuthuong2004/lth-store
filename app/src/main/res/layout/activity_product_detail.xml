@@ -298,6 +298,7 @@
                         android:layout_width="80px"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:visibility="gone"
                         android:layout_marginRight="15px"
                         android:background="@drawable/image_view_bg_circle"
                         android:gravity="center" />
@@ -306,21 +307,25 @@
                         android:layout_width="80px"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
+                        android:visibility="gone"
                         android:layout_marginRight="15px"
                         android:background="@drawable/image_view_bg_circle"
                         android:backgroundTint="@color/pink"
                         android:gravity="center" />
 
                     <TextView
+                        android:id="@+id/txt_color_product_detail"
                         android:layout_width="80px"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
                         android:layout_marginRight="15px"
                         android:background="@drawable/image_view_bg_circle"
-                        android:backgroundTint="@color/black"
+                        android:backgroundTint="@color/pink"
+                        android:text="X"
                         android:gravity="center" />
 
                     <TextView
+                        android:visibility="gone"
                         android:layout_width="80px"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"

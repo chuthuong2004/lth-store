@@ -10,7 +10,9 @@ import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -22,6 +24,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -49,6 +52,7 @@ import com.chuthuong.lthstore.model.Account;
 import com.chuthuong.lthstore.model.CartResponse;
 import com.chuthuong.lthstore.model.Product;
 import com.chuthuong.lthstore.model.ProductDetail;
+import com.chuthuong.lthstore.model.ProductDetailColor;
 import com.chuthuong.lthstore.model.ProductImage;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
@@ -70,7 +74,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProductDetailActivity extends AppCompatActivity {
-    TextView rating, name, description,currentPrice, price, discount, quantitySold, likeCount;
+    TextView rating, name, currentPrice, price, discount, quantitySold, likeCount;
     ImageView imgFavoriteProduct;
     RatingBar ratingBar;
 
@@ -80,7 +84,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
 
     TextView chatWithShop, addToCart, buyNow;
-
+    TextView txtSize;
     LinearLayout linearLayoutSize;
     // Product
     Product product = null;
@@ -88,14 +92,13 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private ViewPagerDetailProductAdapter viewPagerDetailProductAdapter;
-    private CartResponse cart;
-    Bundle save;
+    private CartResponse cartResponse = null;
+    private TextView txtColorProductDetail;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        save = savedInstanceState;
         setContentView(R.layout.activity_product_detail);
-        Toast.makeText(this, "[ProductActivity] onCreate", Toast.LENGTH_SHORT).show();
         addControls();
         addEvents();
         final Product obj = (Product) getIntent().getSerializableExtra("product_detail");
@@ -103,8 +106,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             product = (Product) obj;
 
         }
-        Log.e("obj","Ok");
-        if(product!=null){
+        if (product != null) {
             loadData();
 //            ReviewProductFragment reviewProductFragment = new ReviewProductFragment();
 //            loadFragment(reviewProductFragment);
@@ -152,25 +154,44 @@ public class ProductDetailActivity extends AppCompatActivity {
         imgFavoriteProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ProductDetailActivity.this, "Chức năng yêu thích sản phẩm đang cập nhật !", Toast.LENGTH_SHORT).show();
+                if (user != null) {
+                    setToast(ProductDetailActivity.this,"Chức năng yêu thích sản phẩm đang cập nhật !");
+                } else {
+                    openDialogRequestLogin();
+                }
             }
         });
         chatWithShop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ProductDetailActivity.this, "Chức năng chat với shop đang cập nhật !", Toast.LENGTH_SHORT).show();
+                if (user != null) {
+                    setToast(ProductDetailActivity.this,"Chức năng chat với shop đang cập nhật !");
+                } else {
+                    openDialogRequestLogin();
+                }
             }
         });
         addToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ProductDetailActivity.this, "Thêm vào giỏ hàng không thành công ! Chức năng thêm đang cập nhật !", Toast.LENGTH_SHORT).show();
+                if (user != null) {
+                    String size = product.getDetail().get(0).getSize();
+                    String color = product.getDetail().get(0).getDetailColor().get(0).getColor();
+                    callApiAddItemToCart("Bearer " + user.getAccessToken(), product.getId(),
+                            size, color, 1);
+                } else {
+                    openDialogRequestLogin();
+                }
             }
         });
         buyNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(ProductDetailActivity.this, "Chức năng mua ngay đang cập nhật !", Toast.LENGTH_SHORT).show();
+                if (user != null) {
+                    setToast(ProductDetailActivity.this,"Chức năng mua ngay đang cập nhật !");
+                } else {
+                    openDialogRequestLogin();
+                }
             }
         });
         imgCart.setOnClickListener(new View.OnClickListener() {
@@ -181,12 +202,9 @@ public class ProductDetailActivity extends AppCompatActivity {
                 }
                 // xử lý render cart
                 else {
-                    // start vô cart
-                    Toast.makeText(ProductDetailActivity.this, "vô cart", Toast.LENGTH_SHORT).show();
-
-                    Log.e("GỬi Cart", cart.getCart().toString() );
                     Intent intent = new Intent(ProductDetailActivity.this, MyCartActivity.class);
-                    intent.putExtra("my_cart", cart.getCart());
+                    intent.putExtra("my_cart", cartResponse);
+                    intent.putExtra("title_my_cart", getResources().getString(R.string.strTitleMyCart));
                     startActivity(intent);
                 }
             }
@@ -233,27 +251,17 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void handleToolbar() {
         ImageView imgBack, imgSearch, imgHome;
         imgBack = findViewById(R.id.img_back_detail_toolbar);
-        imgBack.setOnClickListener(new View.OnClickListener()  {
+        imgBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               onBackPressed();
+                onBackPressed();
             }
         });
         imgSearch = findViewById(R.id.search_img_toolbar);
         imgSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                FragmentManager fragmentManager = getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                Fragment searchFragment = new SearchFragment();
-//                fragmentTransaction.add(R.id.search_container,searchFragment );
-////                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_out_right,
-////                        R.anim.slide_out_right);
-//                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right,0);
-//                fragmentTransaction.show(searchFragment);
-//                fragmentTransaction.addToBackStack(null);
-//                fragmentTransaction.commit();
-                Toast.makeText(ProductDetailActivity.this, "Chức năng tìm kiếm đang cập nhật !", Toast.LENGTH_SHORT).show();
+                setToast(ProductDetailActivity.this, "Chức năng tìm kiếm đang cập nhật !");
             }
         });
 
@@ -261,7 +269,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         imgHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ProductDetailActivity.this,MainActivity.class));
+                startActivity(new Intent(ProductDetailActivity.this, MainActivity.class));
             }
         });
     }
@@ -278,9 +286,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         imageSlider.setImageList(slideModelList);
 
         name.setText(product.getName());
-//            description.setText(product.getDesProduct());
-        rating.setText(product.getRate()+"");
-        discount.setText("-"+product.getDiscount()+"%");
+        rating.setText(product.getRate() + "");
+        discount.setText("-" + product.getDiscount() + "%");
 
         ratingBar.setRating(product.getRate());
         NumberFormat formatter = new DecimalFormat("#,###");
@@ -295,65 +302,77 @@ public class ProductDetailActivity extends AppCompatActivity {
             currentPrice.setText("");
         }
         List<ProductDetail> details = product.getDetail();
-        Log.e("size",details.toString());
         for (int i = 0; i < details.size(); i++) {
-            TextView textView = new TextView(ProductDetailActivity.this);
-            textView.setText(details.get(i).getSize()+"");
-            textView.setBackgroundResource(R.drawable.image_view_bg_circle);
+            txtSize = new TextView(ProductDetailActivity.this);
+            txtSize.setText(details.get(i).getSize() + "");
+            txtSize.setId(R.id.txt_size_detai_product);
+            txtSize.setBackgroundResource(R.drawable.image_view_bg_circle);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
                     (100, ViewGroup.LayoutParams.WRAP_CONTENT);
             params.setMargins(0, 0, 20, 0);
-            textView.setLayoutParams(params);
-            textView.setGravity(Gravity.CENTER);
-            linearLayoutSize.addView(textView);
-            textView.setOnClickListener(new View.OnClickListener() {
+            txtSize.setLayoutParams(params);
+            txtSize.setGravity(Gravity.CENTER);
+            linearLayoutSize.addView(txtSize);
+            List<ProductDetailColor> detailColors = details.get(i).getDetailColor();
+            for (int j = 0; j < detailColors.size(); j++) {
+                txtColorProductDetail.setTextColor(Color.parseColor(detailColors.get(j).getColor()));
+            }
+            txtSize.setOnClickListener(new View.OnClickListener() {
                 @SuppressLint("ResourceType")
                 @Override
 
                 public void onClick(View v) {
                     count++;
-                    if(count>1) {
-                        textView.setTextColor(getResources().getColor(R.color.pink));
-                        textView.setBackgroundResource(R.drawable.image_view_bg_circle);
+                    if (count > 1) {
+                        txtSize.setTextColor(getResources().getColor(R.color.pink));
+                        txtSize.setBackgroundResource(R.drawable.image_view_bg_circle);
                         count = 0;
                     } else {
-                        textView.setTextColor(getResources().getColor(R.color.white));
-                        textView.setBackgroundResource(R.drawable.image_view_bg_circle_pink);
+                        txtSize.setTextColor(getResources().getColor(R.color.white));
+                        txtSize.setBackgroundResource(R.drawable.image_view_bg_circle_pink);
 
                     }
                 }
             });
         }
-        Log.e("size", product.getDetail().size()+"");
     }
 
     private void loadCart() {
-        if (user == null) {
-            Toast.makeText(ProductDetailActivity.this, "Không có user", Toast.LENGTH_SHORT).show();
-        } else {
+        if (user != null) {
             callApiGetMyCart("Bearer " + user.getAccessToken());
-
         }
     }
-    private void callApiGetMyCart(String accessToken) {
-        Toast.makeText(this, accessToken, Toast.LENGTH_SHORT).show();
-        Log.e("ACCESS", accessToken);
+    private void setToast(Activity activity, String msg) {
+        Toast toast = new Toast(activity);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.layout_toast));
+        TextView message = view.findViewById(R.id.message_toast);
+        message.setText(msg);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
+    }
+    private void callApiAddItemToCart(String token, String productID, String size, String color, int quantity) {
         String accept = "application/json;versions=1";
-        ApiService.apiService.getMyCart(accept, accessToken).enqueue(new Callback<CartResponse>() {
+        ApiService.apiService.addItemToCart(accept, token, productID, size, color, quantity).enqueue(new Callback<CartResponse>() {
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
-                    cart = response.body();
-                    int size = cart.getCart().getCartItems().size();
-                    quantityCart.setText(size+"");
-                    quantityCart.setVisibility(View.VISIBLE);
-                    Log.e("cart", cart.getCart().toString());
+                    cartResponse = response.body();
+                    if (cartResponse.getCart().getCartItems() != null) {
+                        int size = cartResponse.getCart().getCartItems().size();
+                        if (size > 0) {
+                            quantityCart.setText(size + "");
+                            quantityCart.setVisibility(View.VISIBLE);
+                        }
+                        setToast(ProductDetailActivity.this,cartResponse.getMessage());
+                    }
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-                        Toast.makeText(ProductDetailActivity.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(ProductDetailActivity.this, apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -362,8 +381,39 @@ public class ProductDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(ProductDetailActivity.this, "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(ProductDetailActivity.this, "Lỗi server !");
+            }
+        });
+    }
+
+    private void callApiGetMyCart(String accessToken) {
+        String accept = "application/json;versions=1";
+        ApiService.apiService.getMyCart(accept, accessToken).enqueue(new Callback<CartResponse>() {
+            @Override
+            public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
+                if (response.isSuccessful()) {
+                    cartResponse = response.body();
+                    if (cartResponse.getCart().getCartItems() != null) {
+                        int size = cartResponse.getCart().getCartItems().size();
+                        if (size > 0) {
+                            quantityCart.setText(size + "");
+                            quantityCart.setVisibility(View.VISIBLE);
+                        }
+                    }
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        quantityCart.setVisibility(View.GONE);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CartResponse> call, Throwable t) {
+                setToast(ProductDetailActivity.this, "Lỗi server !");
             }
         });
     }
@@ -371,28 +421,32 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void addControls() {
         rating = findViewById(R.id.detail_product_rating);
         name = findViewById(R.id.detail_product_name);
-//        description = findViewById(R.id.detail_description_product);
         price = findViewById(R.id.detail_product_price);
         currentPrice = findViewById(R.id.detail_product_current_price);
         quantitySold = findViewById(R.id.detail_product_sold);
         likeCount = findViewById(R.id.detail_product_favorite);
         discount = findViewById(R.id.detail_product_discount);
-        ratingBar =findViewById(R.id.detail_product_rating_bar);
+        ratingBar = findViewById(R.id.detail_product_rating_bar);
         linearLayoutSize = findViewById(R.id.linear_layout_size);
-
         tabLayout = findViewById(R.id.tab_layout_detail);
         viewPager2 = findViewById(R.id.view_pager_detail);
         imgFavoriteProduct = findViewById(R.id.img_favorite_product);
-
         chatWithShop = findViewById(R.id.txt_chat_message_navigation_detail);
         addToCart = findViewById(R.id.txt_add_to_cart_navigation_detail);
         buyNow = findViewById(R.id.txt_buy_now_navigation_detail);
         imgCart = findViewById(R.id.cart_img_toolbar);
         quantityCart = findViewById(R.id.quantity_cart_toolbar);
-        user = LoginActivity.user;
-
+        txtColorProductDetail = findViewById(R.id.txt_color_product_detail);
+        user = MainActivity.getUser();
     }
+
     public Product getProduct() {
         return product;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadCart();
     }
 }

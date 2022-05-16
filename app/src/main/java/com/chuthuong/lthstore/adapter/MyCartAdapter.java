@@ -1,9 +1,11 @@
 package com.chuthuong.lthstore.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,21 +44,35 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
 
     public Context context;
     Cart cart;
-    public boolean isChanged = false;
+    LayoutInflater inflater;
+    ViewGroup viewGroup;
+    User user = null;
     private MyCartActivity myCartActivity;
     public MyCartAdapter(Context context, Cart cart) {
         this.context = context;
         this.cart = cart;
     }
-
+    private void setToast(Context context, String msg) {
+        Toast toast = new Toast(context.getApplicationContext());
+        View view = inflater.inflate(R.layout.custom_toast, viewGroup.findViewById(R.id.layout_toast));
+        TextView message = view.findViewById(R.id.message_toast);
+        message.setText(msg);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
+    }
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        inflater = LayoutInflater.from(parent.getContext());
+        viewGroup = parent;
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_item,parent,false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        user = MainActivity.getUser();
         myCartActivity = (MyCartActivity) context;
         CartItem cartItems = cart.getCartItems().get(position);
         Glide.with(context).load(cartItems.getProduct().getImages().get(0).getImg()).into(holder.imgProductItem);
@@ -85,36 +101,50 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
         holder.removeItemFromCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                User user = MainActivity.getUser();
                 if (user!=null) {
-                    callApiRemoveItemFromCart(cartItems.getId(),"Bearer "+ user.getAccessToken(),holder.getAdapterPosition());
-                    Toast.makeText(context.getApplicationContext(), "xóa item", Toast.LENGTH_SHORT).show();
-                }else    {
-                    Toast.makeText(context.getApplicationContext(), "Không có user", Toast.LENGTH_SHORT).show();
+                    callApiRemoveItemFromCart(cartItems.getId(),"Bearer "+ user.getAccessToken());
                 }
+            }
+        });
+        holder.addQuantityProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int quantity = Integer.parseInt(holder.quantityProductItem.getText().toString()) + 1;
+                holder.quantityProductItem.setText(quantity+"");
+                callApiUpdateQuantityCart("Bearer "+ user.getAccessToken(), cartItems.getId(),quantity);
+            }
+        });
+        holder.minusQuantityProduct.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int quantity = Integer.parseInt(holder.quantityProductItem.getText().toString()) - 1;
+                holder.quantityProductItem.setText(quantity+"");
+                callApiUpdateQuantityCart("Bearer "+ user.getAccessToken(), cartItems.getId(),quantity);
             }
         });
 
     }
 
-    private void callApiRemoveItemFromCart(String id, String accessToken, int pos) {
+    private void callApiUpdateQuantityCart(String token, String id, int quantity) {
         String accept = "application/json;versions=1";
-        ApiService.apiService.removeItemFromCart(accept,id, accessToken).enqueue(new Callback<CartResponse>() {
+        ApiService.apiService.updateQuantityCart(accept,token,id,quantity).enqueue(new Callback<CartResponse>() {
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
                     CartResponse cartResponse = response.body();
-                    cart = cartResponse.getCart();
-//                    isChanged = true;
-                    myCartActivity.reloadAdapter(cart);
-//                    notifyDataSetChanged();
-                    Toast.makeText(context.getApplicationContext(), cartResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e("Cart", cartResponse.getMessage() );
+                    if(cartResponse.getCart()!=null) {
+                        myCartActivity.reloadAdapter(cartResponse.getCart());
+                    }else {
+                        myCartActivity.hideLayoutCart();
+                    }
+                    setToast(context.getApplicationContext(), cartResponse.getMessage());
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-                        Toast.makeText(context.getApplicationContext(), apiError.getMessage(), Toast.LENGTH_SHORT).show();
+//                        Log.e("Lỗi",response.errorBody()+"");
+                        setToast(context.getApplicationContext(), apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -123,8 +153,38 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
 
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(context, "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(context.getApplicationContext(), "Lỗi server !");
+            }
+        });
+    }
+
+    private void callApiRemoveItemFromCart(String id, String accessToken) {
+        String accept = "application/json;versions=1";
+        ApiService.apiService.removeItemFromCart(accept,id, accessToken).enqueue(new Callback<CartResponse>() {
+            @Override
+            public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
+                if (response.isSuccessful()) {
+                    CartResponse cartResponse = response.body();
+                    if(cartResponse.getCart()!=null) {
+                        myCartActivity.reloadAdapter(cartResponse.getCart());
+                    }else {
+                        myCartActivity.hideLayoutCart();
+                    }
+                    setToast(context.getApplicationContext(), cartResponse.getMessage());
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(context.getApplicationContext(), apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<CartResponse> call, Throwable t) {
+                setToast(context.getApplicationContext(), "Lỗi server !");
             }
         });
     }

@@ -11,17 +11,22 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -34,6 +39,7 @@ import com.chuthuong.lthstore.fragments.HomeFragment;
 import com.chuthuong.lthstore.fragments.OrderFragment;
 import com.chuthuong.lthstore.fragments.ProductFragment;
 import com.chuthuong.lthstore.fragments.ProfileFragment;
+import com.chuthuong.lthstore.model.CartResponse;
 import com.chuthuong.lthstore.model.ListUser;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
@@ -64,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
     Fragment homeFragment, orderFragment, productFragment, profileFragment;
     ViewPager mViewPager;
     BottomNavigationView bottomNavigationView;
+    private CartResponse cartResponse = null;
 
+    TextView quantityCart;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +173,7 @@ public class MainActivity extends AppCompatActivity {
     private void addControls() {
         mViewPager = findViewById(R.id.view_pager_home);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
+        quantityCart = findViewById(R.id.quantity_cart_toolbar);
     }
 
     @Override
@@ -197,18 +206,12 @@ public class MainActivity extends AppCompatActivity {
             String newPayload = p.substring(0, p.length() - 1);
             long exp = Long.parseLong(newPayload.split(":")[1]);
             long date = Calendar.getInstance().getTimeInMillis();
-            Log.e("Payload", exp + "");
             Date date1 = new Date(exp);
             SimpleDateFormat df2 = null;
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
                 df2 = new SimpleDateFormat("DD/MM/YYYY hh:mm:ss");
             }
             String date2 = df2.format(date1);
-            Log.e("Payload", newPayload + "");
-            Log.e("Date", date + "");
-            Log.e("Date2", date2 + "");
-
-            Toast.makeText(this, payload + "=" + date, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -221,8 +224,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
                 break;
             case R.id.mnuLogout:
-                Toast.makeText(this, "LogOut", Toast.LENGTH_SHORT).show();
-//                callApiLogout();
+                callApiLogout();
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -233,7 +235,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intentReceiveFromUser = getIntent();
             user = (User) intentReceiveFromUser.getSerializableExtra("user");
         }
-        Log.e("accessToken", user.getAccessToken());
         String token = user.getAccessToken();
         String accessToken = "Bearer " + token;
         String access = "application/json;versions=1";
@@ -241,20 +242,18 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful()) {
-                    Log.e("Message", response.body().getMessage() + "");
                     SharedPreferences preferences = getSharedPreferences(nameSharePreference, MODE_PRIVATE);
                     SharedPreferences.Editor editor = preferences.edit();
                     editor.putString("refreshToken", "");
                     editor.putString("accessToken", "");
                     editor.commit(); // xác nhận lưu
-                    Toast.makeText(MainActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    setToast(MainActivity.this, response.body().getMessage());
                     startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-                        Toast.makeText(MainActivity.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(MainActivity.this,apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -263,8 +262,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(MainActivity.this, "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(MainActivity.this, "Lỗi server !");
             }
         });
     }
@@ -273,5 +271,20 @@ public class MainActivity extends AppCompatActivity {
             return user;
         }
         return null;
+    }
+    private void setToast(Activity activity, String msg) {
+        Toast toast = new Toast(activity);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.layout_toast));
+        TextView message = view.findViewById(R.id.message_toast);
+        message.setText(msg);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
+    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
     }
 }

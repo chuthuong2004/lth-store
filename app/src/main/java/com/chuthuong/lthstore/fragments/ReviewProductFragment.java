@@ -1,7 +1,9 @@
 package com.chuthuong.lthstore.fragments;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,14 +81,13 @@ public class ReviewProductFragment extends Fragment {
                         reviewProductAdapter = new ReviewProductAdapter(getContext(), listReview);
                         recyclerViewReview.setAdapter(reviewProductAdapter);
                         reviewProductAdapter.notifyDataSetChanged();
-//                    Log.e("Reviews", listReview.getReviews().get(0).getContent() + "");
                     }
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
                         Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(getActivity(), apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -95,19 +96,19 @@ public class ReviewProductFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListReview> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(getActivity(), "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(getActivity(), "Lỗi server !");
             }
         });
     }
-    @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        Toast.makeText(productDetailActivity, "Review 1", Toast.LENGTH_SHORT).show();
-
-        if (isVisibleToUser) {
-            getFragmentManager().beginTransaction().detach(this).attach(this).commit();
-            Toast.makeText(productDetailActivity, "Review", Toast.LENGTH_SHORT).show();
-        }
+    private void setToast(Activity activity, String msg) {
+        Toast toast = new Toast(activity);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.custom_toast, (ViewGroup) activity.findViewById(R.id.layout_toast));
+        TextView message = view.findViewById(R.id.message_toast);
+        message.setText(msg);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
     }
 }

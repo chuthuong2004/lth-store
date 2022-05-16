@@ -2,15 +2,20 @@ package com.chuthuong.lthstore.activities.authActivities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chuthuong.lthstore.R;
@@ -36,11 +41,6 @@ public class RegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-//        auth = FirebaseAuth.getInstance();
-//        if (auth.getCurrentUser() != null) {
-//            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
-//            finish();
-//        }
         addControls();
 
     }
@@ -67,51 +67,49 @@ public class RegisterActivity extends AppCompatActivity {
         String username = edtUsername.getText().toString();
         String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
-        if (TextUtils.isEmpty(username)) {
-            Toast.makeText(this, "Vui lòng nhập tên đăng nhập !", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(email)) {
-            Toast.makeText(this, "Vui lòng nhập địa chỉ email !", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (TextUtils.isEmpty(password)) {
-            Toast.makeText(this, "Vui lòng nhập mật khẩu !", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (password.length() < 6) {
-            Toast.makeText(this, "Mật khẩu quá ngắn, hãy nhập tối thiểu 6 ký tự!", Toast.LENGTH_SHORT).show();
-            return;
-        }
+//        if (TextUtils.isEmpty(username)) {
+//            Toast.makeText(this, "Vui lòng nhập tên đăng nhập !", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (TextUtils.isEmpty(email)) {
+//            Toast.makeText(this, "Vui lòng nhập địa chỉ email !", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (TextUtils.isEmpty(password)) {
+//            Toast.makeText(this, "Vui lòng nhập mật khẩu !", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (password.length() < 6) {
+//            Toast.makeText(this, "Mật khẩu quá ngắn, hãy nhập tối thiểu 6 ký tự!", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
         callApiRegister(username, email, password);
 
     }
-
+    private void setToast(Activity activity, String msg) {
+        Toast toast = new Toast(activity);
+        LayoutInflater inflater = getLayoutInflater();
+        View view = inflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.layout_toast));
+        TextView message = view.findViewById(R.id.message_toast);
+        message.setText(msg);
+        toast.setView(view);
+        toast.setGravity(Gravity.CENTER, 0, 0);
+        toast.setDuration(Toast.LENGTH_SHORT);
+        toast.show();
+    }
     private void callApiRegister(String username, String email, String password) {
 
         ApiService.apiService.createUser(username, email, password).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful()) {
-                    Log.e("Message", response.body().getMessage());
-                    Toast.makeText(RegisterActivity.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+                    setToast(RegisterActivity.this, response.body().getMessage());
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                 } else {
-//                    switch (response.code()){
-//                        case 400:
-//                            Log.e("Message", "Email đã tồn tại !");
-//                            Toast.makeText(RegisterActivity.this, "Email đã tồn tại !", Toast.LENGTH_SHORT).show();
-//                            break;
-//                        case 500:
-//                            Log.e("Message", "Lỗi server !");
-//                            Toast.makeText(RegisterActivity.this, "Lỗi server !", Toast.LENGTH_SHORT).show();
-//                            break;
-//                    }
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError =  gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-                        Toast.makeText(RegisterActivity.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                        setToast(RegisterActivity.this,apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -120,8 +118,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
-                Log.e("Lỗi server !", t.toString());
-                Toast.makeText(RegisterActivity.this, "lỗi", Toast.LENGTH_SHORT).show();
+                setToast(RegisterActivity.this, "Lỗi server !");
             }
         });
     }
