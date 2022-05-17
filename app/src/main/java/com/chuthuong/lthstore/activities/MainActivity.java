@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                     case R.id.mnu_product_navigation:
                         mViewPager.setCurrentItem(1);
 //                        productFragment = new ProductFragment();
-//                        loadFragment(productFragment);
+//                        loadFragment(productFragment);123
                         break;
                     case R.id.mnu_order_navigation:
                         mViewPager.setCurrentItem(2);
