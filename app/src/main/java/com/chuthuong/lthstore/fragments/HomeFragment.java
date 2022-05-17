@@ -39,10 +39,9 @@ import com.chuthuong.lthstore.adapter.FlashSaleProductAdapter;
 import com.chuthuong.lthstore.adapter.NewProductsAdapter;
 import com.chuthuong.lthstore.adapter.PopularProductAdapter;
 import com.chuthuong.lthstore.api.ApiService;
-import com.chuthuong.lthstore.model.Cart;
-import com.chuthuong.lthstore.model.CartResponse;
-import com.chuthuong.lthstore.model.ListCategory;
-import com.chuthuong.lthstore.model.ListProduct;
+import com.chuthuong.lthstore.response.CartResponse;
+import com.chuthuong.lthstore.response.ListCategoryResponse;
+import com.chuthuong.lthstore.response.ListProductResponse;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.denzcoskun.imageslider.ImageSlider;
@@ -71,19 +70,19 @@ public class HomeFragment extends Fragment {
 
     // Category RecycleView
     CategoryAdapter categoryAdapter;
-    ListCategory categoryList;
+    ListCategoryResponse categoryList;
 
     // New product RecycleView
     NewProductsAdapter newProductsAdapter;
-    ListProduct newProductList;
+    ListProductResponse newProductList;
 
     // Flash Sale product RecycleView
     FlashSaleProductAdapter flashSaleProductAdapter;
-    ListProduct flashSaleProductList;
+    ListProductResponse flashSaleProductList;
 
     // Popular product RecycleView
     PopularProductAdapter popularProductAdapter;
-    ListProduct popularProductList;
+    ListProductResponse popularProductList;
     User user;
     CartResponse cartResponse =null;
 
@@ -213,7 +212,7 @@ public class HomeFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        user = LoginActivity.user;
+        user = MainActivity.getUser();
         loadCart();
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -239,7 +238,7 @@ public class HomeFragment extends Fragment {
 
         // Category
         catRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
-        categoryList = new ListCategory();
+        categoryList = new ListCategoryResponse();
 //        categoryAdapter = new CategoryAdapter(getContext(), categoryList);
 //        catRecyclerView.setAdapter(categoryAdapter)
         callApiGetAllCategories();
@@ -254,7 +253,7 @@ public class HomeFragment extends Fragment {
 
         // popular products
         popularRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-//        popularProductList = new ListProduct();
+//        popularProductList = new ListProductResponse();
 //        popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
 //        popularRecycleView.setAdapter(popularProductAdapter);
         callApiGetAllPopularProducts();
@@ -331,11 +330,11 @@ public class HomeFragment extends Fragment {
         toast.show();
     }
     private void callApiGetAllPopularProducts() {
-        ApiService.apiService.getAllProducts("0", "1", "-likeCount", "0").enqueue(new Callback<ListProduct>() {
+        ApiService.apiService.getAllProducts("0", "1", "-likeCount", "0").enqueue(new Callback<ListProductResponse>() {
             @Override
-            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
-                    ListProduct products = response.body();
+                    ListProductResponse products = response.body();
                     popularProductList = products;
                     popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
                     popularRecycleView.setAdapter(popularProductAdapter);
@@ -353,19 +352,19 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ListProduct> call, Throwable t) {
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
                 setToast(getActivity(), "Lỗi server !");
             }
         });
     }
 
     private void callApiGetAllFlashSaleProducts() {
-        ApiService.apiService.getAllProducts("0", "1", "-discount", "20").enqueue(new Callback<ListProduct>() {
+        ApiService.apiService.getAllProducts("0", "1", "-discount", "20").enqueue(new Callback<ListProductResponse>() {
             @Override
-            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
-                    ListProduct products = response.body();
-                    flashSaleProductList = new ListProduct();
+                    ListProductResponse products = response.body();
+                    flashSaleProductList = new ListProductResponse();
                     flashSaleProductList = products;
                     flashSaleProductAdapter = new FlashSaleProductAdapter(getContext(), flashSaleProductList);
                     flashSaleProductRecycleView.setAdapter(flashSaleProductAdapter);
@@ -382,19 +381,19 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ListProduct> call, Throwable t) {
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
                 setToast(getActivity(),"Lỗi server !");
             }
         });
     }
 
     private void callApiGetAllNewProducts() {
-        ApiService.apiService.getAllProducts("0", "1", "-createdAt", "0").enqueue(new Callback<ListProduct>() {
+        ApiService.apiService.getAllProducts("0", "1", "-createdAt", "0").enqueue(new Callback<ListProductResponse>() {
             @Override
-            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
-                    ListProduct products = response.body();
-                    newProductList = new ListProduct();
+                    ListProductResponse products = response.body();
+                    newProductList = new ListProductResponse();
                     newProductList = products;
                     newProductsAdapter = new NewProductsAdapter(getContext(), newProductList);
                     newProductRecycleView.setAdapter(newProductsAdapter);
@@ -411,18 +410,18 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ListProduct> call, Throwable t) {
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
                 setToast(getActivity(),"Lỗi server !");
             }
         });
     }
 
     public void callApiGetAllCategories() {
-        ApiService.apiService.getAllCategories().enqueue(new Callback<ListCategory>() {
+        ApiService.apiService.getAllCategories().enqueue(new Callback<ListCategoryResponse>() {
             @Override
-            public void onResponse(Call<ListCategory> call, Response<ListCategory> response) {
+            public void onResponse(Call<ListCategoryResponse> call, Response<ListCategoryResponse> response) {
                 if (response.isSuccessful()) {
-                    ListCategory categories = response.body();
+                    ListCategoryResponse categories = response.body();
                     categoryList = categories;
                     categoryAdapter = new CategoryAdapter(getContext(), categoryList);
                     catRecyclerView.setAdapter(categoryAdapter);
@@ -440,7 +439,7 @@ public class HomeFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ListCategory> call, Throwable t) {
+            public void onFailure(Call<ListCategoryResponse> call, Throwable t) {
                 setToast(getActivity(),"Lỗi server !");
             }
         });

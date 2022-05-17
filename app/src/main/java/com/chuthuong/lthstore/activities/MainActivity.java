@@ -3,20 +3,17 @@ package com.chuthuong.lthstore.activities;
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager.widget.ViewPager;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,24 +26,18 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.authActivities.ChangePasswordActivity;
 import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
 import com.chuthuong.lthstore.adapter.ViewPagerAdapter;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.fragments.HomeFragment;
-import com.chuthuong.lthstore.fragments.OrderFragment;
-import com.chuthuong.lthstore.fragments.ProductFragment;
-import com.chuthuong.lthstore.fragments.ProfileFragment;
-import com.chuthuong.lthstore.model.CartResponse;
-import com.chuthuong.lthstore.model.ListUser;
+import com.chuthuong.lthstore.response.CartResponse;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.chuthuong.lthstore.utils.ApiToken;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
-import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -54,7 +45,6 @@ import java.text.SimpleDateFormat;
 import java.util.Base64;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Objects;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,12 +68,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        user = (User) LoginActivity.user;
+        user = (User) getIntent().getSerializableExtra("userkdljfgh dfkgj");
         addControls();
         addEvents();
-
         showToken();
-
         homeFragment = new HomeFragment();
         loadFragment(homeFragment);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);

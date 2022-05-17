@@ -1,33 +1,21 @@
 package com.chuthuong.lthstore.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
-import com.chuthuong.lthstore.activities.detailActivities.ProductDetailActivity;
-import com.chuthuong.lthstore.model.ListReview;
-import com.chuthuong.lthstore.model.Product;
+import com.chuthuong.lthstore.response.ListReviewResponse;
 import com.chuthuong.lthstore.model.Review;
-import com.chuthuong.lthstore.model.User;
 
-import java.text.DateFormat;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -36,7 +24,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class ReviewProductAdapter extends RecyclerView.Adapter<ReviewProductAdapter.ViewHolder> {
 
     private Context context;
-    private ListReview listReview;
+    private ListReviewResponse listReviewResponse;
 
     @NonNull
     @Override
@@ -44,14 +32,14 @@ public class ReviewProductAdapter extends RecyclerView.Adapter<ReviewProductAdap
         return new ReviewProductAdapter.ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_review_product, parent, false));
     }
 
-    public ReviewProductAdapter(Context context, ListReview listReview) {
+    public ReviewProductAdapter(Context context, ListReviewResponse listReviewResponse) {
         this.context = context;
-        this.listReview = listReview;
+        this.listReviewResponse = listReviewResponse;
     }
 
     @Override
     public void onBindViewHolder(@NonNull ReviewProductAdapter.ViewHolder holder, int position) {
-        Review review = listReview.getReviews().get(position);
+        Review review = listReviewResponse.getReviews().get(position);
         Glide.with(context).load(review.getUser().getAvatar()).into(holder.imageViewUser);
         holder.txtNameUser.setText(review.getUser().getUsername());
 
@@ -78,8 +66,8 @@ public class ReviewProductAdapter extends RecyclerView.Adapter<ReviewProductAdap
     }
     @Override
     public int getItemCount() {
-        if (listReview != null) {
-            return listReview.getReviews().size();
+        if (listReviewResponse != null) {
+            return listReviewResponse.getReviews().size();
         }
         return 0;
     }

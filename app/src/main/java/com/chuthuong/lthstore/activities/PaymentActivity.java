@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,14 +16,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chuthuong.lthstore.R;
-import com.chuthuong.lthstore.adapter.MyCartAdapter;
 import com.chuthuong.lthstore.adapter.MyPaymentAdapter;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.model.Cart;
-import com.chuthuong.lthstore.model.CartResponse;
+import com.chuthuong.lthstore.response.CartResponse;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
-import com.chuthuong.lthstore.widget.CustomProgressDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -64,6 +61,7 @@ public class PaymentActivity extends AppCompatActivity {
         txtPaymentOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(PaymentActivity.this, ShipmentDetailActivity.class));
                 setToast(PaymentActivity.this,"Chuyển sang nhập thông tin");
             }
         });

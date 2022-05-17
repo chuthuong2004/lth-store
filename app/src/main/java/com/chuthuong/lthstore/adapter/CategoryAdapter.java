@@ -1,7 +1,6 @@
 package com.chuthuong.lthstore.adapter;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,13 +13,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.model.Category;
-import com.chuthuong.lthstore.model.ListCategory;
+import com.chuthuong.lthstore.response.ListCategoryResponse;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     private Context context;
-    private ListCategory list;
+    private ListCategoryResponse list;
 
-    public CategoryAdapter(Context context, ListCategory list) {
+    public CategoryAdapter(Context context, ListCategoryResponse list) {
         this.context = context;
         this.list = list;
     }

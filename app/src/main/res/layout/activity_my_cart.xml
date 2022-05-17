@@ -141,7 +141,7 @@
             android:layout_height="43dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="Tiếp tục mua sắm và nhận khuyến mãi hấp dẫn từ HTD Store nhé !"
+            android:text="Tiếp tục mua sắm và nhận khuyến mãi hấp dẫn từ LTH Store nhé !"
             android:textColor="@color/grey"
             android:textSize="16sp"
             app:layout_constraintEnd_toEndOf="parent"

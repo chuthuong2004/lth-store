@@ -1,15 +1,17 @@
 package com.chuthuong.lthstore.api;
 
-import com.chuthuong.lthstore.model.Cart;
-import com.chuthuong.lthstore.model.CartResponse;
-import com.chuthuong.lthstore.model.ListCategory;
-import com.chuthuong.lthstore.model.ListProduct;
-import com.chuthuong.lthstore.model.ListReview;
-import com.chuthuong.lthstore.model.ListUser;
+import com.chuthuong.lthstore.province.Province;
+import com.chuthuong.lthstore.response.CartResponse;
+import com.chuthuong.lthstore.response.ListCategoryResponse;
+import com.chuthuong.lthstore.response.ListProductResponse;
+import com.chuthuong.lthstore.response.ListReviewResponse;
 import com.chuthuong.lthstore.model.User;
+import com.chuthuong.lthstore.response.ProductResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -33,15 +35,13 @@ public interface ApiService {
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService.class);
-
-    // Lấy tất cả user
-//    @Headers("Content-Type: application/json")
-    @Headers({"application-id: MY-APPLICATION-ID",
-            "secret-key: MY-SECRET-KEY",
-            "application-type: REST"})
-    @GET("admin/users")
-    Call<ListUser> getAllUser(@Header("Accept") String accept,
-                              @Header("token") String token);
+    ApiService apiProvince = new Retrofit.Builder()
+            .baseUrl("https://provinces.open-api.vn/api/")
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+            .create(ApiService.class);
+    @GET("?depth=3")
+    Call<List<Province>> getProvinces();
 
     // Đăng nhập
     @FormUrlEncoded
@@ -81,19 +81,21 @@ public interface ApiService {
 
     // Get All Category
     @GET("categories")
-    Call<ListCategory> getAllCategories();
+    Call<ListCategoryResponse> getAllCategories();
 
     @GET("products")
-    Call<ListProduct> getAllProducts(@Query("limit") String limit,
-                                     @Query("page") String page,
-                                     @Query("sort") String sort,
-                                     @Query("discount[gte]") String filterDiscount);
+    Call<ListProductResponse> getAllProducts(@Query("limit") String limit,
+                                             @Query("page") String page,
+                                             @Query("sort") String sort,
+                                             @Query("discount[gte]") String filterDiscount);
+    @GET("product/{id}")
+    Call<ProductResponse> getProduct(@Path("id") String id);
 
     @GET("reviews/{idProduct}")
-    Call<ListReview> getAllReviewByProduct(@Path("idProduct") String productID);
+    Call<ListReviewResponse> getAllReviewByProduct(@Path("idProduct") String productID);
 
     @GET("products/{idCate}")
-    Call<ListProduct> getAllProductByCategory(@Path("idCate") String categoryID);
+    Call<ListProductResponse> getAllProductByCategory(@Path("idCate") String categoryID);
 
     @GET("cart/my-cart")
     Call<CartResponse> getMyCart(@Header("Accept") String accept,

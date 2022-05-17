@@ -1,18 +1,20 @@
-package com.chuthuong.lthstore.model;
+package com.chuthuong.lthstore.response;
+
+import com.chuthuong.lthstore.model.Product;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class ListProduct implements Serializable {
+public class ListProductResponse implements Serializable {
     private List<Product> products;
     private boolean success;
     private  int countDocuments;
     private int resultPerPage;
 
-    public ListProduct() {
+    public ListProductResponse() {
     }
 
-    public ListProduct(List<Product> products, boolean success, int countDocument, int resultPerPage) {
+    public ListProductResponse(List<Product> products, boolean success, int countDocument, int resultPerPage) {
         this.products = products;
         this.success = success;
         this.countDocuments = countDocument;

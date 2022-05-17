@@ -54,4 +54,9 @@ dependencies {
 
     // circle imageview
     implementation 'de.hdodenhof:circleimageview:3.1.0'
+
+
+    // custom progressbar loading
+    implementation 'com.github.ybq:Android-SpinKit:1.4.0'
+
 }

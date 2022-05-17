@@ -1,60 +1,41 @@
 package com.chuthuong.lthstore.activities.detailActivities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentStatePagerAdapter;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.MainActivity;
 import com.chuthuong.lthstore.activities.MyCartActivity;
 import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
 import com.chuthuong.lthstore.adapter.ViewPagerDetailProductAdapter;
 import com.chuthuong.lthstore.api.ApiService;
-import com.chuthuong.lthstore.fragments.DescriptionProductFragment;
-import com.chuthuong.lthstore.fragments.HomeFragment;
-import com.chuthuong.lthstore.fragments.ReviewProductFragment;
-import com.chuthuong.lthstore.fragments.SearchFragment;
-import com.chuthuong.lthstore.fragments.SuggestionProductFragment;
-import com.chuthuong.lthstore.model.Account;
-import com.chuthuong.lthstore.model.CartResponse;
+import com.chuthuong.lthstore.response.CartResponse;
 import com.chuthuong.lthstore.model.Product;
 import com.chuthuong.lthstore.model.ProductDetail;
 import com.chuthuong.lthstore.model.ProductDetailColor;
 import com.chuthuong.lthstore.model.ProductImage;
 import com.chuthuong.lthstore.model.User;
+import com.chuthuong.lthstore.response.ProductResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.chuthuong.lthstore.widget.CustomProgressDialog;
 import com.denzcoskun.imageslider.ImageSlider;
@@ -96,23 +77,20 @@ public class ProductDetailActivity extends AppCompatActivity {
     private CartResponse cartResponse = null;
     private TextView txtColorProductDetail;
     CustomProgressDialog dialogAddItem,dialogMyCart;
+    String productID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_product_detail);
         addControls();
+        productID = getIntent().getStringExtra("product_id");
+        callProduct(productID);
         addEvents();
-        final Product obj = (Product) getIntent().getSerializableExtra("product_detail");
-        if (obj instanceof Product) {
-            product = (Product) obj;
+    }
 
-        }
+    private void loadProduct(Product product) {
         if (product != null) {
-            loadData();
-//            ReviewProductFragment reviewProductFragment = new ReviewProductFragment();
-//            loadFragment(reviewProductFragment);
-//            DescriptionProductFragment descriptionProductFragment = new DescriptionProductFragment();
-//            loadFragment(descriptionProductFragment);
+            loadData(product);
             viewPagerDetailProductAdapter = new ViewPagerDetailProductAdapter(this);
             viewPager2.setAdapter(viewPagerDetailProductAdapter);
             new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
@@ -147,7 +125,6 @@ public class ProductDetailActivity extends AppCompatActivity {
                 }
             });
             handleToolbar();
-
         }
     }
 
@@ -213,7 +190,6 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
     }
-
     private void openDialogRequestLogin() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -250,7 +226,6 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
         dialog.show();
     }
-
     private void handleToolbar() {
         ImageView imgBack, imgSearch, imgHome;
         imgBack = findViewById(R.id.img_back_detail_toolbar);
@@ -276,8 +251,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void loadData() {
+    private void loadData(Product product) {
         loadCart();
         List<ProductImage> productImages = product.getImages();
         // image slider
@@ -305,6 +279,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             currentPrice.setText("");
         }
         List<ProductDetail> details = product.getDetail();
+        linearLayoutSize.clearChildFocus(findViewById(R.id.txt_size_detai_product));
         for (int i = 0; i < details.size(); i++) {
             txtSize = new TextView(ProductDetailActivity.this);
             txtSize.setText(details.get(i).getSize() + "");
@@ -339,7 +314,6 @@ public class ProductDetailActivity extends AppCompatActivity {
             });
         }
     }
-
     private void loadCart() {
         if (user != null) {
             dialogMyCart = new CustomProgressDialog(ProductDetailActivity.this);
@@ -390,7 +364,6 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
     }
-
     private void callApiGetMyCart(String accessToken) {
         String accept = "application/json;versions=1";
         ApiService.apiService.getMyCart(accept, accessToken).enqueue(new Callback<CartResponse>() {
@@ -416,14 +389,43 @@ public class ProductDetailActivity extends AppCompatActivity {
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
                 setToast(ProductDetailActivity.this, "Lỗi server !");
             }
         });
     }
+    private void callApiGetProduct(String id) {
+        ApiService.apiService.getProduct(id).enqueue(new Callback<ProductResponse>() {
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                if (response.isSuccessful()) {
+                    ProductResponse productResponse = response.body();
+                    product = productResponse.getProduct();
+                    Log.e("product", product.toString());
+                    loadProduct(product);
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(ProductDetailActivity.this, apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                setToast(ProductDetailActivity.this, "Lỗi server !");
+            }
+        });
+    }
+    private void callProduct(String id) {
+        if(id!=null) {
+            callApiGetProduct(id);
+        }
+    }
     private void addControls() {
         rating = findViewById(R.id.detail_product_rating);
         name = findViewById(R.id.detail_product_name);
@@ -445,14 +447,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         txtColorProductDetail = findViewById(R.id.txt_color_product_detail);
         user = MainActivity.getUser();
     }
-
     public Product getProduct() {
         return product;
     }
-
     @Override
     protected void onStart() {
         super.onStart();
+        callProduct(productID);
         loadCart();
     }
 }

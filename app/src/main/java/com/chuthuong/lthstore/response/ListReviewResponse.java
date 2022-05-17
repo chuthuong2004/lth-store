@@ -1,30 +1,32 @@
-package com.chuthuong.lthstore.model;
+package com.chuthuong.lthstore.response;
+
+import com.chuthuong.lthstore.model.Review;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class ListCategory implements Serializable {
-    private List<Category> categories;
+public class ListReviewResponse implements Serializable {
+    private List<Review> reviews;
     private boolean success;
     private  int countDocuments;
     private int resultPerPage;
 
-    public ListCategory() {
+    public ListReviewResponse() {
     }
 
-    public ListCategory(List<Category> categories, boolean success, int countDocuments, int resultPerPage) {
-        this.categories = categories;
+    public ListReviewResponse(List<Review> reviews, boolean success, int countDocuments, int resultPerPage) {
+        this.reviews = reviews;
         this.success = success;
         this.countDocuments = countDocuments;
         this.resultPerPage = resultPerPage;
     }
 
-    public List<Category> getCategories() {
-        return categories;
+    public List<Review> getReviews() {
+        return reviews;
     }
 
-    public void setCategories(List<Category> categories) {
-        this.categories = categories;
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
     }
 
     public boolean isSuccess() {

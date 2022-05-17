@@ -1,9 +1,8 @@
 package com.chuthuong.lthstore.adapter;
 
-import android.app.Activity;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -20,22 +19,22 @@ import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.MainActivity;
 import com.chuthuong.lthstore.activities.MyCartActivity;
-import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
 import com.chuthuong.lthstore.activities.detailActivities.ProductDetailActivity;
 import com.chuthuong.lthstore.api.ApiService;
-import com.chuthuong.lthstore.model.Account;
 import com.chuthuong.lthstore.model.Cart;
 import com.chuthuong.lthstore.model.CartItem;
-import com.chuthuong.lthstore.model.CartResponse;
+import com.chuthuong.lthstore.response.CartResponse;
+import com.chuthuong.lthstore.model.ProductDetail;
+import com.chuthuong.lthstore.model.ProductDetailColor;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
-import com.chuthuong.lthstore.utils.ApiToken;
 import com.chuthuong.lthstore.widget.CustomProgressDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -74,6 +73,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
         return new ViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.cart_item,parent,false));
     }
 
+    @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         user = MainActivity.getUser();
@@ -93,15 +93,22 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
             holder.currentPriceProductItem.setText("");
         }
         holder.quantityProductItem.setText(cartItems.getQuantity()+"");
-//        holder.itemView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Intent intent = new Intent(context, ProductDetailActivity.class);
-//                intent.putExtra("product_detail", cartItems.getProduct().);
-//
-//                context.startActivity(intent);
-//            }
-//        });
+        int quantity = Integer.parseInt(holder.quantityProductItem.getText().toString());
+        if(quantity<2) {
+            holder.minusQuantityProduct.setEnabled(true);
+            holder.minusQuantityProduct.setBackgroundTintList(context.getResources().getColorStateList(R.color.grey_2));
+        }
+        List<ProductDetailColor> productDetailColors = findProductDetail(cartItems.getProduct().getDetail(), cartItems.getSize());
+        int amountProduct  = findAmountBySizeColor(productDetailColors, cartItems.getColor());
+        if(quantity>=amountProduct) {
+            holder.addQuantityProduct.setEnabled(true);
+            holder.maxQuantity.setVisibility(View.VISIBLE);
+            holder.maxQuantity.setText("Chỉ còn "+amountProduct+" sản phẩm");
+            holder.addQuantityProduct.setBackgroundTintList(context.getResources().getColorStateList(R.color.grey_2));
+        }
+        else {
+            holder.maxQuantity.setVisibility(View.GONE);
+        }
         holder.removeItemFromCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,29 +122,56 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
         holder.addQuantityProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int quantity = Integer.parseInt(holder.quantityProductItem.getText().toString()) + 1;
-                holder.quantityProductItem.setText(quantity+"");
-                dialogUpdate = new CustomProgressDialog(context);
-                dialogUpdate.show();
-                callApiUpdateQuantityCart("Bearer "+ user.getAccessToken(), cartItems.getId(),quantity);
+                int quantity = Integer.parseInt(holder.quantityProductItem.getText().toString());
+                if(quantity< amountProduct) {
+                    quantity +=1;
+                    holder.quantityProductItem.setText(quantity+"");
+                    dialogUpdate = new CustomProgressDialog(context);
+                    dialogUpdate.show();
+                    callApiUpdateQuantityCart("Bearer "+ user.getAccessToken(), cartItems.getId(),quantity);
+                }
+
             }
         });
         holder.minusQuantityProduct.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int quantity = Integer.parseInt(holder.quantityProductItem.getText().toString()) - 1;
-                holder.quantityProductItem.setText(quantity+"");
-                dialogUpdate = new CustomProgressDialog(context);
-                dialogUpdate.show();
-                callApiUpdateQuantityCart("Bearer "+ user.getAccessToken(), cartItems.getId(),quantity);
+                int quantity = Integer.parseInt(holder.quantityProductItem.getText().toString());
+                if(quantity>1) {
+                    quantity -=1;
+                    holder.quantityProductItem.setText(quantity+"");
+                    dialogUpdate = new CustomProgressDialog(context);
+                    dialogUpdate.show();
+                    callApiUpdateQuantityCart("Bearer "+ user.getAccessToken(), cartItems.getId(),quantity);
+                }
+
             }
         });
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setToast(context.getApplicationContext(), "click me");
+                Intent intent = new Intent(context.getApplicationContext(), ProductDetailActivity.class);
+                intent.putExtra("product_id", cartItems.getProduct().getId());
+                context.startActivity(intent);
             }
         });
+    }
+
+    private List<ProductDetailColor> findProductDetail(List<ProductDetail> productDetails, String query){
+        for (int i = 0; i < productDetails.size(); i++) {
+            if(productDetails.get(i).getSize().equals(query)){
+                return productDetails.get(i).getDetailColor();
+            }
+        }
+        return  null;
+    }
+    private int findAmountBySizeColor(List<ProductDetailColor> productDetailColors, String query) {
+        for (int i = 0; i < productDetailColors.size(); i++) {
+            if(productDetailColors.get(i).getColor().equals(query)) {
+                return  productDetailColors.get(i).getAmount();
+            }
+        }
+        return 0;
     }
     private void callApiUpdateQuantityCart(String token, String id, int quantity) {
         String accept = "application/json;versions=1";
@@ -153,7 +187,6 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
                     }else {
                         myCartActivity.hideLayoutCart();
                     }
-//                    setToast(context.getApplicationContext(), cartResponse.getMessage());
                 } else {
                     try {
                         Gson gson = new Gson();
@@ -216,7 +249,8 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         ImageView imgProductItem, removeItemFromCart;
-        TextView nameProductItem, colorProductItem , sizeProductItem,currentPriceProductItem,priceProductItem, addQuantityProduct, minusQuantityProduct,quantityProductItem;
+        TextView nameProductItem, colorProductItem , sizeProductItem,currentPriceProductItem,priceProductItem,
+                addQuantityProduct, minusQuantityProduct,quantityProductItem, maxQuantity;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -230,6 +264,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
             minusQuantityProduct=itemView.findViewById(R.id.txt_minus_quantity);
             quantityProductItem=itemView.findViewById(R.id.txt_quantity_product);
             removeItemFromCart =itemView.findViewById(R.id.remove_item_from_cart);
+            maxQuantity =itemView.findViewById(R.id.txt_max_quantity);
         }
     }
 }

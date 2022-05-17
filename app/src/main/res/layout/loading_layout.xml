@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:padding="10dp"
+    android:background="@android:color/transparent"
     android:layout_height="wrap_content">
-
+    <com.github.ybq.android.spinkit.SpinKitView
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.Large.Circle"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/pink" />
     <ProgressBar
         android:id="@+id/progress_bar_loading"
         android:layout_width="40dp"
+        android:indeterminateTint="@color/pink"
         android:layout_height="40dp" />
 </RelativeLayout>

@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.detailActivities.ProductDetailActivity;
-import com.chuthuong.lthstore.model.ListProduct;
+import com.chuthuong.lthstore.response.ListProductResponse;
 import com.chuthuong.lthstore.model.Product;
 
 import java.text.DecimalFormat;
@@ -24,11 +24,11 @@ import java.text.NumberFormat;
 
 public class SameProductDetailAdapter extends RecyclerView.Adapter<SameProductDetailAdapter.ViewHolder> {
     private Context context;
-    private ListProduct listProduct;
+    private ListProductResponse listProductResponse;
 
-    public SameProductDetailAdapter(Context context, ListProduct listProduct) {
+    public SameProductDetailAdapter(Context context, ListProductResponse listProductResponse) {
         this.context = context;
-        this.listProduct = listProduct;
+        this.listProductResponse = listProductResponse;
     }
 
     @NonNull
@@ -39,7 +39,7 @@ public class SameProductDetailAdapter extends RecyclerView.Adapter<SameProductDe
 
     @Override
     public void onBindViewHolder(@NonNull SameProductDetailAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        Product product = listProduct.getProducts().get(position);
+        Product product = listProductResponse.getProducts().get(position);
         Glide.with(context).load(product.getImages().get(0).getImg()).into(holder.imageView);
         holder.name.setText(product.getName());
         holder.discount.setText("-" + product.getDiscount() + "%");
@@ -60,7 +60,7 @@ public class SameProductDetailAdapter extends RecyclerView.Adapter<SameProductDe
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProductDetailActivity.class);
-                intent.putExtra("product_detail", product);
+                intent.putExtra("product_id", product.getId());
 
                 context.startActivity(intent);
             }
@@ -69,8 +69,8 @@ public class SameProductDetailAdapter extends RecyclerView.Adapter<SameProductDe
 
     @Override
     public int getItemCount() {
-        if (listProduct != null) {
-            return listProduct.getProducts().size();
+        if (listProductResponse != null) {
+            return listProductResponse.getProducts().size();
         }
         return 0;
     }

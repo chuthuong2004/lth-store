@@ -1,4 +1,6 @@
-package com.chuthuong.lthstore.model;
+package com.chuthuong.lthstore.response;
+
+import com.chuthuong.lthstore.model.Cart;
 
 import java.io.Serializable;
 

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/txt_province_selected"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/custom_edit_text"
+        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+        android:drawableTint="@color/white"
+        android:text="Thành phố Hồ Chí Minh"
+        android:paddingLeft="10dp"
+        android:gravity="center_vertical"
+        android:paddingTop="5dp"
+        android:paddingRight="10dp"
+        android:paddingBottom="5dp"
+        android:textColor="@color/black"
+        android:textSize="14dp" />
+</LinearLayout>

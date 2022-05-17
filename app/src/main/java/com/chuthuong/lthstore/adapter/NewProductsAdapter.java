@@ -3,9 +3,6 @@ package com.chuthuong.lthstore.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,26 +11,24 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.detailActivities.ProductDetailActivity;
-import com.chuthuong.lthstore.model.ListProduct;
+import com.chuthuong.lthstore.response.ListProductResponse;
 import com.chuthuong.lthstore.model.Product;
 
-import java.io.Serializable;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 public class NewProductsAdapter extends RecyclerView.Adapter<NewProductsAdapter.ViewHolder> {
     private Context context;
-    private ListProduct listProduct;
+    private ListProductResponse listProductResponse;
 
-    public NewProductsAdapter(Context context, ListProduct listProduct) {
+    public NewProductsAdapter(Context context, ListProductResponse listProductResponse) {
         this.context = context;
-        this.listProduct = listProduct;
+        this.listProductResponse = listProductResponse;
     }
 
     @NonNull
@@ -44,7 +39,7 @@ public class NewProductsAdapter extends RecyclerView.Adapter<NewProductsAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull NewProductsAdapter.ViewHolder holder, @SuppressLint("RecyclerView") int position) {
-        Product product = listProduct.getProducts().get(position);
+        Product product = listProductResponse.getProducts().get(position);
         Glide.with(context).load(product.getImages().get(0).getImg()).into(holder.imageView);
         holder.name.setText(product.getName());
         holder.discount.setText("-" + product.getDiscount() + "%");
@@ -65,8 +60,7 @@ public class NewProductsAdapter extends RecyclerView.Adapter<NewProductsAdapter.
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProductDetailActivity.class);
-                intent.putExtra("product_detail", product);
-
+                intent.putExtra("product_id", product.getId());
                 context.startActivity(intent);
             }
         });
@@ -74,8 +68,8 @@ public class NewProductsAdapter extends RecyclerView.Adapter<NewProductsAdapter.
 
     @Override
     public int getItemCount() {
-        if (listProduct != null) {
-            return listProduct.getProducts().size();
+        if (listProductResponse != null) {
+            return listProductResponse.getProducts().size();
         }
         return 0;
     }

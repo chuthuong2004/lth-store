@@ -15,8 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.detailActivities.ProductDetailActivity;
-import com.chuthuong.lthstore.model.ListCategory;
-import com.chuthuong.lthstore.model.ListProduct;
+import com.chuthuong.lthstore.response.ListProductResponse;
 import com.chuthuong.lthstore.model.Product;
 
 import java.text.DecimalFormat;
@@ -24,10 +23,10 @@ import java.text.NumberFormat;
 
 public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ViewHolder> {
     private Context context;
-    private ListProduct listProduct;
-    public ShowAllAdapter(Context context, ListProduct listProduct) {
+    private ListProductResponse listProductResponse;
+    public ShowAllAdapter(Context context, ListProductResponse listProductResponse) {
         this.context = context;
-        this.listProduct = listProduct;
+        this.listProductResponse = listProductResponse;
     }
 
     @NonNull
@@ -38,7 +37,7 @@ public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        Product product = listProduct.getProducts().get(position);
+        Product product = listProductResponse.getProducts().get(position);
         Glide.with(context).load(product.getImages().get(0).getImg()).into(holder.imageView);
         holder.name.setText(product.getName());
         holder.discount.setText("-" + product.getDiscount() + "%");
@@ -60,7 +59,7 @@ public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ViewHold
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context, ProductDetailActivity.class);
-                intent.putExtra("product_detail", product);
+                intent.putExtra("product_id", product.getId());
                 context.startActivity(intent);
             }
         });
@@ -68,8 +67,8 @@ public class ShowAllAdapter extends RecyclerView.Adapter<ShowAllAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        if (listProduct.getProducts() != null) {
-            return listProduct.getProducts().size();
+        if (listProductResponse.getProducts() != null) {
+            return listProductResponse.getProducts().size();
         }
         return 0;
     }

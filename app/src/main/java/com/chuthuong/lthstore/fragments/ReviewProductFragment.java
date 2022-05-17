@@ -18,16 +18,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.detailActivities.ProductDetailActivity;
-import com.chuthuong.lthstore.adapter.FlashSaleProductAdapter;
 import com.chuthuong.lthstore.adapter.ReviewProductAdapter;
 import com.chuthuong.lthstore.api.ApiService;
-import com.chuthuong.lthstore.model.ListProduct;
-import com.chuthuong.lthstore.model.ListReview;
+import com.chuthuong.lthstore.response.ListReviewResponse;
 import com.chuthuong.lthstore.model.Product;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.google.gson.Gson;
-
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 
@@ -38,7 +34,7 @@ import retrofit2.Response;
 public class ReviewProductFragment extends Fragment {
         RecyclerView recyclerViewReview;
         ReviewProductAdapter reviewProductAdapter ;
-        ListReview listReview;
+        ListReviewResponse listReviewResponse;
          Product product;
         RatingBar ratingBar;
         TextView rating, quantityReviewProduct, reviewNull;
@@ -68,17 +64,17 @@ public class ReviewProductFragment extends Fragment {
         }
 
     private void callApiGetAllReviewByProduct(String productID) {
-        ApiService.apiService.getAllReviewByProduct(productID).enqueue(new Callback<ListReview>() {
+        ApiService.apiService.getAllReviewByProduct(productID).enqueue(new Callback<ListReviewResponse>() {
             @Override
-            public void onResponse(Call<ListReview> call, Response<ListReview> response) {
+            public void onResponse(Call<ListReviewResponse> call, Response<ListReviewResponse> response) {
                 if (response.isSuccessful()) {
-                    listReview = response.body();
-                    if(listReview.getReviews().size()==0) {
+                    listReviewResponse = response.body();
+                    if(listReviewResponse.getReviews().size()==0) {
                         reviewNull.setVisibility(View.VISIBLE);
                         layoutReview.setVisibility(View.GONE);
                     }else {
-                        quantityReviewProduct.setText("("+listReview.getReviews().size()+" đánh giá)");
-                        reviewProductAdapter = new ReviewProductAdapter(getContext(), listReview);
+                        quantityReviewProduct.setText("("+ listReviewResponse.getReviews().size()+" đánh giá)");
+                        reviewProductAdapter = new ReviewProductAdapter(getContext(), listReviewResponse);
                         recyclerViewReview.setAdapter(reviewProductAdapter);
                         reviewProductAdapter.notifyDataSetChanged();
                     }
@@ -95,7 +91,7 @@ public class ReviewProductFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ListReview> call, Throwable t) {
+            public void onFailure(Call<ListReviewResponse> call, Throwable t) {
                 setToast(getActivity(), "Lỗi server !");
             }
         });

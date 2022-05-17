@@ -3,13 +3,10 @@ package com.chuthuong.lthstore.fragments;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,11 +18,9 @@ import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.detailActivities.ProductDetailActivity;
 import com.chuthuong.lthstore.activities.detailActivities.ShowAllActivity;
 import com.chuthuong.lthstore.adapter.PopularProductAdapter;
-import com.chuthuong.lthstore.adapter.ReviewProductAdapter;
 import com.chuthuong.lthstore.adapter.SameProductDetailAdapter;
 import com.chuthuong.lthstore.api.ApiService;
-import com.chuthuong.lthstore.model.ListProduct;
-import com.chuthuong.lthstore.model.ListReview;
+import com.chuthuong.lthstore.response.ListProductResponse;
 import com.chuthuong.lthstore.model.Product;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.google.gson.Gson;
@@ -39,13 +34,13 @@ import retrofit2.Response;
 public class SuggestionProductFragment extends Fragment {
     RecyclerView recyclerViewSameProductDetail, recyclerViewAllProduct;
     SameProductDetailAdapter sameProductDetailAdapter;
-    ListProduct listSameProduct;
+    ListProductResponse listSameProduct;
     ProductDetailActivity productDetailActivity;
     TextView sameProductShowAll, showAllProduct;
 
     // Popular product RecycleView
     PopularProductAdapter popularProductAdapter;
-    ListProduct popularProductList;
+    ListProductResponse popularProductList;
     private Product product;
     public SuggestionProductFragment() {
         // Required empty public constructor
@@ -93,11 +88,11 @@ public class SuggestionProductFragment extends Fragment {
         return root;
     }
     private void callApiGetAllPopularProducts() {
-        ApiService.apiService.getAllProducts("0", "1", "-likeCount", "0").enqueue(new Callback<ListProduct>() {
+        ApiService.apiService.getAllProducts("0", "1", "-likeCount", "0").enqueue(new Callback<ListProductResponse>() {
             @Override
-            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
-                    ListProduct products = response.body();
+                    ListProductResponse products = response.body();
                     popularProductList = products;
                     popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
                     recyclerViewAllProduct.setAdapter(popularProductAdapter);
@@ -114,15 +109,15 @@ public class SuggestionProductFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ListProduct> call, Throwable t) {
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
                 setToast(getActivity(),"Lỗi server !");
             }
         });
     }
     private void callApiProductByCategory(String category) {
-        ApiService.apiService.getAllProductByCategory(category).enqueue(new Callback<ListProduct>() {
+        ApiService.apiService.getAllProductByCategory(category).enqueue(new Callback<ListProductResponse>() {
             @Override
-            public void onResponse(Call<ListProduct> call, Response<ListProduct> response) {
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
                     listSameProduct = response.body();
                     sameProductDetailAdapter = new SameProductDetailAdapter(getContext(), listSameProduct);
@@ -140,7 +135,7 @@ public class SuggestionProductFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(Call<ListProduct> call, Throwable t) {
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
                 setToast(getActivity(),"Lỗi server !");
             }
         });
