@@ -1,5 +1,7 @@
 package com.chuthuong.lthstore.api;
 
+import android.os.Environment;
+
 import com.chuthuong.lthstore.model.ShipmentDetail;
 import com.chuthuong.lthstore.province.Province;
 import com.chuthuong.lthstore.response.CartResponse;
@@ -33,7 +35,6 @@ import retrofit2.http.Query;
 
 public interface ApiService {
     Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd HH:mm:ss").create();
-
     // api
     ApiService apiService = new Retrofit.Builder()
             .baseUrl(Util.URI_API)
