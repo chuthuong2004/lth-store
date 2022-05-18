@@ -11,6 +11,7 @@ import com.chuthuong.lthstore.response.OrderResponse;
 import com.chuthuong.lthstore.response.ProductResponse;
 import com.chuthuong.lthstore.response.UserResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
@@ -35,12 +36,12 @@ public interface ApiService {
 
     // api
     ApiService apiService = new Retrofit.Builder()
-            .baseUrl("http://web-api-chuthuong.herokuapp.com/api/v2/")
+            .baseUrl(Util.URI_API)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService.class);
     ApiService apiProvince = new Retrofit.Builder()
-            .baseUrl("https://provinces.open-api.vn/api/")
+            .baseUrl(Util.URI_API_PROVINCES)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
             .create(ApiService.class);
