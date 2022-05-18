@@ -129,39 +129,30 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
 
     private void addEvents() {
-        imgFavoriteProduct.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (user != null) {
-                    setToast(ProductDetailActivity.this,"Chức năng yêu thích sản phẩm đang cập nhật !");
-                } else {
-                    openDialogRequestLogin();
-                }
+        imgFavoriteProduct.setOnClickListener(v -> {
+            if (user != null) {
+                setToast(ProductDetailActivity.this,"Chức năng yêu thích sản phẩm đang cập nhật !");
+            } else {
+                openDialogRequestLogin();
             }
         });
-        chatWithShop.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (user != null) {
-                    setToast(ProductDetailActivity.this,"Chức năng chat với shop đang cập nhật !");
-                } else {
-                    openDialogRequestLogin();
-                }
+        chatWithShop.setOnClickListener(v -> {
+            if (user != null) {
+                setToast(ProductDetailActivity.this,"Chức năng chat với shop đang cập nhật !");
+            } else {
+                openDialogRequestLogin();
             }
         });
-        addToCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (user != null) {
-                    String size = product.getDetail().get(0).getSize();
-                    String color = product.getDetail().get(0).getDetailColor().get(0).getColor();
-                     dialogAddItem= new CustomProgressDialog(ProductDetailActivity.this);
-                    dialogAddItem.show();
-                    callApiAddItemToCart("Bearer " + user.getAccessToken(), product.getId(),
-                            size, color, 1);
-                } else {
-                    openDialogRequestLogin();
-                }
+        addToCart.setOnClickListener(v -> {
+            if (user != null) {
+                String size = product.getDetail().get(0).getSize();
+                String color = product.getDetail().get(0).getDetailColor().get(0).getColor();
+                 dialogAddItem= new CustomProgressDialog(ProductDetailActivity.this);
+                dialogAddItem.show();
+                callApiAddItemToCart("Bearer " + user.getAccessToken(), product.getId(),
+                        size, color, 1);
+            } else {
+                openDialogRequestLogin();
             }
         });
         buyNow.setOnClickListener(new View.OnClickListener() {
@@ -348,6 +339,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                         setToast(ProductDetailActivity.this,cartResponse.getMessage());
                     }
                 } else {
+                    dialogAddItem.dismiss();
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
@@ -360,6 +352,7 @@ public class ProductDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
+                dialogAddItem.dismiss();
                 setToast(ProductDetailActivity.this, "Lỗi server !");
             }
         });

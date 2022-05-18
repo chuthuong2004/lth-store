@@ -139,11 +139,8 @@
         android:textColor="@color/grey"
         android:textSize="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/cart_item_payment_price"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.982"
-        app:layout_constraintStart_toEndOf="@+id/cart_item_payment_price"
-        app:layout_constraintTop_toTopOf="@+id/cart_item_payment_price"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintEnd_toStartOf="@+id/cart_item_payment_quantity"
+        app:layout_constraintTop_toTopOf="@+id/cart_item_payment_quantity"
         tools:ignore="MissingConstraints" />
 
     <TextView
@@ -153,12 +150,9 @@
         android:text="1"
         android:textColor="@color/black"
         android:textSize="10dp"
+        android:gravity="bottom"
         app:layout_constraintBottom_toBottomOf="@+id/cart_item_payment_price"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.777"
-        app:layout_constraintStart_toEndOf="@+id/text_view6"
-        app:layout_constraintTop_toTopOf="@+id/text_view6"
-        app:layout_constraintVertical_bias="0.75"
         tools:ignore="MissingConstraints" />
 
 

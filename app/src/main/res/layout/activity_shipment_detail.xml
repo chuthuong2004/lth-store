@@ -175,7 +175,7 @@
                 tools:ignore="MissingConstraints" />
 
             <EditText
-                android:id="@+id/editTextTextMultiLine"
+                android:id="@+id/text_view_address"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
@@ -198,10 +198,10 @@
                 android:id="@+id/switchCompat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="@+id/editTextTextMultiLine"
+                app:layout_constraintEnd_toEndOf="@+id/text_view_address"
                 android:thumb="@drawable/thumb"
                 app:track="@drawable/track"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+                app:layout_constraintTop_toBottomOf="@+id/text_view_address" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -209,21 +209,22 @@
                 android:text="Đặt làm địa chỉ mặc định"
                 app:layout_constraintBottom_toBottomOf="@+id/switchCompat"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
+                app:layout_constraintTop_toBottomOf="@+id/text_view_address" />
 
             <TextView
+                android:id="@+id/text_view_confirm"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="30dp"
                 android:layout_marginRight="30dp"
-                android:layout_marginBottom="30dp"
                 android:background="@drawable/custom_button_profile"
                 android:gravity="center"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
                 android:text="XÁC NHẬN"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"
                 android:textColor="@color/white"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/spinner_province"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/switchCompat"

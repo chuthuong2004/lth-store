@@ -31,42 +31,45 @@
                 android:src="@drawable/milk" />
         </androidx.cardview.widget.CardView>
 
-        <TextView
-            android:id="@+id/cart_item_name"
-            android:layout_width="227dp"
-            android:layout_height="45dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
-            android:ellipsize="end"
-            android:fontFamily="@font/amethysta"
-            android:gravity="center_vertical"
-            android:maxLines="2"
-            android:padding="3dp"
-            android:text="Áo khoác hoodie xịn xò sang xịn mịnjsdgf sdgjfjsgd fj gsdsdjfg sjd fg sjhdgf"
-            android:textColor="@color/black"
-            android:textSize="14sp"
-            android:textStyle="bold"
+        <LinearLayout
+            android:id="@+id/layout_top"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/cardView3"
             app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="MissingConstraints" />
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            tools:ignore="MissingConstraints">
+
+            <TextView
+                android:id="@+id/cart_item_name"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="@integer/material_motion_duration_long_1"
+                android:ellipsize="end"
+                android:fontFamily="@font/amethysta"
+                android:gravity="center_vertical"
+                android:maxLines="2"
+                android:padding="3dp"
+                android:text="Áo khoác hoodie xịn xò sang xịn mịnjsdgf sdgjfjsgd fj gsdsdjfg sjd fg sjhdgf"
+                android:textColor="@color/black"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/remove_item_from_cart"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="2dp"
+                android:src="@drawable/ic_baseline_close_24"
+                tools:ignore="MissingConstraints" />
+        </LinearLayout>
 
 
-        <ImageView
-            android:id="@+id/remove_item_from_cart"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
-            android:layout_marginLeft="2dp"
-            android:src="@drawable/ic_baseline_close_24"
-            app:layout_constraintBottom_toBottomOf="@+id/cart_item_name"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.812"
-            app:layout_constraintStart_toEndOf="@+id/cart_item_name"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.484"
-            tools:ignore="MissingConstraints" />
+
+
 
         <TextView
             android:id="@+id/title_color_card"
@@ -80,7 +83,7 @@
             android:textSize="12sp"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/cardView3"
-            app:layout_constraintTop_toBottomOf="@+id/cart_item_name"
+            app:layout_constraintTop_toBottomOf="@+id/layout_top"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -96,7 +99,7 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/title_color_card"
             app:layout_constraintStart_toEndOf="@+id/title_color_card"
-            app:layout_constraintTop_toBottomOf="@+id/cart_item_name"
+            app:layout_constraintTop_toBottomOf="@+id/layout_top"
             tools:ignore="MissingConstraints" />
 
         <TextView
@@ -217,8 +220,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Chỉ còn 30 sản phẩm"
-            android:textColor="@color/pink"
-            android:textSize="8dp"
+            android:textColor="@color/red"
+            android:textSize="10dp"
             android:visibility="gone"
             android:layout_marginTop="4dp"
             app:layout_constraintBottom_toBottomOf="parent"

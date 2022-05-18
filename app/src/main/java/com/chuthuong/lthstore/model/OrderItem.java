@@ -2,7 +2,9 @@ package com.chuthuong.lthstore.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class OrderItem {
+import java.io.Serializable;
+
+public class OrderItem implements Serializable {
     @SerializedName("_id")
     private String id;
     private String name;
@@ -12,12 +14,12 @@ public class OrderItem {
     private String size;
     private String color;
     private String image;
-    private Product product;
+    private String product;
 
     public OrderItem() {
     }
 
-    public OrderItem(String id, String name, int price, int discount, int quantity, String size, String color, String image, Product product) {
+    public OrderItem(String id, String name, int price, int discount, int quantity, String size, String color, String image, String product) {
         this.id = id;
         this.name = name;
         this.price = price;
@@ -93,11 +95,11 @@ public class OrderItem {
         this.image = image;
     }
 
-    public Product getProduct() {
+    public String getProduct() {
         return product;
     }
 
-    public void setProduct(Product product) {
+    public void setProduct(String product) {
         this.product = product;
     }
 }

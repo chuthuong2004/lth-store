@@ -21,13 +21,13 @@ public class User implements Serializable {
     private String accessToken;
     private String refreshToken;
     private String avatar;
+    @SerializedName("shipmentDetails")
+    private List<ShipmentDetail> shipmentDetails;
 
     public User() {
     }
 
-    public User(String id, String username, String email, String password, boolean isAdmin,
-                String cart, List<String> reviews, List<String> blogs, List<String> orders,
-                String createdAt, String updatedAt, String accessToken, String refreshToken, String avatar) {
+    public User(String id, String username, String email, String password, boolean isAdmin, String cart, List<String> reviews, List<String> blogs, List<String> orders, String createdAt, String updatedAt, String accessToken, String refreshToken, String avatar, List<ShipmentDetail> shipmentDetails) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -42,6 +42,7 @@ public class User implements Serializable {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.avatar = avatar;
+        this.shipmentDetails = shipmentDetails;
     }
 
     public String getId() {
@@ -156,6 +157,14 @@ public class User implements Serializable {
         this.avatar = avatar;
     }
 
+    public List<ShipmentDetail> getShipmentDetails() {
+        return shipmentDetails;
+    }
+
+    public void setShipmentDetails(List<ShipmentDetail> shipmentDetails) {
+        this.shipmentDetails = shipmentDetails;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -164,7 +173,7 @@ public class User implements Serializable {
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", isAdmin=" + isAdmin +
-                ", cart=" + cart +
+                ", cart='" + cart + '\'' +
                 ", reviews=" + reviews +
                 ", blogs=" + blogs +
                 ", orders=" + orders +
@@ -173,6 +182,7 @@ public class User implements Serializable {
                 ", accessToken='" + accessToken + '\'' +
                 ", refreshToken='" + refreshToken + '\'' +
                 ", avatar='" + avatar + '\'' +
+                ", shipmentDetails=" + shipmentDetails +
                 '}';
     }
 }

@@ -1,25 +1,41 @@
 package com.chuthuong.lthstore.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
-public class OrderShippingInfo implements Serializable {
+public class ShipmentDetail implements Serializable {
+    @SerializedName("_id")
+    private String id;
     private String fullName;
     private String phone;
     private String province;
     private String district;
     private String ward;
     private String address;
+    @SerializedName("isDefault")
+    private boolean isDefault;
 
-    public OrderShippingInfo() {
+    public ShipmentDetail() {
     }
 
-    public OrderShippingInfo(String fullName, String phone, String province, String district, String ward, String address) {
+    public ShipmentDetail(String id, String fullName, String phone, String province, String district, String ward, String address, boolean isDefault) {
+        this.id = id;
         this.fullName = fullName;
         this.phone = phone;
         this.province = province;
         this.district = district;
         this.ward = ward;
         this.address = address;
+        this.isDefault = isDefault;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getFullName() {
@@ -68,5 +84,13 @@ public class OrderShippingInfo implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public boolean isDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
     }
 }

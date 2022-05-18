@@ -2,14 +2,15 @@ package com.chuthuong.lthstore.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Order {
+public class Order implements Serializable {
     @SerializedName("_id")
     private String id;
     private OrderShippingInfo shippingInfo;
     private List<OrderItem> orderItems;
-    private User user;
+    private String user;
     private int taxPrice;
     private int shippingPrice;
     private int totalPrice;
@@ -21,7 +22,7 @@ public class Order {
     public Order() {
     }
 
-    public Order(OrderShippingInfo shippingInfo, List<OrderItem> orderItems, User user, int taxPrice, int shippingPrice, int totalPrice, String createdAt, String updatedAt, String orderStatus, String deliveredAt) {
+    public Order(OrderShippingInfo shippingInfo, List<OrderItem> orderItems, String user, int taxPrice, int shippingPrice, int totalPrice, String createdAt, String updatedAt, String orderStatus, String deliveredAt) {
         this.shippingInfo = shippingInfo;
         this.orderItems = orderItems;
         this.user = user;
@@ -50,11 +51,11 @@ public class Order {
         this.orderItems = orderItems;
     }
 
-    public User getUser() {
+    public String getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(String user) {
         this.user = user;
     }
 
