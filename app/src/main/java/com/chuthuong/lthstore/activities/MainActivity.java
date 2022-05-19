@@ -36,6 +36,8 @@ import com.chuthuong.lthstore.response.CartResponse;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.chuthuong.lthstore.utils.ApiToken;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationBarView;
 import com.google.gson.Gson;
@@ -53,25 +55,25 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
 
 
-    private static User user = null;
+    User user = null;
     String nameSharePreference = "account";
     ImageView avt;
     ArrayAdapter<String> userAdapter;
     Fragment homeFragment, orderFragment, productFragment, profileFragment;
     ViewPager mViewPager;
     BottomNavigationView bottomNavigationView;
-    private CartResponse cartResponse = null;
-
+    CartResponse cartResponse = null;
+    UserReaderSqlite userReaderSqlite;
     TextView quantityCart;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        user = (User) LoginActivity.user;
+        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        Util.refreshToken(this);
         addControls();
         addEvents();
-        showToken();
         homeFragment = new HomeFragment();
         loadFragment(homeFragment);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -111,54 +113,55 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         mViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                Util.refreshToken(MainActivity.this);
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
+                        Util.refreshToken(MainActivity.this);
                         bottomNavigationView.getMenu().findItem(R.id.mnu_home_navigation).setChecked(true);
                         break;
                     case 1:
+                        Util.refreshToken(MainActivity.this);
                         bottomNavigationView.getMenu().findItem(R.id.mnu_product_navigation).setChecked(true);
                         break;
                     case 2:
+                        Util.refreshToken(MainActivity.this);
                         bottomNavigationView.getMenu().findItem(R.id.mnu_order_navigation).setChecked(true);
                         break;
                     case 3:
+                        Util.refreshToken(MainActivity.this);
                         bottomNavigationView.getMenu().findItem(R.id.mnu_profile_navigation).setChecked(true);
                         break;
                 }
             }
 
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                Util.refreshToken(MainActivity.this);
             }
         });
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        SharedPreferences preferences = getSharedPreferences(nameSharePreference, MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("refreshToken", "");
-        editor.putString("accessToken", "");
-        editor.commit(); // xác nhận lưu
-    }
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadFragment(Fragment homeFragment) {
+        Util.refreshToken(MainActivity.this);
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.home_container, homeFragment);
         transaction.commit();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void addControls() {
+        Util.refreshToken(MainActivity.this);
         mViewPager = findViewById(R.id.view_pager_home);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         quantityCart = findViewById(R.id.quantity_cart_toolbar);
@@ -171,94 +174,42 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    public ApiToken getToken(String nameSharePreference) {
-        SharedPreferences preferences = getSharedPreferences(nameSharePreference, MODE_PRIVATE);
-        String refreshToken = preferences.getString("refreshToken", "");
-        String accessToken = preferences.getString("accessToken", "");
-        ApiToken apiToken = new ApiToken(accessToken, refreshToken);
-        return apiToken;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    public void showToken() {
-        ApiToken apiToken = getToken("account");
-        String accessToken = apiToken.getAccessToken();
-        if (accessToken == "") {
-//            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-        } else {
-            Base64.Decoder decoder = Base64.getUrlDecoder();
-            String[] verifyTokens = accessToken.split("\\.");
-            String header = new String(decoder.decode(verifyTokens[0]));
-            String payload = new String(decoder.decode(verifyTokens[1]));
-            String p = payload.split(",")[3];
-            String newPayload = p.substring(0, p.length() - 1);
-            long exp = Long.parseLong(newPayload.split(":")[1]);
-            long date = Calendar.getInstance().getTimeInMillis();
-            Date date1 = new Date(exp);
-            SimpleDateFormat df2 = null;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-                df2 = new SimpleDateFormat("DD/MM/YYYY hh:mm:ss");
-            }
-            String date2 = df2.format(date1);
-        }
-    }
+//    @RequiresApi(api = Build.VERSION_CODES.O)
+//    public void showToken() {
+//        ApiToken apiToken = getToken("account");
+//        String accessToken = apiToken.getAccessToken();
+//        if (accessToken == "") {
+////            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+//        } else {
+//            Base64.Decoder decoder = Base64.getUrlDecoder();
+//            String[] verifyTokens = accessToken.split("\\.");
+//            String header = new String(decoder.decode(verifyTokens[0]));
+//            String payload = new String(decoder.decode(verifyTokens[1]));
+//            String p = payload.split(",")[3];
+//            String newPayload = p.substring(0, p.length() - 1);
+//            long exp = Long.parseLong(newPayload.split(":")[1]);
+//            long date = Calendar.getInstance().getTimeInMillis();
+//            Date date1 = new Date(exp);
+//            SimpleDateFormat df2 = null;
+//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+//                df2 = new SimpleDateFormat("DD/MM/YYYY hh:mm:ss");
+//            }
+//            String date2 = df2.format(date1);
+//        }
+//    }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.mnuChangePassword:
                 Intent intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
-                intent.putExtra("user", user);
                 startActivity(intent);
                 break;
             case R.id.mnuLogout:
-                callApiLogout();
+//                callApiLogout();
                 break;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    private void callApiLogout() {
-        if (user == null) {
-            Intent intentReceiveFromUser = getIntent();
-            user = (User) intentReceiveFromUser.getSerializableExtra("user");
-        }
-        String token = user.getAccessToken();
-        String accessToken = "Bearer " + token;
-        String access = "application/json;versions=1";
-        ApiService.apiService.logoutUser(access, accessToken).enqueue(new Callback<ApiResponse>() {
-            @Override
-            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
-                if (response.isSuccessful()) {
-                    SharedPreferences preferences = getSharedPreferences(nameSharePreference, MODE_PRIVATE);
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString("refreshToken", "");
-                    editor.putString("accessToken", "");
-                    editor.commit(); // xác nhận lưu
-                    setToast(MainActivity.this, response.body().getMessage());
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                } else {
-                    try {
-                        Gson gson = new Gson();
-                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        setToast(MainActivity.this,apiError.getMessage());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse> call, Throwable t) {
-                setToast(MainActivity.this, "Lỗi server !");
-            }
-        });
-    }
-    public static User getUser(){
-        if (user!=null){
-            return user;
-        }
-        return null;
     }
     private void setToast(Activity activity, String msg) {
         Toast toast = new Toast(activity);
@@ -271,8 +222,11 @@ public class MainActivity extends AppCompatActivity {
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.show();
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onRestart() {
         super.onRestart();
+        Util.refreshToken(this);
     }
 }

@@ -28,6 +28,7 @@ import com.chuthuong.lthstore.model.ProductDetail;
 import com.chuthuong.lthstore.model.ProductDetailColor;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
 import com.chuthuong.lthstore.widget.CustomProgressDialog;
 import com.google.gson.Gson;
 
@@ -50,7 +51,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
     private MyCartActivity myCartActivity;
     private CustomProgressDialog dialogUpdate;
     private CustomProgressDialog dialogRemoveItem;
-
+    private UserReaderSqlite userReaderSqlite;
     public MyCartAdapter(Context context, Cart cart) {
         this.context = context;
         this.cart = cart;
@@ -76,7 +77,8 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        user = MainActivity.getUser();
+        userReaderSqlite = new UserReaderSqlite(context, "user.db", null, 1);
+        user = userReaderSqlite.getUser();
         myCartActivity = (MyCartActivity) context;
         CartItem cartItems = cart.getCartItems().get(position);
         Glide.with(context).load(cartItems.getProduct().getImages().get(0).getImg()).into(holder.imgProductItem);

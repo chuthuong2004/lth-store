@@ -1,10 +1,12 @@
 package com.chuthuong.lthstore.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SwitchCompat;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -31,6 +33,8 @@ import com.chuthuong.lthstore.province.Ward;
 import com.chuthuong.lthstore.province.WardAdapter;
 import com.chuthuong.lthstore.response.UserResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -57,11 +61,14 @@ public class ShipmentDetailActivity extends AppCompatActivity {
     private String txtDistrict;
     private String txtWard;
     private ImageView backToHome;
-
+    UserReaderSqlite userReaderSqlite;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_shipment_detail);
+        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        Util.refreshToken(this);
         addControls();
         callApiGetProvince();
         addEvents();
@@ -80,7 +87,7 @@ public class ShipmentDetailActivity extends AppCompatActivity {
                 shipmentDetail.setPhone(phone.getText().toString());
                 shipmentDetail.setProvince(txtProvince);
                 shipmentDetail.setWard(txtWard);
-                callApiAddShipmentDetail(shipmentDetail, "Bearer "+ LoginActivity.user.getAccessToken());
+                callApiAddShipmentDetail(shipmentDetail, "Bearer "+ userReaderSqlite.getUser().getAccessToken());
             }
         });
         back.setOnClickListener(new View.OnClickListener() {
@@ -209,5 +216,13 @@ public class ShipmentDetailActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onRestart() {
+        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        Util.refreshToken(this);
+        super.onRestart();
     }
 }

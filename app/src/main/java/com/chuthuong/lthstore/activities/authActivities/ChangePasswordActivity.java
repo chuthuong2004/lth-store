@@ -1,18 +1,17 @@
 package com.chuthuong.lthstore.activities.authActivities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,7 +20,8 @@ import com.chuthuong.lthstore.activities.MainActivity;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
-import com.chuthuong.lthstore.utils.ShowHidePassword;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -32,7 +32,7 @@ import retrofit2.Response;
 
 public class ChangePasswordActivity extends AppCompatActivity {
     EditText edtCurrentPassword, edtNewPassword, edtConfirmPassword;
-
+    private UserReaderSqlite userReaderSqlite;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,9 +44,9 @@ public class ChangePasswordActivity extends AppCompatActivity {
         edtCurrentPassword = findViewById(R.id.edtCurrentPassword);
         edtNewPassword = findViewById(R.id.edtNewPassword);
         edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
-        ShowHidePassword.showPassword(edtCurrentPassword);
-        ShowHidePassword.showPassword(edtNewPassword);
-        ShowHidePassword.showPassword(edtConfirmPassword);
+        Util.showPassword(edtCurrentPassword);
+        Util.showPassword(edtNewPassword);
+        Util.showPassword(edtConfirmPassword);
     }
     private void setToast(Activity activity, String msg) {
         Toast toast = new Toast(activity);
@@ -59,6 +59,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.show();
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void changePassword(View view) {
         String currentPassword = edtCurrentPassword.getText().toString();
         String newPassword = edtNewPassword.getText().toString();
@@ -76,22 +77,22 @@ public class ChangePasswordActivity extends AppCompatActivity {
 //            Toast.makeText(this, "Vui lòng xác nhận mật khẩu !", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-        callApiChangePassword(currentPassword, newPassword, confirmPassword);
+
+        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        Util.refreshToken(this);
+        User user = userReaderSqlite.getUser();
+        callApiChangePassword(user.getAccessToken(),currentPassword, newPassword, confirmPassword);
     }
 
-    private void callApiChangePassword(String currentPassword, String newPassword, String confirmPassword) {
-        Intent intentReceiveFromUser = getIntent();
-        User user = (User) intentReceiveFromUser.getSerializableExtra("user");
-        String token = user.getAccessToken();
-        String accessToken = "Bearer "+token;
-        String access = "application/json;versions=1";
-        ApiService.apiService.resetPassword(access,accessToken,currentPassword,newPassword,confirmPassword).enqueue(new Callback<ApiResponse>() {
+    private void callApiChangePassword(String accessToken,String currentPassword, String newPassword, String confirmPassword) {
+        String token = "Bearer "+accessToken;
+        String accept = "application/json;versions=1";
+        ApiService.apiService.resetPassword(accept,token,currentPassword,newPassword,confirmPassword).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful()) {
                     setToast(ChangePasswordActivity.this, response.body().getMessage());
                     Intent intent = new Intent(ChangePasswordActivity.this, MainActivity.class);
-                    intent.putExtra("user", user);
                     startActivity(new Intent(intent));
                 } else {
                     try {

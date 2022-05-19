@@ -1,5 +1,6 @@
 package com.chuthuong.lthstore.activities.detailActivities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -9,6 +10,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -29,6 +31,7 @@ import com.chuthuong.lthstore.activities.MyCartActivity;
 import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
 import com.chuthuong.lthstore.adapter.ViewPagerDetailProductAdapter;
 import com.chuthuong.lthstore.api.ApiService;
+import com.chuthuong.lthstore.model.Order;
 import com.chuthuong.lthstore.response.CartResponse;
 import com.chuthuong.lthstore.model.Product;
 import com.chuthuong.lthstore.model.ProductDetail;
@@ -37,6 +40,8 @@ import com.chuthuong.lthstore.model.ProductImage;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.response.ProductResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
 import com.chuthuong.lthstore.widget.CustomProgressDialog;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
@@ -78,17 +83,23 @@ public class ProductDetailActivity extends AppCompatActivity {
     private TextView txtColorProductDetail;
     CustomProgressDialog dialogAddItem,dialogMyCart;
     String productID;
+    private UserReaderSqlite userReaderSqlite;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_detail);
+        setContentView(R.layout.activity_product_detail);userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        Util.refreshToken(this);
         addControls();
         productID = getIntent().getStringExtra("product_id");
         callProduct(productID);
         addEvents();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadProduct(Product product) {
+        Util.refreshToken(ProductDetailActivity.this);
         if (product != null) {
             loadData(product);
             viewPagerDetailProductAdapter = new ViewPagerDetailProductAdapter(this);
@@ -128,8 +139,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void addEvents() {
         imgFavoriteProduct.setOnClickListener(v -> {
+            Util.refreshToken(ProductDetailActivity.this);
             if (user != null) {
                 setToast(ProductDetailActivity.this,"Chức năng yêu thích sản phẩm đang cập nhật !");
             } else {
@@ -137,6 +150,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
         chatWithShop.setOnClickListener(v -> {
+            Util.refreshToken(ProductDetailActivity.this);
             if (user != null) {
                 setToast(ProductDetailActivity.this,"Chức năng chat với shop đang cập nhật !");
             } else {
@@ -144,6 +158,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
         addToCart.setOnClickListener(v -> {
+            Util.refreshToken(ProductDetailActivity.this);
             if (user != null) {
                 String size = product.getDetail().get(0).getSize();
                 String color = product.getDetail().get(0).getDetailColor().get(0).getColor();
@@ -158,6 +173,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         buyNow.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Util.refreshToken(ProductDetailActivity.this);
                 if (user != null) {
                     setToast(ProductDetailActivity.this,"Chức năng mua ngay đang cập nhật !");
                 } else {
@@ -168,13 +184,13 @@ public class ProductDetailActivity extends AppCompatActivity {
         imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Util.refreshToken(ProductDetailActivity.this);
                 if (user == null) {
                     openDialogRequestLogin();
                 }
                 // xử lý render cart
                 else {
                     Intent intent = new Intent(ProductDetailActivity.this, MyCartActivity.class);
-                    intent.putExtra("my_cart", cartResponse);
                     intent.putExtra("title_my_cart", getResources().getString(R.string.strTitleMyCart));
                     startActivity(intent);
                 }
@@ -211,7 +227,6 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(ProductDetailActivity.this, LoginActivity.class);
-                intent.putExtra("intent", "ProductActivity");
                 startActivity(intent);
             }
         });
@@ -221,28 +236,37 @@ public class ProductDetailActivity extends AppCompatActivity {
         ImageView imgBack, imgSearch, imgHome;
         imgBack = findViewById(R.id.img_back_detail_toolbar);
         imgBack.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                Util.refreshToken(ProductDetailActivity.this);
+
                 onBackPressed();
             }
         });
         imgSearch = findViewById(R.id.search_img_toolbar);
         imgSearch.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                Util.refreshToken(ProductDetailActivity.this);
                 setToast(ProductDetailActivity.this, "Chức năng tìm kiếm đang cập nhật !");
             }
         });
 
         imgHome = findViewById(R.id.home_img_toolbar);
         imgHome.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                Util.refreshToken(ProductDetailActivity.this);
                 startActivity(new Intent(ProductDetailActivity.this, MainActivity.class));
             }
         });
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadData(Product product) {
+        Util.refreshToken(ProductDetailActivity.this);
         loadCart();
         List<ProductImage> productImages = product.getImages();
         // image slider
@@ -291,6 +315,7 @@ public class ProductDetailActivity extends AppCompatActivity {
                 @Override
 
                 public void onClick(View v) {
+                    Util.refreshToken(ProductDetailActivity.this);
                     count++;
                     if (count > 1) {
                         txtSize.setTextColor(getResources().getColor(R.color.pink));
@@ -305,8 +330,10 @@ public class ProductDetailActivity extends AppCompatActivity {
             });
         }
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadCart() {
         if (user != null) {
+            Util.refreshToken(ProductDetailActivity.this);
             dialogMyCart = new CustomProgressDialog(ProductDetailActivity.this);
             callApiGetMyCart("Bearer " + user.getAccessToken());
         }
@@ -390,6 +417,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     }
     private void callApiGetProduct(String id) {
         ApiService.apiService.getProduct(id).enqueue(new Callback<ProductResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -414,8 +442,11 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void callProduct(String id) {
+        Util.refreshToken(ProductDetailActivity.this);
         if(id!=null) {
+
             callApiGetProduct(id);
         }
     }
@@ -438,14 +469,18 @@ public class ProductDetailActivity extends AppCompatActivity {
         imgCart = findViewById(R.id.cart_img_toolbar);
         quantityCart = findViewById(R.id.quantity_cart_toolbar);
         txtColorProductDetail = findViewById(R.id.txt_color_product_detail);
-        user = MainActivity.getUser();
+
+        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        user = userReaderSqlite.getUser();
     }
     public Product getProduct() {
         return product;
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onStart() {
         super.onStart();
+        Util.refreshToken(this);
         callProduct(productID);
         loadCart();
     }

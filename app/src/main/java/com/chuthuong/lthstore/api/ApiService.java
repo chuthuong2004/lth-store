@@ -13,6 +13,7 @@ import com.chuthuong.lthstore.response.OrderResponse;
 import com.chuthuong.lthstore.response.ProductResponse;
 import com.chuthuong.lthstore.response.UserResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.utils.ApiToken;
 import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -78,13 +79,12 @@ public interface ApiService {
 
     // Đăng xuất
     @POST("auth/logout")
-    Call<ApiResponse> logoutUser(@Header("Accept") String accept,
-                                 @Header("token") String token);
+    Call<ApiResponse> logoutUser(@Header("token") String token);
 
     // Refresh token
     @FormUrlEncoded
     @POST("auth/refresh")
-    Call<ApiResponse> refreshToken(@Field("refreshToken") String refreshToken);
+    Call<ApiToken> refreshToken(@Field("refreshToken") String refreshToken);
 
     // Get All Category
     @GET("categories")

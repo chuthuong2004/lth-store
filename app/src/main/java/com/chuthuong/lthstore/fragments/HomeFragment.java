@@ -7,9 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.widget.SearchView;
 import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -44,6 +46,8 @@ import com.chuthuong.lthstore.response.ListCategoryResponse;
 import com.chuthuong.lthstore.response.ListProductResponse;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
 import com.denzcoskun.imageslider.ImageSlider;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.models.SlideModel;
@@ -85,8 +89,7 @@ public class HomeFragment extends Fragment {
     ListProductResponse popularProductList;
     User user;
     CartResponse cartResponse =null;
-
-
+    UserReaderSqlite userReaderSqlite;
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -121,8 +124,11 @@ public class HomeFragment extends Fragment {
 
     private void addEvents() {
         categoryShowAll.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+
+                Util.refreshToken(getActivity());
 //                Intent intent = new Intent(getContext(), ShowAllActivity.class);
 //                intent.putExtra("list_see_all", categoryList);
 //                startActivity(intent);
@@ -130,8 +136,10 @@ public class HomeFragment extends Fragment {
             }
         });
         newProductShowALl.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                Util.refreshToken(getActivity());
                 Intent intent = new Intent(getContext(), ShowAllActivity.class);
                 intent.putExtra("list_see_all", newProductList);
                 intent.putExtra("title_see_all", getResources().getString(R.string.strTitleNewProducts));
@@ -139,8 +147,10 @@ public class HomeFragment extends Fragment {
             }
         });
         flashSaleProductShowAll.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                Util.refreshToken(getActivity());
                 Intent intent = new Intent(getContext(), ShowAllActivity.class);
                 intent.putExtra("list_see_all", flashSaleProductList);
                 intent.putExtra("title_see_all", getResources().getString(R.string.strTitleFlashSaleProducts));
@@ -148,8 +158,10 @@ public class HomeFragment extends Fragment {
             }
         });
         popularProductShowAll.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                Util.refreshToken(getActivity());
                 Intent intent = new Intent(getContext(), ShowAllActivity.class);
                 intent.putExtra("list_see_all", popularProductList);
                 intent.putExtra("title_see_all", getResources().getString(R.string.strTitlePopularProduct));
@@ -157,8 +169,11 @@ public class HomeFragment extends Fragment {
             }
         });
         imgCart.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+
+                Util.refreshToken(getActivity());
                 if (user == null) {
                     openDialogRequestLogin();
                 }
@@ -195,8 +210,12 @@ public class HomeFragment extends Fragment {
         TextView cancel = dialog.findViewById(R.id.dialog_cancel);
         TextView login = dialog.findViewById(R.id.dialog_login);
         cancel.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+
+                Util.refreshToken(getActivity());
+
                 dialog.dismiss();
             }
         });
@@ -209,10 +228,14 @@ public class HomeFragment extends Fragment {
         dialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        user = MainActivity.getUser();
+        userReaderSqlite = new UserReaderSqlite(getActivity(), "user.db", null, 1);
+
+        Util.refreshToken(getActivity());
+        user = userReaderSqlite.getUser();
         loadCart();
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_home, container, false);
@@ -241,14 +264,20 @@ public class HomeFragment extends Fragment {
         categoryList = new ListCategoryResponse();
 //        categoryAdapter = new CategoryAdapter(getContext(), categoryList);
 //        catRecyclerView.setAdapter(categoryAdapter)
+
+        Util.refreshToken(getActivity());
         callApiGetAllCategories();
 
         // new Products
         newProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+
+        Util.refreshToken(getActivity());
         callApiGetAllNewProducts();
 
         // Flash Sale Products
         flashSaleProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+
+        Util.refreshToken(getActivity());
         callApiGetAllFlashSaleProducts();
 
         // popular products
@@ -256,15 +285,18 @@ public class HomeFragment extends Fragment {
 //        popularProductList = new ListProductResponse();
 //        popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
 //        popularRecycleView.setAdapter(popularProductAdapter);
+        Util.refreshToken(getActivity());
         callApiGetAllPopularProducts();
 
         SearchView searchView = root.findViewById(R.id.search_view_home);
         CardView cardView = root.findViewById(R.id.card_view_search_home);
         TextView textView = root.findViewById(R.id.text_view_hint_search);
+        Util.refreshToken(getActivity());
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
+                Util.refreshToken(getActivity());
                 searchView.setIconified(false);
                 textView.setVisibility(View.GONE);
 //                getActivity().onSearchRequested();
@@ -273,6 +305,7 @@ public class HomeFragment extends Fragment {
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
+                Util.refreshToken(getActivity());
                 textView.setVisibility(View.VISIBLE);
                 return false;
             }
@@ -280,7 +313,9 @@ public class HomeFragment extends Fragment {
         return root;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadCart() {
+        Util.refreshToken(getActivity());
         if (user != null) {
             callApiGetMyCart("Bearer " + user.getAccessToken());
         }

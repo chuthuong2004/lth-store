@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.PersonalInforActivity">
+
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/custom_toolbar_personal_information"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image_personal_information"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/img_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/textView24"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:paddingLeft="10dp"
+        android:text="Thông tin cá nhân: "
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image_personal_information"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView26"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Họ và tên: "
+        android:paddingLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView24"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_user_name_personal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/textView26"
+        app:layout_constraintStart_toEndOf="@+id/textView26"
+        app:layout_constraintTop_toTopOf="@+id/textView26"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/textView27"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Tuổi: "
+        android:paddingLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView26"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_age_personal_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/textView27"
+        app:layout_constraintStart_toEndOf="@+id/textView27"
+        app:layout_constraintTop_toTopOf="@+id/textView27"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView28"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Giới tính: "
+        android:paddingLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView27"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_gender_personal_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/textView28"
+        app:layout_constraintStart_toEndOf="@+id/textView28"
+        app:layout_constraintTop_toTopOf="@+id/textView28"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/textView29"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:text="Thông tin tài khoản: "
+        android:textSize="18dp"
+        android:paddingLeft="10dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView28"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/textView31"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Phone: "
+        android:paddingLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView29"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_number_phone_personal_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/textView31"
+        app:layout_constraintStart_toEndOf="@+id/textView31"
+        app:layout_constraintTop_toTopOf="@+id/textView31"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/textView32"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Email: "
+        android:paddingLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView31"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_email_personal_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/textView32"
+        app:layout_constraintStart_toEndOf="@+id/textView32"
+        app:layout_constraintTop_toTopOf="@+id/textView32"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView33"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:text="Địa chỉ: "
+        android:paddingLeft="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView32"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_address_personal_information"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="@+id/textView33"
+        app:layout_constraintStart_toEndOf="@+id/textView33"
+        app:layout_constraintTop_toTopOf="@+id/textView33"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/txt_password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:drawableRight="@drawable/ic_baseline_arrow_right_24"
+        android:gravity="left|center"
+        android:text="Mật khẩu: "
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView33" />
+
+
+    <TextView
+        android:id="@+id/txt_edit_personal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/custom_button_profile"
+        android:drawableRight="@drawable/ic_baseline_edit_note_24"
+        android:gravity="center"
+        android:layout_marginLeft="50dp"
+        android:paddingTop="10dp"
+        android:textSize="18sp"
+        android:paddingBottom="10dp"
+        android:text="Chỉnh sửa "
+        android:layout_marginBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="MissingConstraints" >
+    </TextView>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

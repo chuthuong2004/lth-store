@@ -1,5 +1,6 @@
 package com.chuthuong.lthstore.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -30,6 +32,8 @@ import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.response.OrderResponse;
 import com.chuthuong.lthstore.response.UserResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -55,12 +59,16 @@ public class PaymentActivity extends AppCompatActivity {
     private ShipmentDetail shipmentDetail;
     private int priceShipping;
     private int quantityPriceCart;
+    private UserReaderSqlite userReaderSqlite;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_payment);
-        callApiMyAccount("Bearer " + LoginActivity.user.getAccessToken());
+        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        Util.refreshToken(this);
+        callApiMyAccount("Bearer " + userReaderSqlite.getUser().getAccessToken());
         addControls();
         addEvents();
         recyclerViewPaymentCart.setLayoutManager(new LinearLayoutManager(PaymentActivity.this));
@@ -79,7 +87,7 @@ public class PaymentActivity extends AppCompatActivity {
                 if (layoutShipment.getVisibility() == View.GONE) {
                     startActivity(new Intent(PaymentActivity.this, ShipmentDetailActivity.class));
                 } else {
-                    callApiCreateOrder("Bearer "+LoginActivity.user.getAccessToken(), shipmentDetail, false,priceShipping );
+                    callApiCreateOrder("Bearer "+userReaderSqlite.getUser().getAccessToken(), shipmentDetail, false,priceShipping );
                 }
 
             }
@@ -267,15 +275,18 @@ public class PaymentActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onStart() {
         super.onStart();
-        callApiMyAccount("Bearer " + LoginActivity.user.getAccessToken());
+        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        Util.refreshToken(this);
+        callApiMyAccount("Bearer " + userReaderSqlite.getUser().getAccessToken());
     }
 
     private void getMyCart() {
         if (user != null) {
-            callApiGetMyCart("Bearer " + LoginActivity.user.getAccessToken());
+            callApiGetMyCart("Bearer " + userReaderSqlite.getUser().getAccessToken());
         }
     }
 

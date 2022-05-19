@@ -3,11 +3,9 @@ package com.chuthuong.lthstore.activities.authActivities;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
-import android.app.IntentService;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +20,8 @@ import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.model.Account;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
-import com.chuthuong.lthstore.utils.ShowHidePassword;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -34,8 +33,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     EditText edtUsername, edtPassword;
     String nameSharePreference = "account";
-    public static User user = null;
-
+    private UserReaderSqlite userReaderSqlite;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +48,7 @@ public class LoginActivity extends AppCompatActivity {
         edtUsername = findViewById(R.id.edtUsername);
         edtPassword = findViewById(R.id.edtPassword);
         // show password
-        ShowHidePassword.showPassword(edtPassword);
+        Util.showPassword(edtPassword);
     }
 
     public void signIn(View view) {
@@ -74,16 +72,14 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<User> call, Response<User> response) {
                 if (response.isSuccessful()) {
-                    User newUser = response.body();
-                    user = newUser;
-                    saveAccount(username, password, newUser.getRefreshToken(), newUser.getAccessToken());
+                    User user = response.body();
+                    userReaderSqlite = new UserReaderSqlite(LoginActivity.this, "user.db", null, 1);
+                    userReaderSqlite.insertUser(user);
+                    saveAccount(username, password);
                     setToast(LoginActivity.this,"Đăng nhập thành công !");
-                    Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                    intent.putExtra("user", user);
-                    startActivity(intent);
-
-//                    startActivity(Intent.getIntent());
                     finish();
+                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+
 //                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_animation);
                 } else {
                     try {
@@ -103,13 +99,11 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    public void saveAccount(String username, String password, String refreshToken, String accessToken) {
+    public void saveAccount(String username, String password) {
         SharedPreferences preferences = getSharedPreferences(nameSharePreference, MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putString("username", username);
         editor.putString("password", password);
-        editor.putString("refreshToken", refreshToken);
-        editor.putString("accessToken", accessToken);
         editor.commit(); // xác nhận lưu
     }
 

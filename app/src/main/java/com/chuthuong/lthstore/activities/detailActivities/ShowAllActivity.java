@@ -1,5 +1,6 @@
 package com.chuthuong.lthstore.activities.detailActivities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -12,6 +13,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,6 +36,8 @@ import com.chuthuong.lthstore.response.CartResponse;
 import com.chuthuong.lthstore.response.ListProductResponse;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -51,11 +55,14 @@ public class ShowAllActivity extends AppCompatActivity {
     private CartResponse cartResponse;
     private ImageView imgCart;
     private TextView quantityCart;
+    private UserReaderSqlite userReaderSqlite;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_all);
+
         addControls();
         addEvents();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
@@ -73,6 +80,7 @@ public class ShowAllActivity extends AppCompatActivity {
         ImageView imgBack, imgSearch;
         imgBack = findViewById(R.id.img_back_detail);
         imgBack.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
                 onBackPressed();
@@ -96,6 +104,7 @@ public class ShowAllActivity extends AppCompatActivity {
         });
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void addEvents() {
         imgCart.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,12 +116,13 @@ public class ShowAllActivity extends AppCompatActivity {
                 else {
                     // start vô cart
                     Intent intent = new Intent(ShowAllActivity.this, MyCartActivity.class);
-                    intent.putExtra("my_cart", cartResponse);
                     intent.putExtra("title_my_cart", getResources().getString(R.string.strTitleMyCart));
                     startActivity(intent);
                 }
             }
         });
+
+        Util.refreshToken(ShowAllActivity.this);
         loadCart();
     }
 
@@ -153,19 +163,26 @@ public class ShowAllActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void addControls() {
-        user = MainActivity.getUser();
+        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
         quantityCart = findViewById(R.id.quantity_cart_toolbar);
         imgCart = findViewById(R.id.cart_img_toolbar);
         recyclerView = findViewById(R.id.show_all_rec);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBackPressed() {
+        Util.refreshToken(ShowAllActivity.this);
         super.onBackPressed();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadCart() {
+        Util.refreshToken(ShowAllActivity.this);
         if (user != null) {
             callApiGetMyCart("Bearer " + user.getAccessToken());
         }
@@ -213,9 +230,11 @@ public class ShowAllActivity extends AppCompatActivity {
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.show();
     }
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onStart() {
         super.onStart();
+        Util.refreshToken(this);
         loadCart();
     }
 }

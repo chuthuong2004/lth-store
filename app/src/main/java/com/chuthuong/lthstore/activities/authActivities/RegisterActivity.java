@@ -6,12 +6,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.text.InputType;
-import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -22,7 +18,7 @@ import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.OnBoardingActivity;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.utils.ApiResponse;
-import com.chuthuong.lthstore.utils.ShowHidePassword;
+import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -60,7 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         }
-        ShowHidePassword.showPassword(edtPassword);
+        Util.showPassword(edtPassword);
     }
 
     public void signUpRegisterClicked(View view) {
@@ -105,6 +101,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     setToast(RegisterActivity.this, response.body().getMessage());
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+                    finish();
                 } else {
                     try {
                         Gson gson = new Gson();
@@ -125,6 +122,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     public void signInRegisterClicked(View view) {
         startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
+        finish();
     }
 
 }

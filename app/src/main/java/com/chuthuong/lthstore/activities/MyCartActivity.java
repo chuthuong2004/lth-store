@@ -1,5 +1,6 @@
 package com.chuthuong.lthstore.activities;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -23,6 +25,8 @@ import com.chuthuong.lthstore.model.Cart;
 import com.chuthuong.lthstore.response.CartResponse;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -42,13 +46,17 @@ public class MyCartActivity extends AppCompatActivity {
     CartResponse cartResponse = null;
     private User user = null;
     private Cart cart = null;
+    private UserReaderSqlite userReaderSqlite;
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_cart);
-        user = MainActivity.getUser();
-        Intent intent = getIntent();
-        String title = intent.getStringExtra("title_my_cart");
+
+        userReaderSqlite = new UserReaderSqlite(MyCartActivity.this, "user.db", null, 1);
+        Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
+        String title = getIntent().getStringExtra("title_my_cart");
         addControls();
         addEvents();
         loadCart();
@@ -104,9 +112,12 @@ public class MyCartActivity extends AppCompatActivity {
     }
 
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onStart() {
         super.onStart();
+        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        Util.refreshToken(this);
         loadCart();
 
     }
