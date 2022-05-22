@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.ShipmentDetailActivity">
+    tools:context=".activities.shipmentActivities.ShipmentDetailActivity">
 
     <include
         android:id="@+id/toolbar"
@@ -125,6 +125,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
 
             <TextView
                 android:id="@+id/textView15"

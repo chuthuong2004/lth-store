@@ -7,8 +7,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/custom_edit_text"
-        android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
-        android:drawableTint="@color/white"
         android:text="Thành phố Hồ Chí Minh"
         android:paddingLeft="10dp"
         android:gravity="center_vertical"

@@ -178,7 +178,7 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <TextView
-                        android:id="@+id/txt_number_address"
+                        android:id="@+id/txt_list_address"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
@@ -193,6 +193,7 @@
                         android:text="Số địa chỉ" />
 
                     <TextView
+                        android:id="@+id/voucher"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/line_top"
@@ -202,7 +203,7 @@
                         android:drawableTint="@color/black"
                         android:gravity="left|center"
                         android:paddingTop="5dp"
-                        android:text="De Closet Voucher" />
+                        android:text="Voucher" />
 
                     <TextView
                         android:layout_width="match_parent"
@@ -254,6 +255,7 @@
                         android:gravity="center"
                         android:paddingTop="5dp"
                         android:paddingBottom="5dp"
+                        android:visibility="gone"
                         android:text="ĐĂNG XUẤT"
                         android:textColor="@color/white"
                         android:textSize="18sp"

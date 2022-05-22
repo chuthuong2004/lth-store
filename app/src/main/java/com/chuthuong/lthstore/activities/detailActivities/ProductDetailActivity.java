@@ -89,8 +89,10 @@ public class ProductDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_detail);userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        setContentView(R.layout.activity_product_detail);
+        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
         Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
         addControls();
         productID = getIntent().getStringExtra("product_id");
         callProduct(productID);
@@ -100,6 +102,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadProduct(Product product) {
         Util.refreshToken(ProductDetailActivity.this);
+        user = userReaderSqlite.getUser();
         if (product != null) {
             loadData(product);
             viewPagerDetailProductAdapter = new ViewPagerDetailProductAdapter(this);
@@ -143,6 +146,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void addEvents() {
         imgFavoriteProduct.setOnClickListener(v -> {
             Util.refreshToken(ProductDetailActivity.this);
+            user = userReaderSqlite.getUser();
             if (user != null) {
                 setToast(ProductDetailActivity.this,"Chức năng yêu thích sản phẩm đang cập nhật !");
             } else {
@@ -151,6 +155,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
         chatWithShop.setOnClickListener(v -> {
             Util.refreshToken(ProductDetailActivity.this);
+            user = userReaderSqlite.getUser();
             if (user != null) {
                 setToast(ProductDetailActivity.this,"Chức năng chat với shop đang cập nhật !");
             } else {
@@ -159,7 +164,10 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
         addToCart.setOnClickListener(v -> {
             Util.refreshToken(ProductDetailActivity.this);
+            user = userReaderSqlite.getUser();
             if (user != null) {
+                Util.refreshToken(ProductDetailActivity.this);
+                user = userReaderSqlite.getUser();
                 String size = product.getDetail().get(0).getSize();
                 String color = product.getDetail().get(0).getDetailColor().get(0).getColor();
                  dialogAddItem= new CustomProgressDialog(ProductDetailActivity.this);
@@ -174,6 +182,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Util.refreshToken(ProductDetailActivity.this);
+                user = userReaderSqlite.getUser();
                 if (user != null) {
                     setToast(ProductDetailActivity.this,"Chức năng mua ngay đang cập nhật !");
                 } else {
@@ -185,6 +194,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Util.refreshToken(ProductDetailActivity.this);
+                user = userReaderSqlite.getUser();
                 if (user == null) {
                     openDialogRequestLogin();
                 }
@@ -240,7 +250,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Util.refreshToken(ProductDetailActivity.this);
-
+                user = userReaderSqlite.getUser();
                 onBackPressed();
             }
         });
@@ -267,6 +277,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadData(Product product) {
         Util.refreshToken(ProductDetailActivity.this);
+        user = userReaderSqlite.getUser();
         loadCart();
         List<ProductImage> productImages = product.getImages();
         // image slider
@@ -334,6 +345,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     private void loadCart() {
         if (user != null) {
             Util.refreshToken(ProductDetailActivity.this);
+            user = userReaderSqlite.getUser();
             dialogMyCart = new CustomProgressDialog(ProductDetailActivity.this);
             callApiGetMyCart("Bearer " + user.getAccessToken());
         }
@@ -445,6 +457,7 @@ public class ProductDetailActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void callProduct(String id) {
         Util.refreshToken(ProductDetailActivity.this);
+        user = userReaderSqlite.getUser();
         if(id!=null) {
 
             callApiGetProduct(id);
@@ -481,7 +494,16 @@ public class ProductDetailActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
         callProduct(productID);
         loadCart();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
     }
 }

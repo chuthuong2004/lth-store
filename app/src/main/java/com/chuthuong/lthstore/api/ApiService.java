@@ -18,8 +18,10 @@ import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import java.io.File;
 import java.util.List;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -29,8 +31,10 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Headers;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -137,10 +141,25 @@ public interface ApiService {
     Call<UserResponse> getMyAccount(@Header("Accept") String accept,
                                     @Header("token") String token);
 
+    // get profile
+    @Multipart
+    @PUT("me/update")
+    Call<UserResponse> updateAvatar(@Header("token") String token, @Part MultipartBody.Part avatar);
+
+
     @POST("me/shipment-detail")
     Call<UserResponse> addShipmentDetail(@Header("Accept") String accept,
                                          @Header("token") String token,
                                          @Body ShipmentDetail shipmentDetail);
+    @PUT("me/shipment-detail/{id}")
+    Call<UserResponse> updateShipment(
+            @Header("token") String token,
+            @Path("id") String shipmentID,
+            @Body ShipmentDetail shipmentDetail);
+    @PUT("me/shipment-detail/remove/{id}")
+    Call<UserResponse> removeShipment(
+            @Header("token") String token,
+            @Path("id") String shipmentID);
 
     @FormUrlEncoded
     @POST("order/new")

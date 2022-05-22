@@ -7,7 +7,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,12 +18,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chuthuong.lthstore.R;
-import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
+import com.chuthuong.lthstore.activities.shipmentActivities.ListShipmentDetailActivity;
+import com.chuthuong.lthstore.activities.shipmentActivities.ShipmentDetailActivity;
 import com.chuthuong.lthstore.adapter.MyPaymentAdapter;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.model.Cart;
@@ -52,7 +54,7 @@ public class PaymentActivity extends AppCompatActivity {
     TextView txtNamePayment, txtPhonePayment, txtAddressPayment, txtProvincePayment;
     ImageView editShipmentDetail;
     CardView layoutShipment;
-    User user;
+    User user, userToken;
     Cart cart = null;
     private CartResponse cartResponse;
     private ImageView back;
@@ -68,7 +70,8 @@ public class PaymentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_payment);
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
         Util.refreshToken(this);
-        callApiMyAccount("Bearer " + userReaderSqlite.getUser().getAccessToken());
+        userToken = userReaderSqlite.getUser();
+        callApiMyAccount("Bearer " + userToken.getAccessToken());
         addControls();
         addEvents();
         recyclerViewPaymentCart.setLayoutManager(new LinearLayoutManager(PaymentActivity.this));
@@ -95,7 +98,9 @@ public class PaymentActivity extends AppCompatActivity {
         editShipmentDetail.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setToast(PaymentActivity.this, "Chuyển sang sổ địa chỉ !");
+                Intent intent = new Intent(PaymentActivity.this, ListShipmentDetailActivity.class);
+                intent.putExtra("change_address", true);
+                startActivity(intent);
             }
         });
     }
@@ -149,11 +154,15 @@ public class PaymentActivity extends AppCompatActivity {
     private void callApiMyAccount(String token) {
         String accept = "application/json;versions=1";
         ApiService.apiService.getMyAccount(accept, token).enqueue(new Callback<UserResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                 if (response.isSuccessful()) {
                     UserResponse userResponse = response.body();
                     user = userResponse.getUser();
+
+                    Util.refreshToken(PaymentActivity.this);
+                    userToken = userReaderSqlite.getUser();
                     getMyCart();
                     setShipmentDetail();
                 } else {
@@ -174,16 +183,27 @@ public class PaymentActivity extends AppCompatActivity {
         });
 
     }
-
     private void setShipmentDetail() {
+        SharedPreferences preferences = getSharedPreferences("shipment_detail", MODE_PRIVATE);
+        String shipmentID = preferences.getString("shipment_id", "");
+
         NumberFormat formatter = new DecimalFormat("#,###");
-        shipmentDetail = findDefaultShipmentDetail(user);
+
+        if(shipmentID!="") {
+            for (int i = 0; i < user.getShipmentDetails().size(); i++) {
+                if(user.getShipmentDetails().get(i).getId().equals(shipmentID)) {
+                    shipmentDetail = user.getShipmentDetails().get(i);
+                    break;
+                }
+            }
+        }else {
+            shipmentDetail = findDefaultShipmentDetail(user);
+        }
         if (shipmentDetail == null) {
             shippingPrice.setText("0đ");
             layoutShipment.setVisibility(View.GONE);
         } else {
             priceShipping = getShippingPrice(shipmentDetail.getProvince(), shipmentDetail.getWard());
-
             String formatterPriceShipping = formatter.format(priceShipping);
             shippingPrice.setText(formatterPriceShipping + "đ");
             layoutShipment.setVisibility(View.VISIBLE);
@@ -279,13 +299,24 @@ public class PaymentActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
         Util.refreshToken(this);
-        callApiMyAccount("Bearer " + userReaderSqlite.getUser().getAccessToken());
+        userToken = userReaderSqlite.getUser();
+        callApiMyAccount("Bearer " + userToken.getAccessToken());
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Util.refreshToken(this);
+        userToken = userReaderSqlite.getUser();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void getMyCart() {
         if (user != null) {
+            Util.refreshToken(this);
+            userToken = userReaderSqlite.getUser();
             callApiGetMyCart("Bearer " + userReaderSqlite.getUser().getAccessToken());
         }
     }
@@ -300,5 +331,14 @@ public class PaymentActivity extends AppCompatActivity {
         toast.setGravity(Gravity.CENTER, 0, 0);
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        SharedPreferences preferences2 = getSharedPreferences("shipment_detail", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences2.edit();
+        editor.putString("shipment_id", "");
+        editor.commit(); // xác nhận lưu
     }
 }

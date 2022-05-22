@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -54,7 +55,7 @@ import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
-
+    int i = 0;
     User user = null;
     String nameSharePreference = "account";
     ImageView avt;
@@ -71,14 +72,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
-        Util.refreshToken(this);
         addControls();
         addEvents();
         homeFragment = new HomeFragment();
+        Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
         loadFragment(homeFragment);
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getSupportFragmentManager(), FragmentStatePagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mViewPager.setAdapter(viewPagerAdapter);
         mViewPager.setOffscreenPageLimit(3); //só lượng page load
+
     }
 
     private void addEvents() {
@@ -153,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadFragment(Fragment homeFragment) {
         Util.refreshToken(MainActivity.this);
+        user = userReaderSqlite.getUser();
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.replace(R.id.home_container, homeFragment);
@@ -162,6 +166,7 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void addControls() {
         Util.refreshToken(MainActivity.this);
+        user = userReaderSqlite.getUser();
         mViewPager = findViewById(R.id.view_pager_home);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         quantityCart = findViewById(R.id.quantity_cart_toolbar);
@@ -226,7 +231,14 @@ public class MainActivity extends AppCompatActivity {
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onRestart() {
-        super.onRestart();
         Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
+        super.onRestart();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 }

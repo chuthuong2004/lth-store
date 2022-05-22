@@ -53,7 +53,7 @@ public class Util {
         });
     }
     @RequiresApi(api = Build.VERSION_CODES.O)
-    public static void refreshToken(Context context){
+    public static boolean refreshToken(Context context){
         userReaderSqlite = new UserReaderSqlite(context, "user.db", null, 1);
         user = userReaderSqlite.getUser();
         if (user == null) {
@@ -70,8 +70,10 @@ public class Util {
             long exp = Long.parseLong(newPayload.split(":")[1]);
             if (exp < currentSecond) {
                 callApiRefreshToken(user.getRefreshToken());
+                return true;
             }
         }
+        return false;
     }
 
     private static void callApiRefreshToken(String refreshToken) {
@@ -83,6 +85,7 @@ public class Util {
                     user.setAccessToken(apiToken.getAccessToken());
                     user.setRefreshToken(apiToken.getRefreshToken());
                     userReaderSqlite.updateUser(user);
+                    Log.e( "onResponse: ", "Đã refresh");
                 }
                 else     {
                     try {

@@ -193,7 +193,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-//                        Log.e("Lỗi",response.errorBody()+"");
+                        dialogUpdate.dismiss();
                         setToast(context.getApplicationContext(), apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();

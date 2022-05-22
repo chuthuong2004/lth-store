@@ -1,9 +1,10 @@
 package com.chuthuong.lthstore.fragments;
 
 import android.app.Activity;
-import android.content.Context;
+import android.app.Dialog;
 import android.content.Intent;
-import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -13,13 +14,16 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
-import com.chuthuong.lthstore.activities.ListShipmentDetailActivity;
+import com.chuthuong.lthstore.activities.detailActivities.ProductDetailActivity;
+import com.chuthuong.lthstore.activities.shipmentActivities.ListShipmentDetailActivity;
 import com.chuthuong.lthstore.activities.MainActivity;
 import com.chuthuong.lthstore.activities.PersonalInforActivity;
 import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
@@ -39,12 +43,14 @@ import retrofit2.Response;
 
 public class ProfileFragment extends Fragment {
 
-    TextView txtNameUserProfile, btnLogout,btnLogin,txtHello, txtNumberAddress ;
+    TextView txtNameUserProfile, btnLogout,btnLogin,txtHello, txtListShipment ;
     ImageView imageUserProfile;
     User user = null ;
     String accessToken ;
     String nameSharePreference = "account";
     private UserReaderSqlite userReaderSqlite;
+    private TextView txtVoucher;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -60,6 +66,17 @@ public class ProfileFragment extends Fragment {
     }
 
     private void addEvents() {
+        txtVoucher.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(user==null) {
+                    openDialogRequestLogin();
+
+                }else {
+                    setToast(getActivity(), "Tôi đang cố gắng cập nhật tính năng voucher của bạn !");
+                }
+            }
+        });
         imageUserProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,13 +105,54 @@ public class ProfileFragment extends Fragment {
                 startActivity(new Intent(getActivity(),LoginActivity.class));
             }
         });
-        txtNumberAddress.setOnClickListener(new View.OnClickListener() {
+        txtListShipment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ListShipmentDetailActivity.class));
+                if(user==null) {
+                    openDialogRequestLogin();
+                }else {
+
+                    startActivity(new Intent(getActivity(), ListShipmentDetailActivity.class));
+                }
             }
         });
 
+    }
+
+    private void openDialogRequestLogin() {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_login);
+        Window window = dialog.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = Gravity.CENTER;
+        window.setAttributes(windowAttributes);
+        if (Gravity.CENTER == Gravity.CENTER) {
+            dialog.setCancelable(true);
+        } else {
+            dialog.setCancelable(false);
+        }
+        TextView cancel = dialog.findViewById(R.id.dialog_cancel);
+        TextView login = dialog.findViewById(R.id.dialog_login);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), LoginActivity.class);
+                startActivity(intent);
+            }
+        });
+        dialog.show();
     }
 
 
@@ -104,7 +162,8 @@ public class ProfileFragment extends Fragment {
         btnLogout = view.findViewById(R.id.btn_logout);
         btnLogin = view.findViewById(R.id.btn_login);
         txtHello = view.findViewById(R.id.txt_hello);
-        txtNumberAddress=view.findViewById(R.id.txt_number_address);
+        txtListShipment=view.findViewById(R.id.txt_list_address);
+        txtVoucher = view.findViewById(R.id.voucher);
     }
 
     private void callApiMyAccount(String token){
@@ -137,7 +196,6 @@ public class ProfileFragment extends Fragment {
         });
 
     }
-
     private void callApiLogout(String token) {
         String accessToken = "Bearer " + token;
         ApiService.apiService.logoutUser(accessToken).enqueue(new Callback<ApiResponse>() {

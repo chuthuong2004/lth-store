@@ -69,7 +69,6 @@ public class ShowAllActivity extends AppCompatActivity {
         final Object obj = getIntent().getSerializableExtra("list_see_all");
         String title = getIntent().getStringExtra("title_see_all");
         if (obj instanceof ListProductResponse) {
-            listProductResponse = new ListProductResponse();
             listProductResponse = (ListProductResponse) obj;
             showAllAdapter = new ShowAllAdapter(ShowAllActivity.this, listProductResponse);
             TextView txtTitle = findViewById(R.id.title_see_all);
@@ -123,6 +122,7 @@ public class ShowAllActivity extends AppCompatActivity {
         });
 
         Util.refreshToken(ShowAllActivity.this);
+        user = userReaderSqlite.getUser();
         loadCart();
     }
 
@@ -177,12 +177,15 @@ public class ShowAllActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         Util.refreshToken(ShowAllActivity.this);
+        user = userReaderSqlite.getUser();
         super.onBackPressed();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadCart() {
         Util.refreshToken(ShowAllActivity.this);
+        user = userReaderSqlite.getUser();
+
         if (user != null) {
             callApiGetMyCart("Bearer " + user.getAccessToken());
         }
@@ -235,6 +238,15 @@ public class ShowAllActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
         loadCart();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onResume() {
+        Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
+        super.onResume();
     }
 }

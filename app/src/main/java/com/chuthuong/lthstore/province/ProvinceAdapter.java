@@ -26,9 +26,6 @@ public class ProvinceAdapter extends ArrayAdapter<Province> {
         TextView txtProvince = convertView.findViewById(R.id.txt_province_selected);
         Province province = this.getItem(position);
         txtProvince.setText(province.getName());
-        if(province!=null){
-            txtProvince.setText(province.getName());
-        }
         return convertView;
     }
 

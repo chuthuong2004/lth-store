@@ -79,8 +79,12 @@ public class MyCartActivity extends AppCompatActivity {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadCart() {
         if (user != null) {
+            Util.refreshToken(this);
+
+            user = userReaderSqlite.getUser();
             callApiGetMyCart("Bearer " + user.getAccessToken());
         }
     }
@@ -118,8 +122,18 @@ public class MyCartActivity extends AppCompatActivity {
         super.onStart();
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
         Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
         loadCart();
 
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    protected void onResume() {
+
+        super.onResume();
+        Util.refreshToken(this);
+        user = userReaderSqlite.getUser();
     }
 
     public void hideLayoutCart() {

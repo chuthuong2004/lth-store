@@ -484,6 +484,7 @@ public class HomeFragment extends Fragment {
         setToast(getActivity(),"Reload Fragment Homt");
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onStart() {
         super.onStart();

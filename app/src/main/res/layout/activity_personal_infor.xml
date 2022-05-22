@@ -191,12 +191,11 @@
 
     <TextView
         android:id="@+id/txt_address_personal_information"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
-        android:gravity="center"
         android:textColor="@color/black"
-        app:layout_constraintBottom_toBottomOf="@+id/textView33"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView33"
         app:layout_constraintTop_toTopOf="@+id/textView33"
         tools:ignore="MissingConstraints" />
@@ -206,15 +205,14 @@
         android:id="@+id/txt_password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:drawableRight="@drawable/ic_baseline_arrow_right_24"
         android:gravity="left|center"
-        android:text="Mật khẩu: "
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
+        android:text="Mật khẩu: "
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView33" />
+        app:layout_constraintTop_toBottomOf="@+id/txt_address_personal_information" />
 
 
     <TextView

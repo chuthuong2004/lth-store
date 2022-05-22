@@ -84,7 +84,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
         callApiChangePassword(user.getAccessToken(),currentPassword, newPassword, confirmPassword);
     }
 
-    private void callApiChangePassword(String accessToken,String currentPassword, String newPassword, String confirmPassword) {
+
+    private void callApiChangePassword(String accessToken, String currentPassword, String newPassword, String confirmPassword) {
         String token = "Bearer "+accessToken;
         String accept = "application/json;versions=1";
         ApiService.apiService.resetPassword(accept,token,currentPassword,newPassword,confirmPassword).enqueue(new Callback<ApiResponse>() {
