@@ -72,7 +72,6 @@
                 android:layout_marginTop="50dp"
                 android:text="Thông tin cá nhân: "
                 android:textColor="@color/black"
-                android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_personal_information" />
@@ -92,6 +91,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:textSize="13sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView35" />
 
@@ -109,6 +109,7 @@
                 android:id="@+id/edit_text_age"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textSize="13sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView36" />
 
@@ -135,6 +136,7 @@
                     android:id="@+id/radio_button_male"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="13sp"
                     android:layout_marginRight="10dp"
                     android:text="Nam" />
 
@@ -142,6 +144,7 @@
                     android:id="@+id/radio_button_female"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="13sp"
                     android:layout_marginRight="10dp"
                     android:text="Nữ" />
 
@@ -149,6 +152,7 @@
                     android:id="@+id/radio_button_other"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textSize="13sp"
                     android:layout_marginRight="10dp"
                     android:text="Khác" />
 
@@ -161,7 +165,7 @@
                 android:layout_marginTop="20dp"
                 android:text="Thông tin tài khoản: "
                 android:textColor="@color/black"
-                android:textSize="16sp"
+                android:textSize="14sp"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
@@ -180,6 +184,7 @@
                 android:id="@+id/edit_text_number_phone"
                 android:layout_width="match_parent"
                 android:layout_marginTop="10dp"
+                android:textSize="13sp"
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -199,13 +204,14 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                android:clickable="false"
+                android:textSize="13sp"
                 app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
             <TextView
                 android:id="@+id/textView40"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="Địa chỉ cụ thể: "
                 android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
@@ -219,7 +225,9 @@
                 app:layout_constraintStart_toStartOf="parent"
                 android:text="sdhf jsdf gsdfsdjf sgdjf sgdjg fjsgfjsd gsjdf sfsdf sd"
                 android:padding="5dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/line_bottom"
+                android:textSize="13sp"
                 android:clickable="false"
                 android:ellipsize="end"
                 android:maxLines="1"
@@ -230,14 +238,13 @@
                 android:id="@+id/txt_save"
                 android:layout_width="match_parent"
                 android:layout_height="35dp"
-                android:layout_marginRight="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginLeft="20dp"
+                android:layout_margin="20dp"
                 android:background="@drawable/custom_button_profile"
                 android:gravity="center"
                 android:text="LƯU"
                 android:textColor="@color/white"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/edit_text_address" />

@@ -4,14 +4,23 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,18 +41,37 @@ import retrofit2.Response;
 
 public class ChangePasswordActivity extends AppCompatActivity {
     EditText edtCurrentPassword, edtNewPassword, edtConfirmPassword;
+    ImageView back, backToHome;
     private UserReaderSqlite userReaderSqlite;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
         addControls();
+        addEvents();
+    }
+
+    private void addEvents() {
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        backToHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ChangePasswordActivity.this, MainActivity.class));
+            }
+        });
     }
 
     private void addControls() {
-        edtCurrentPassword = findViewById(R.id.edtCurrentPassword);
-        edtNewPassword = findViewById(R.id.edtNewPassword);
-        edtConfirmPassword = findViewById(R.id.edtConfirmPassword);
+        edtCurrentPassword = findViewById(R.id.edit_text_current_password);
+        edtNewPassword = findViewById(R.id.edit_text_new_password);
+        edtConfirmPassword = findViewById(R.id.edit_text_confirm_password);
+        back = findViewById(R.id.img_back_detail);
+        backToHome = findViewById(R.id.back_to_home);
         Util.showPassword(edtCurrentPassword);
         Util.showPassword(edtNewPassword);
         Util.showPassword(edtConfirmPassword);
@@ -64,19 +92,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         String currentPassword = edtCurrentPassword.getText().toString();
         String newPassword = edtNewPassword.getText().toString();
         String confirmPassword = edtConfirmPassword.getText().toString();
-//
-//        if (TextUtils.isEmpty(currentPassword)) {
-//            Toast.makeText(this, "Vui lòng nhập mật khẩu hiện tại !", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        if (TextUtils.isEmpty(newPassword)) {
-//            Toast.makeText(this, "Vui lòng nhập mật khẩu mới !", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        if (TextUtils.isEmpty(confirmPassword)) {
-//            Toast.makeText(this, "Vui lòng xác nhận mật khẩu !", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
 
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
         Util.refreshToken(this);
@@ -92,9 +107,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful()) {
-                    setToast(ChangePasswordActivity.this, response.body().getMessage());
-                    Intent intent = new Intent(ChangePasswordActivity.this, MainActivity.class);
-                    startActivity(new Intent(intent));
+                    openDialogLogin();
                 } else {
                     try {
                         Gson gson = new Gson();
@@ -105,6 +118,58 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     }
                 }
             }
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                setToast(ChangePasswordActivity.this, "Lỗi server !");
+            }
+        });
+    }
+    private void openDialogLogin() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_update_pasword);
+        Window window = dialog.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = Gravity.CENTER;
+        window.setAttributes(windowAttributes);
+        dialog.setCancelable(false);
+        TextView login = dialog.findViewById(R.id.login);
+        login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String accessToken = userReaderSqlite.getUser().getAccessToken();
+                userReaderSqlite.deleteUser(userReaderSqlite.getUser());
+                callApiLogout(accessToken);
+
+            }
+        });
+        dialog.show();
+    }
+    private void callApiLogout(String token) {
+        String accessToken = "Bearer " + token;
+        ApiService.apiService.logoutUser(accessToken).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if (response.isSuccessful()) {
+                    Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+//                        setToast(getActivity(),apiError.getMessage());
+                        Log.e("Không",apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
             @Override
             public void onFailure(Call<ApiResponse> call, Throwable t) {
                 setToast(ChangePasswordActivity.this, "Lỗi server !");

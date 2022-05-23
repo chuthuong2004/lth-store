@@ -47,6 +47,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -58,9 +59,10 @@ public class EditPersonalProfile extends AppCompatActivity {
 
     private static final int MY_REQUEST_CODE = 24;
     ImageView imgViewPersonal;
+    ImageView back, backToHome;
     CardView cardView;
     EditText edtNamePersonal, edtAgePersonal, edtPhonePersonal, edtEmailPersonal ;
-
+    CircleImageView circleImageViewAvatar;
     TextView txtSave, edtAddressPersonal;
     User user = null;
     private UserReaderSqlite userReaderSqlite;
@@ -130,14 +132,31 @@ public class EditPersonalProfile extends AppCompatActivity {
         txtSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setToast(EditPersonalProfile.this, "Chờ API lưu");
+                setToast(EditPersonalProfile.this, "Đợi tui cập nhật API");
             }
         });
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onCheckRequestPermission();
-                setToast(EditPersonalProfile.this, "Mở hình ảnh");
+            }
+        });
+        circleImageViewAvatar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckRequestPermission();
+            }
+        });
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+        backToHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(EditPersonalProfile.this, MainActivity.class));
             }
         });
     }
@@ -196,6 +215,9 @@ public class EditPersonalProfile extends AppCompatActivity {
         edtAddressPersonal = findViewById(R.id.edit_text_address);
         txtSave = findViewById(R.id.txt_save);
         cardView = findViewById(R.id.image_camera);
+        circleImageViewAvatar =findViewById(R.id.image_personal_information);
+        back = findViewById(R.id.img_back_detail);
+        backToHome = findViewById(R.id.back_to_home);
     }
 
     private ShipmentDetail findDefaultShipmentDetail(User user) {

@@ -8,11 +8,8 @@
         android:layout_height="wrap_content"
         android:background="@drawable/custom_edit_text"
         android:text="Thành phố Hồ Chí Minh"
-        android:paddingLeft="10dp"
+        android:padding="10dp"
         android:gravity="center_vertical"
-        android:paddingTop="5dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="5dp"
         android:textColor="@color/black"
         android:textSize="14dp" />
 </LinearLayout>

@@ -9,11 +9,8 @@
         android:background="@drawable/custom_edit_text"
         android:drawableTint="@color/white"
         android:text="Chọn Tỉnh/Thành phố"
-        android:paddingLeft="10dp"
+        android:padding="10dp"
         android:gravity="center_vertical"
-        android:paddingTop="8dp"
-        android:paddingRight="10dp"
-        android:paddingBottom="8dp"
         android:textColor="@color/grey"
         android:textSize="14dp" />
 </LinearLayout>

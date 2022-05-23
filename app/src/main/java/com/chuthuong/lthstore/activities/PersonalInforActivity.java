@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
+import com.chuthuong.lthstore.activities.authActivities.ChangePasswordActivity;
 import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.model.ShipmentDetail;
@@ -35,7 +36,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 public class PersonalInforActivity extends AppCompatActivity {
-    TextView txtNamePersonal, txtEmailPersonal, txtAddressPersonal, txtEditPersonal,txtPhonePersonal;
+    TextView txtNamePersonal, txtEmailPersonal, txtAddressPersonal, txtEditPersonal,txtPhonePersonal, editPassword;
     ImageView imgBackPersonal, imgPersonal, backToHome;
     User user = null;
     private UserReaderSqlite userReaderSqlite;
@@ -86,6 +87,12 @@ public class PersonalInforActivity extends AppCompatActivity {
                 startActivity(new Intent(PersonalInforActivity.this,EditPersonalProfile.class));
             }
         });
+        editPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PersonalInforActivity.this, ChangePasswordActivity.class));
+            }
+        });
     }
 
     private void addControl() {
@@ -96,7 +103,8 @@ public class PersonalInforActivity extends AppCompatActivity {
         txtAddressPersonal = findViewById(R.id.txt_address_personal_information);
         txtEditPersonal = findViewById(R.id.txt_edit_personal);
         txtPhonePersonal=findViewById(R.id.txt_number_phone_personal_information);
-        backToHome = findViewById(R.id.home_img_toolbar);
+        backToHome = findViewById(R.id.back_to_home);
+        editPassword = findViewById(R.id.txt_password);
     }
 
     private void callApiMyAccount(String accessToken) {

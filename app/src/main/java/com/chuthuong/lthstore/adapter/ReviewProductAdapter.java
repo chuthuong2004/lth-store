@@ -1,7 +1,11 @@
 package com.chuthuong.lthstore.adapter;
 
 import android.content.Context;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RatingBar;
@@ -25,6 +29,16 @@ public class ReviewProductAdapter extends RecyclerView.Adapter<ReviewProductAdap
 
     private Context context;
     private ListReviewResponse listReviewResponse;
+
+    private int position;
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
 
     @NonNull
     @Override
@@ -50,20 +64,49 @@ public class ReviewProductAdapter extends RecyclerView.Adapter<ReviewProductAdap
 
 
         holder.ratingBar.setRating(review.getStar());
-        if(review.getReviewInfoProductOrdered()!=null){
-            holder.txtProductInfo.setText(review.getReviewInfoProductOrdered().getSize()+", "+review.getReviewInfoProductOrdered().getColor());
-        } else  {
+        if (review.getReviewInfoProductOrdered() != null) {
+            holder.txtProductInfo.setText(review.getReviewInfoProductOrdered().getSize() + ", " + review.getReviewInfoProductOrdered().getColor());
+        } else {
             holder.txtProductInfo.setText("");
         }
         holder.txtContentReview.setText(review.getContent());
-        holder.itemView.findViewById(R.id.txt_update_review).setOnClickListener(new View.OnClickListener() {
+//        holder.itemView.findViewById(R.id.txt_update_review).setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+//            @Override
+//            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+//                inflater.inflate(R.menu.menu_main, menu);
+//            }
+//        });
+//        holder.itemView.findViewById(R.id.txt_update_review).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Toast.makeText(context, "Chức năng update đang cập nhật !", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+
+        holder.txtUpdateReview.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "Chức năng update đang cập nhật !", Toast.LENGTH_SHORT).show();
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                menu.add("Sửa").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(context, "update", Toast.LENGTH_SHORT).show();
+                        //do what u want
+                        return true;
+                    }
+                });
+                menu.add("Xóa").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        Toast.makeText(context, "xóa", Toast.LENGTH_SHORT).show();
+
+                        return true;
+                    }
+                });
             }
         });
 
     }
+
     @Override
     public int getItemCount() {
         if (listReviewResponse != null) {

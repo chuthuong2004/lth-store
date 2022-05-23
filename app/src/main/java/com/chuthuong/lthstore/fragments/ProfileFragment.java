@@ -5,8 +5,10 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -32,6 +34,7 @@ import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.response.UserResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -90,8 +93,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(userReaderSqlite.getUser()!=null){
-                    userReaderSqlite.deleteUser(userReaderSqlite.getUser());
-                    callApiLogout(accessToken);
+                    openDialogConfirmLogout();
                 }else {
                     Log.e("Không","Có");
                 }
@@ -154,8 +156,41 @@ public class ProfileFragment extends Fragment {
         });
         dialog.show();
     }
-
-
+    private void openDialogConfirmLogout() {
+        final Dialog dialog = new Dialog(getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.custom_dialog_logout);
+        Window window = dialog.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = Gravity.CENTER;
+        window.setAttributes(windowAttributes);
+        if (Gravity.CENTER == Gravity.CENTER) {
+            dialog.setCancelable(true);
+        } else {
+            dialog.setCancelable(false);
+        }
+        TextView cancel = dialog.findViewById(R.id.btn_cancel);
+        TextView logout = dialog.findViewById(R.id.btn_logout);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    userReaderSqlite.deleteUser(userReaderSqlite.getUser());
+                    callApiLogout(accessToken);
+            }
+        });
+        dialog.show();
+    }
     private void addControls(View view) {
         txtNameUserProfile = view.findViewById(R.id.txt_name_user_profile);
         imageUserProfile = view.findViewById(R.id.image_user_profile);
