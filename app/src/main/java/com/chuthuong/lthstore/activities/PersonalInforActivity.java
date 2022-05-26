@@ -153,6 +153,9 @@ public class PersonalInforActivity extends AppCompatActivity {
     protected void onRestart() {
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
         Util.refreshToken(this);
+        if (userReaderSqlite.getUser() != null) {
+            callApiMyAccount(userReaderSqlite.getUser().getAccessToken());
+        }
         super.onRestart();
     }
     private ShipmentDetail findDefaultShipmentDetail(User user) {

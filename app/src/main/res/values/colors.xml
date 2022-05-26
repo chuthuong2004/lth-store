@@ -25,5 +25,12 @@
     <color name="green">#3A6021</color>
     <color name="violet">#820D8A</color>
     <color name="red">#E40B0B</color>
+    <color name="orange">#E46605</color>
+    <color name="processing">#EF1CAC</color>
+    <color name="all_order">#A3989F</color>
+    <color name="shipping">#7B9314</color>
+    <color name="delivery">#2A9E09</color>
+    <color name="delivered">#DF9F4F</color>
+    <color name="cancel_order">#E46605</color>
 
 </resources>

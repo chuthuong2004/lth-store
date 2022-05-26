@@ -1,6 +1,8 @@
 package com.chuthuong.lthstore.adapter;
 
 import android.content.Context;
+import android.os.Build;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -13,17 +15,27 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
+import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.response.ListReviewResponse;
 import com.chuthuong.lthstore.model.Review;
+import com.chuthuong.lthstore.utils.ApiResponse;
+import com.chuthuong.lthstore.utils.UserReaderSqlite;
+import com.chuthuong.lthstore.utils.Util;
+import com.google.gson.Gson;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ReviewProductAdapter extends RecyclerView.Adapter<ReviewProductAdapter.ViewHolder> {
 
@@ -39,7 +51,7 @@ public class ReviewProductAdapter extends RecyclerView.Adapter<ReviewProductAdap
     public void setPosition(int position) {
         this.position = position;
     }
-
+    private UserReaderSqlite userReaderSqlite;
     @NonNull
     @Override
     public ReviewProductAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -95,16 +107,48 @@ public class ReviewProductAdapter extends RecyclerView.Adapter<ReviewProductAdap
                     }
                 });
                 menu.add("Xóa").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.O)
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
                         Toast.makeText(context, "xóa", Toast.LENGTH_SHORT).show();
-
+                        userReaderSqlite = new UserReaderSqlite(context, "user.db", null, 1);
+                        Util.refreshToken(context);
+                        callApiDeleteReview(userReaderSqlite.getUser().getAccessToken(), review.getId());
                         return true;
                     }
                 });
             }
         });
 
+    }
+
+    private void callApiDeleteReview(String accessToken, String id) {
+        String token = "Bearer "+ accessToken;
+        ApiService.apiService.deleteReview(token, id).enqueue(new Callback<ApiResponse>() {
+            @Override
+            public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
+                if(response.isSuccessful()){
+                    ApiResponse apiResponse = response.body();
+                    Toast.makeText(context, apiResponse.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        Log.e("Message", apiError.getMessage());
+                        Toast.makeText(context, apiError.getMessage(), Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ApiResponse> call, Throwable t) {
+                Log.e("Lỗi", "Lỗi server ");
+                Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

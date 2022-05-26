@@ -59,7 +59,6 @@ public class ListShipmentDetailActivity extends AppCompatActivity {
         if(isChangeAddress== true) {
             isChanged=true;
         }
-        setToast(this, isChanged+"");
         addControls();
         addEvents();
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);

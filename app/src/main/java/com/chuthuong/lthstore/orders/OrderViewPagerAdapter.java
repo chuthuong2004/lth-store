@@ -3,50 +3,45 @@ package com.chuthuong.lthstore.orders;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.chuthuong.lthstore.fragments.DescriptionProductFragment;
 import com.chuthuong.lthstore.fragments.HomeFragment;
 import com.chuthuong.lthstore.fragments.OrderFragment;
 import com.chuthuong.lthstore.fragments.ProductFragment;
 import com.chuthuong.lthstore.fragments.ProfileFragment;
+import com.chuthuong.lthstore.fragments.ReviewProductFragment;
+import com.chuthuong.lthstore.fragments.SuggestionProductFragment;
 
-public class OrderViewPagerAdapter extends FragmentStatePagerAdapter {
+public class OrderViewPagerAdapter extends FragmentStateAdapter {
 
-    public OrderViewPagerAdapter(@NonNull FragmentManager fm, int behavior) {
-        super(fm, behavior);
+
+    public OrderViewPagerAdapter(@NonNull FragmentActivity fragmentActivity) {
+        super(fragmentActivity);
     }
-
     @NonNull
     @Override
-    public Fragment getItem(int position) {
+    public Fragment createFragment(int position) {
         switch (position) {
             case 1:
-                return new Tab2Fragment();
+                return new OrderedFragment();
             case 2:
-                return new Tab3Fragment();
+                return new DeliveryFragment();
+            case 3:
+                return new DeliveredFragment();
+            case 4:
+                return new CancelFragment();
             case 0:
             default:
-                return new Tab1Fragment();
+                return new AllOrderFragment();
         }
     }
 
     @Override
-    public int getCount() {
-        return 3;
-    }
-
-    @Nullable
-    @Override
-    public CharSequence getPageTitle(int position) {
-        switch (position) {
-            case 1:
-                return "Đã giao";
-            case 2:
-                return "Tất cả đơn hàng";
-            case 0:
-            default:
-                return "Đã đặt";
-        }
+    public int getItemCount() {
+        return 5;
     }
 }

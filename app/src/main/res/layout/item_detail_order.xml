@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:background="@drawable/line_top"
+    android:layout_height="wrap_content"
+    android:padding="5dp"
+    android:layout_margin="10dp"
+    app:cardCornerRadius="10dp">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/image_order_item"
+        android:layout_width="60dp"
+        android:src="@drawable/avt"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/txt_order_item_name"
+        android:layout_height="60dp"/>
+
+    <TextView
+        android:id="@+id/txt_order_item_name"
+        android:layout_width="330dp"
+        android:layout_height="21dp"
+        android:layout_marginLeft="5dp"
+        android:ellipsize="end"
+        android:fontFamily="@font/amethysta"
+        android:gravity="center_vertical"
+        android:maxLines="2"
+        android:padding="3dp"
+        android:text="Áo khoác hoodie xịn xò sang xịn mịn"
+        android:textColor="@color/black"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/image_order_item"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x "
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_quantity_item_order"
+        app:layout_constraintEnd_toStartOf="@+id/txt_quantity_item_order"
+        app:layout_constraintTop_toTopOf="@+id/txt_quantity_item_order" />
+
+    <TextView
+        android:id="@+id/title_color_card"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:fontFamily="@font/amethysta"
+        android:paddingTop="5dp"
+        android:text="Giá: "
+        android:textColor="@color/grey"
+        android:textSize="10dp"
+
+        app:layout_constraintStart_toStartOf="@+id/txt_order_item_name"
+        app:layout_constraintTop_toBottomOf="@+id/txt_order_item_name"
+        tools:ignore="MissingConstraints" />
+
+
+    <TextView
+        android:id="@+id/txt_price_item_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:fontFamily="@font/amethysta"
+        android:paddingTop="5dp"
+        android:text="450.000đ"
+        android:textColor="@color/grey"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_color_card"
+        app:layout_constraintStart_toEndOf="@+id/title_color_card"
+        app:layout_constraintTop_toTopOf="@+id/title_color_card"
+        app:layout_constraintVertical_bias="0.0"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/textView47"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Mã đơn hàng"
+        android:textSize="10dp"
+        app:layout_constraintStart_toStartOf="@+id/txt_order_item_name"
+        app:layout_constraintTop_toBottomOf="@+id/title_color_card" />
+
+    <TextView
+        android:id="@+id/txt_id_order"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="123456"
+        android:textSize="10sp"
+        android:layout_marginLeft="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/textView47"
+        app:layout_constraintStart_toEndOf="@+id/textView47"
+        app:layout_constraintTop_toTopOf="@+id/textView47"
+        tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/txt_quantity_item_order"
+        android:layout_width="7dp"
+        android:layout_height="14dp"
+        android:layout_marginRight="5dp"
+        android:text="1"
+        android:textColor="@color/black"
+        android:textSize="10dp"
+        app:layout_constraintBottom_toBottomOf="@+id/txt_price_item_order"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.777"
+        app:layout_constraintTop_toTopOf="@+id/txt_price_item_order"
+        app:layout_constraintVertical_bias="0.75"
+        tools:ignore="MissingConstraints" />
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

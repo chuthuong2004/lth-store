@@ -210,7 +210,6 @@ public class ShowAllActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
                         quantityCart.setVisibility(View.GONE);
-                        setToast(ShowAllActivity.this, apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

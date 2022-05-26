@@ -108,7 +108,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/image_user_profile" />
 
                         <TextView
-                            android:id="@+id/textView20"
+                            android:id="@+id/my_order"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentStart="true"
@@ -150,7 +150,7 @@
                             android:paddingTop="5dp"
                             android:text="Dịch vụ"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@+id/textView20" />
+                            app:layout_constraintTop_toBottomOf="@+id/my_order" />
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -158,8 +158,8 @@
                             android:layout_marginTop="10dp"
                             android:drawableTop="@drawable/ic_baseline_feedback_24"
                             android:text="Phản hồi"
-                            app:layout_constraintEnd_toEndOf="@+id/textView20"
-                            app:layout_constraintStart_toStartOf="@+id/textView20"
+                            app:layout_constraintEnd_toEndOf="@+id/my_order"
+                            app:layout_constraintStart_toStartOf="@+id/my_order"
                             app:layout_constraintTop_toBottomOf="@+id/textView22" />
 
                         <TextView

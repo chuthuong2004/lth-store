@@ -249,9 +249,9 @@ public class HomeFragment extends Fragment {
         // image slider
         ImageSlider imageSlider = root.findViewById(R.id.image_slider);
         List<SlideModel> slideModelList = new ArrayList<>();
-        slideModelList.add(new SlideModel(R.drawable.banner1, "Discount On Shoes Items", ScaleTypes.CENTER_CROP));
-        slideModelList.add(new SlideModel(R.drawable.banner2, "Discount On Perfume", ScaleTypes.CENTER_CROP));
-        slideModelList.add(new SlideModel(R.drawable.banner3, "70% OFF", ScaleTypes.CENTER_CROP));
+        slideModelList.add(new SlideModel(R.drawable.banner1, ScaleTypes.CENTER_CROP));
+        slideModelList.add(new SlideModel(R.drawable.banner2,  ScaleTypes.CENTER_CROP));
+        slideModelList.add(new SlideModel(R.drawable.banner3,  ScaleTypes.CENTER_CROP));
         imageSlider.setImageList(slideModelList);
 
         progressDialog.setTitle("Welcome to LTH Store");

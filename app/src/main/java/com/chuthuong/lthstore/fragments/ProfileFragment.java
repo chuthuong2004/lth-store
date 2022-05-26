@@ -2,6 +2,7 @@ package com.chuthuong.lthstore.fragments;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 
 import android.util.Log;
 import android.view.Gravity;
@@ -35,6 +37,7 @@ import com.chuthuong.lthstore.response.UserResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.chuthuong.lthstore.utils.UserReaderSqlite;
 import com.chuthuong.lthstore.utils.Util;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -53,6 +56,8 @@ public class ProfileFragment extends Fragment {
     String nameSharePreference = "account";
     private UserReaderSqlite userReaderSqlite;
     private TextView txtVoucher;
+    private TextView myOrder;
+    private BottomNavigationView bottomNavigationView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,6 +71,18 @@ public class ProfileFragment extends Fragment {
         addControls(view);
         addEvents();
         return view;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onStart() {
+        super.onStart();
+        userReaderSqlite = new UserReaderSqlite(getActivity(), "user.db", null, 1);
+        Util.refreshToken(getActivity());
+        if(userReaderSqlite.getUser()!=null) {
+            accessToken = userReaderSqlite.getUser().getAccessToken();
+            callApiMyAccount("Bearer " + accessToken);
+        }
     }
 
     private void addEvents() {
@@ -118,6 +135,13 @@ public class ProfileFragment extends Fragment {
                 }
             }
         });
+        myOrder.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainActivity mainActivity = (MainActivity) getActivity();
+                mainActivity.loadFragmentOrder();
+            }
+        });
 
     }
 
@@ -156,6 +180,7 @@ public class ProfileFragment extends Fragment {
         });
         dialog.show();
     }
+
     private void openDialogConfirmLogout() {
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -191,6 +216,7 @@ public class ProfileFragment extends Fragment {
         });
         dialog.show();
     }
+
     private void addControls(View view) {
         txtNameUserProfile = view.findViewById(R.id.txt_name_user_profile);
         imageUserProfile = view.findViewById(R.id.image_user_profile);
@@ -199,6 +225,8 @@ public class ProfileFragment extends Fragment {
         txtHello = view.findViewById(R.id.txt_hello);
         txtListShipment=view.findViewById(R.id.txt_list_address);
         txtVoucher = view.findViewById(R.id.voucher);
+        myOrder =view.findViewById(R.id.my_order);
+        bottomNavigationView = view.findViewById(R.id.bottom_navigation);
     }
 
     private void callApiMyAccount(String token){
@@ -231,6 +259,7 @@ public class ProfileFragment extends Fragment {
         });
 
     }
+
     private void callApiLogout(String token) {
         String accessToken = "Bearer " + token;
         ApiService.apiService.logoutUser(accessToken).enqueue(new Callback<ApiResponse>() {
@@ -276,13 +305,16 @@ public class ProfileFragment extends Fragment {
             imageUserProfile.setMaxHeight(310);
         }
     }
+
     private void render(){
         txtNameUserProfile.setText(user.getUsername());
         Glide.with(getActivity()).load(user.getAvatar()).into(imageUserProfile);
     }
+
     public void reloadData(){
         setToast(getActivity(),"Reload Fragment Profile");
     }
+
     private void setToast(Activity activity, String msg) {
         Toast toast = new Toast(activity);
         LayoutInflater inflater = getLayoutInflater();

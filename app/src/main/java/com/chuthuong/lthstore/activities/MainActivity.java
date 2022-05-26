@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
     ImageView avt;
     ArrayAdapter<String> userAdapter;
     Fragment homeFragment, orderFragment, productFragment, profileFragment;
-    ViewPager mViewPager;
+    public ViewPager mViewPager;
     BottomNavigationView bottomNavigationView;
     CartResponse cartResponse = null;
     UserReaderSqlite userReaderSqlite;
@@ -177,6 +177,10 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         return true;
+    }
+    public void loadFragmentOrder() {
+        mViewPager.setCurrentItem(2);
+        bottomNavigationView.getMenu().findItem(R.id.mnu_order_navigation).setChecked(true);
     }
 
 //    @RequiresApi(api = Build.VERSION_CODES.O)

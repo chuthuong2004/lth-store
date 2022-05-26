@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
@@ -99,7 +100,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
         callApiChangePassword(user.getAccessToken(),currentPassword, newPassword, confirmPassword);
     }
 
-
+    public void saveAccount() {
+        SharedPreferences preferences = getSharedPreferences("account", MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("username", "");
+        editor.putString("password", "");
+        editor.commit(); // xác nhận lưu
+    }
     private void callApiChangePassword(String accessToken, String currentPassword, String newPassword, String confirmPassword) {
         String token = "Bearer "+accessToken;
         String accept = "application/json;versions=1";
@@ -107,6 +114,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> response) {
                 if (response.isSuccessful()) {
+                    saveAccount();
                     openDialogLogin();
                 } else {
                     try {
@@ -158,11 +166,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 if (response.isSuccessful()) {
                     Intent intent = new Intent(ChangePasswordActivity.this, LoginActivity.class);
                     startActivity(intent);
+                    finish();
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-//                        setToast(getActivity(),apiError.getMessage());
                         Log.e("Không",apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
