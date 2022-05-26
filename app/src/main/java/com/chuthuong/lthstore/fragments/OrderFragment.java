@@ -69,15 +69,17 @@ public class OrderFragment extends Fragment {
     public OrderFragment() {
         // Required empty public constructor
     }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         Log.e("OrderFragment", "Fragment 3");
     }
+
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("Thuong","Reload FragmentOrder");
+        Log.e("Thuong", "Reload FragmentOrder");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -96,7 +98,7 @@ public class OrderFragment extends Fragment {
         loadCart();
         tabLayout = view.findViewById(R.id.tab_layout_order);
         viewPager2 = view.findViewById(R.id.view_pager_order);
-        OrderViewPagerAdapter orderViewPagerAdapter= new OrderViewPagerAdapter(getActivity());
+        OrderViewPagerAdapter orderViewPagerAdapter = new OrderViewPagerAdapter(getActivity());
         viewPager2.setAdapter(orderViewPagerAdapter);
         new TabLayoutMediator(tabLayout, viewPager2, (tab, position) -> {
             switch (position) {
@@ -105,12 +107,15 @@ public class OrderFragment extends Fragment {
                     tabLayout.setTabTextColors(getResources().getColor(R.color.white), getResources().getColor(R.color.processing));
                     break;
                 case 2:
+                    tab.setText("Đang vận chuyển");
+                    break;
+                case 3:
                     tab.setText("Đang giao");
                     break;
-                case  3:
+                case 4:
                     tab.setText("Đã giao");
                     break;
-                case    4:
+                case 5:
                     tab.setText("Đã hủy");
                     break;
                 case 0:
@@ -144,8 +149,7 @@ public class OrderFragment extends Fragment {
         Util.refreshToken(getActivity());
         if (user != null) {
             callApiGetMyCart("Bearer " + user.getAccessToken());
-        }
-        else {
+        } else {
             layoutOrder.setVisibility(View.GONE);
             layoutNotUser.setVisibility(View.VISIBLE);
         }
@@ -178,10 +182,11 @@ public class OrderFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
-                setToast(getActivity(),"Lỗi server !");
+                setToast(getActivity(), "Lỗi server !");
             }
         });
     }
+
     private void setToast(Activity activity, String msg) {
         Toast toast = new Toast(activity);
         LayoutInflater inflater = getLayoutInflater();
@@ -193,6 +198,7 @@ public class OrderFragment extends Fragment {
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.show();
     }
+
     private void addEvents() {
         imgCart.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -220,6 +226,7 @@ public class OrderFragment extends Fragment {
             }
         });
     }
+
     private void openDialogRequestLogin() {
         final Dialog dialog = new Dialog(getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -258,6 +265,7 @@ public class OrderFragment extends Fragment {
         });
         dialog.show();
     }
+
     private void addControls() {
         imgCart = view.findViewById(R.id.cart_img_toolbar);
         quantityCart = view.findViewById(R.id.quantity_cart_toolbar);

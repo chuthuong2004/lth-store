@@ -157,7 +157,6 @@ public interface ApiService {
     Call<UserResponse> updateAvatar(@Header("token") String token, @Part MultipartBody.Part avatar);
 
 
-
     // add shipment detail
     @POST("me/shipment-detail")
     Call<UserResponse> addShipmentDetail(@Header("Accept") String accept,
@@ -177,6 +176,7 @@ public interface ApiService {
             @Header("token") String token,
             @Path("id") String shipmentID);
 
+
     // create new order
     @FormUrlEncoded
     @POST("order/new")
@@ -191,22 +191,31 @@ public interface ApiService {
                                     @Field("isPaid") boolean isPaid,
                                     @Field("shippingPrice") int shippingPrice);
 
-    @DELETE("review/{id}")
-    Call<ApiResponse> deleteReview (@Header("token") String token,
-                                    @Path("id") String id);
-
-    @FormUrlEncoded
-    @POST("review/new/{id}")
-    Call<ReviewResponse> addReview (@Header("Accept") String accept,
-                                    @Header("token") String token,
-                                    @Field("content") String content,
-                                    @Field("product") String productID,
-                                    @Field("star") int star,
-                                    @Path("id") String orderItemID);
-
-    // get all products
+    // get all orders
     @GET("order/me")
     Call<ListOrderResponse> getMyOrder(@Header("Accept") String accept,
                                        @Header("token") String token,
                                        @Query("orderStatus[regex]") String filterStatus);
+
+    // get a order
+    @GET("order/me/{id}")
+    Call<OrderResponse> getAnOrderMe(@Header("token") String token,
+                                     @Path("id") String id);
+
+    // delete review
+    @DELETE("review/{id}")
+    Call<ApiResponse> deleteReview(@Header("token") String token,
+                                   @Path("id") String id);
+
+    // create new review
+    @FormUrlEncoded
+    @POST("review/new/{id}")
+    Call<ReviewResponse> addReview(@Header("Accept") String accept,
+                                   @Header("token") String token,
+                                   @Field("content") String content,
+                                   @Field("product") String productID,
+                                   @Field("star") int star,
+                                   @Path("id") String orderItemID);
+
+
 }

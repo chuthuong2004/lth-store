@@ -6,6 +6,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
@@ -35,6 +37,8 @@ public class OrderedFragment extends Fragment {
     private User user= null;
     private ListOrderResponse listOrder;
     private UserReaderSqlite userReaderSqlite;
+    private TextView txtNoOrder;
+    private ImageView imgNoOrder;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -65,6 +69,8 @@ public class OrderedFragment extends Fragment {
 
     private void addControls(View view) {
         recOrder = view.findViewById(R.id.rec_ordered);
+        txtNoOrder = view.findViewById(R.id.no_order);
+        imgNoOrder = view.findViewById(R.id.img_no_order);
     }
 
     public void callApiGetMyOrder(String accessToken){
@@ -74,6 +80,10 @@ public class OrderedFragment extends Fragment {
             public void onResponse(Call<ListOrderResponse> call, Response<ListOrderResponse> response) {
                 if(response.isSuccessful()){
                     listOrder = response.body();
+                    if(listOrder.getCountDocuments()==0) {
+                        txtNoOrder.setVisibility(View.VISIBLE);
+                        imgNoOrder.setVisibility(View.VISIBLE);
+                    }
                     recOrder.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                     orderAdapter= new OrderAdapter(getActivity(),listOrder);
                     recOrder.setAdapter(orderAdapter);

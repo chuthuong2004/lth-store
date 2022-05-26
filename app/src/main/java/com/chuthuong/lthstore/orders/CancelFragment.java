@@ -8,15 +8,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.adapter.OrderAdapter;
-import com.chuthuong.lthstore.adapter.OrderCancelAdapter;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.response.ListOrderResponse;
@@ -38,6 +38,8 @@ public class CancelFragment extends Fragment {
     private User user= null;
     private ListOrderResponse listOrder;
     private UserReaderSqlite userReaderSqlite;
+    private TextView txtNoOrder;
+    private ImageView imgNoOrder;
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -60,15 +62,21 @@ public class CancelFragment extends Fragment {
 
     private void addControls(View view) {
         recOrder = view.findViewById(R.id.rec_order_cancel);
+        txtNoOrder = view.findViewById(R.id.no_order);
+        imgNoOrder = view.findViewById(R.id.img_no_order);
     }
 
     public void callApiGetMyOrder(String accessToken){
         String accept = "application/json;versions=1";
-        ApiService.apiService.getMyOrder(accept, accessToken,"").enqueue(new Callback<ListOrderResponse>() {
+        ApiService.apiService.getMyOrder(accept, accessToken,"Canceled").enqueue(new Callback<ListOrderResponse>() {
             @Override
             public void onResponse(Call<ListOrderResponse> call, Response<ListOrderResponse> response) {
                 if(response.isSuccessful()){
                     listOrder = response.body();
+                    if(listOrder.getCountDocuments()==0) {
+                        txtNoOrder.setVisibility(View.VISIBLE);
+                        imgNoOrder.setVisibility(View.VISIBLE);
+                    }
                     recOrder.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
                     orderAdapter= new OrderAdapter(getActivity(),listOrder);
                     recOrder.setAdapter(orderAdapter);

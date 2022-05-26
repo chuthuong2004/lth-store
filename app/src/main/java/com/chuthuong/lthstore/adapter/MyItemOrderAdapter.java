@@ -46,29 +46,6 @@ public class MyItemOrderAdapter extends RecyclerView.Adapter<MyItemOrderAdapter.
         NumberFormat formatter = new DecimalFormat("#,###");
         String formatTotalPriceOrder = formatter.format(orderItem.getPrice()-(orderItem.getPrice()*orderItem.getDiscount()/100));
         holder.priceItemOrder.setText(formatTotalPriceOrder+"đ");
-//        if(order.getOrderStatus().equals("Delivered")){// đã giao
-//            holder.txtReviewProduct.setVisibility(View.VISIBLE);
-//            holder.txtReviewProduct.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent(context, ReviewProductActivity.class);
-//                    intent.putExtra("order_item", orderItem);
-//                    context.startActivity(intent);
-//                    Log.e("Đánh giá","đi");
-//                }
-//            });
-//        }else {
-//            holder.txtReviewProduct.setVisibility(View.GONE);
-//        }
-//        CartItem cartItems = cart.getCartItems().get(position);
-//        Glide.with(context).load(cartItems.getProduct().getImages().get(0).getImg()).into(holder.imageViewItemCartPayment);
-//        holder.nameItemCartPayment.setText(cartItems.getProduct().getName());
-//        holder.colorItemCartPayment.setText(cartItems.getColor());
-//        holder.sizeItemCartPayment.setText(cartItems.getSize());
-//        holder.quantityItemCartPayment.setText(cartItems.getQuantity() + "");
-//        NumberFormat formatter = new DecimalFormat("#,###");
-//        String formatterPriceProduct = formatter.format(cartItems.getProduct().getPrice() - (cartItems.getProduct().getPrice() * cartItems.getProduct().getDiscount() / 100));
-//        holder.priceItemCartPayment.setText(formatterPriceProduct + "đ");
     }
 
     @Override

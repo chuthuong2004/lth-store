@@ -22,6 +22,7 @@ import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.model.OrderItem;
 import com.chuthuong.lthstore.model.User;
+import com.chuthuong.lthstore.response.OrderResponse;
 import com.chuthuong.lthstore.response.ReviewModel;
 import com.chuthuong.lthstore.response.ReviewResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
@@ -30,6 +31,7 @@ import com.chuthuong.lthstore.utils.Util;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -42,7 +44,7 @@ public class ReviewProductActivity extends AppCompatActivity {
     RatingBar ratingBarReviewProduct;
     EditText editTextFeelings;
     String productID;
-    OrderItem orderItem;
+    List<OrderItem> orderItems;
     ReviewResponse reviewResponse;
     User user;
     private UserReaderSqlite userReaderSqlite;
@@ -52,17 +54,47 @@ public class ReviewProductActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_product);
-        Util.refreshToken(this);
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
+        Util.refreshToken(this);
         user = userReaderSqlite.getUser();
-        orderItem = (OrderItem) getIntent().getSerializableExtra("order_item");
-        productID = orderItem.getProduct();
-
+        String orderID = getIntent().getStringExtra("order_id");
+        if(orderID!= null){
+            setToast(this, orderID);
+            callApiGetAnOrderMe(user.getAccessToken(), orderID);
+        }
+//        productID = orderItem.getProduct();
         addControls();
-        loadProduct();
+//        loadProduct();
         addEvent();
 
 
+    }
+
+    private void callApiGetAnOrderMe(String accessToken, String orderID) {
+        String token = "Bearer "+accessToken;
+        ApiService.apiService.getAnOrderMe(token,orderID).enqueue(new Callback<OrderResponse>() {
+            @Override
+            public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
+                if(response.isSuccessful()) {
+                    orderItems = response.body().getOrder().getOrderItems();
+                    Log.e("Odder", orderItems.toString());
+                }
+                else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(ReviewProductActivity.this, apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<OrderResponse> call, Throwable t) {
+                Toast.makeText(ReviewProductActivity.this, "Lỗi server", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 
@@ -70,7 +102,7 @@ public class ReviewProductActivity extends AppCompatActivity {
         ratingBarReviewProduct.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
             @Override
             public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                switch ((int) ratingBarReviewProduct.getRating()) {
+                switch ((int) rating) {
                     case 1:
                         editTextFeelings.setHint("Hãy chia sẻ vì sao sản phẩm này không tốt nhé");
                         break;
@@ -89,7 +121,6 @@ public class ReviewProductActivity extends AppCompatActivity {
                         break;
 
                 }
-                Log.e("Sao nè", ratingBarReviewProduct.getRating() + "");
             }
         });
         txtConfirmReview.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +131,8 @@ public class ReviewProductActivity extends AppCompatActivity {
                     Util.refreshToken(ReviewProductActivity.this);
                     user = userReaderSqlite.getUser();
                     setToast(ReviewProductActivity.this, "Đánh giá " + ratingBarReviewProduct.getRating() + " sao" + "\nNội dung " + editTextFeelings.getText());
-                    addReview(userReaderSqlite.getUser().getAccessToken(), productID, editTextFeelings.getText().toString(),
-                            (int) ratingBarReviewProduct.getRating(), orderItem.getId());
+//                    addReview(userReaderSqlite.getUser().getAccessToken(), productID, editTextFeelings.getText().toString(),
+//                            (int) ratingBarReviewProduct.getRating(), orderItem.getId());
                 }
 
             }
@@ -159,11 +190,11 @@ public class ReviewProductActivity extends AppCompatActivity {
     }
 
 
-    private void loadProduct() {
-        txtNameProductReview.setText(orderItem.getName());
-        txtTypeProductReview.setText(orderItem.getColor() + ", " + orderItem.getSize());
-        Glide.with(this).load(orderItem.getImage()).into(imageProductReview);
-    }
+//    private void loadProduct() {
+//        txtNameProductReview.setText(orderItem.getName());
+//        txtTypeProductReview.setText(orderItem.getColor() + ", " + orderItem.getSize());
+//        Glide.with(this).load(orderItem.getImage()).into(imageProductReview);
+//    }
 
     private void setToast(Activity activity, String msg) {
         Toast toast = new Toast(activity);

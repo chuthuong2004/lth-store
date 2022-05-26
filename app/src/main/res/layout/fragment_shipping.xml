@@ -8,7 +8,7 @@
 
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rec_ordered"
+        android:id="@+id/rec_shipping"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
@@ -25,7 +25,7 @@
         android:src="@drawable/img_no_order"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/rec_ordered" />
+        app:layout_constraintTop_toTopOf="@+id/rec_shipping" />
 
     <TextView
         android:id="@+id/no_order"

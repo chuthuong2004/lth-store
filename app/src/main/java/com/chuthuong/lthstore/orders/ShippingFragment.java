@@ -2,12 +2,6 @@ package com.chuthuong.lthstore.orders;
 
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +9,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.adapter.OrderAdapter;
@@ -32,7 +31,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class DeliveredFragment extends Fragment {
+public class ShippingFragment extends Fragment {
     RecyclerView recOrder;
     OrderAdapter orderAdapter;
     private User user= null;
@@ -45,7 +44,8 @@ public class DeliveredFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view =inflater.inflate(R.layout.fragment_delivered, container, false);
+        Toast.makeText(getActivity(),"Vô rồi á",Toast.LENGTH_SHORT);
+        View view =inflater.inflate(R.layout.fragment_shipping, container, false);
         userReaderSqlite= new UserReaderSqlite(getActivity(),"user.db",null,1);
         Util.refreshToken(getActivity());
         user = userReaderSqlite.getUser();
@@ -55,7 +55,7 @@ public class DeliveredFragment extends Fragment {
     }
 
     private void loadOrders() {
-        Log.e("User order ",user.toString());
+        //  Log.e("User order ",user.toString());
         if(user!=null){
             Log.e("User order ",user.toString());
             callApiGetMyOrder("Bearer " + user.getAccessToken());
@@ -64,14 +64,15 @@ public class DeliveredFragment extends Fragment {
     }
 
     private void addControls(View view) {
-        recOrder = view.findViewById(R.id.rec_order_delivered);
+        recOrder = view.findViewById(R.id.rec_shipping);
         txtNoOrder = view.findViewById(R.id.no_order);
         imgNoOrder = view.findViewById(R.id.img_no_order);
+
     }
 
     public void callApiGetMyOrder(String accessToken){
         String accept = "application/json;versions=1";
-        ApiService.apiService.getMyOrder(accept, accessToken,"Delivered").enqueue(new Callback<ListOrderResponse>() {
+        ApiService.apiService.getMyOrder(accept, accessToken,"Shipping").enqueue(new Callback<ListOrderResponse>() {
             @Override
             public void onResponse(Call<ListOrderResponse> call, Response<ListOrderResponse> response) {
                 if(response.isSuccessful()){
@@ -103,5 +104,4 @@ public class DeliveredFragment extends Fragment {
         });
 
     }
-
 }

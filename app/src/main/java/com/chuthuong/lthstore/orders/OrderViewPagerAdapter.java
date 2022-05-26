@@ -29,10 +29,12 @@ public class OrderViewPagerAdapter extends FragmentStateAdapter {
             case 1:
                 return new OrderedFragment();
             case 2:
-                return new DeliveryFragment();
+                return new ShippingFragment();
             case 3:
-                return new DeliveredFragment();
+                return new DeliveryFragment();
             case 4:
+                return new DeliveredFragment();
+            case 5:
                 return new CancelFragment();
             case 0:
             default:
@@ -42,6 +44,6 @@ public class OrderViewPagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 5;
+        return 6;
     }
 }

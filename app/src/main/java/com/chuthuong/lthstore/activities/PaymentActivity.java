@@ -7,9 +7,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +20,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +41,7 @@ import com.chuthuong.lthstore.response.UserResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.chuthuong.lthstore.utils.UserReaderSqlite;
 import com.chuthuong.lthstore.utils.Util;
+import com.chuthuong.lthstore.widget.CustomProgressDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -62,6 +68,7 @@ public class PaymentActivity extends AppCompatActivity {
     private int priceShipping;
     private int quantityPriceCart;
     private UserReaderSqlite userReaderSqlite;
+    private CustomProgressDialog dialog;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -90,6 +97,8 @@ public class PaymentActivity extends AppCompatActivity {
                 if (layoutShipment.getVisibility() == View.GONE) {
                     startActivity(new Intent(PaymentActivity.this, ShipmentDetailActivity.class));
                 } else {
+                    dialog = new CustomProgressDialog(PaymentActivity.this);
+                    dialog.show();
                     callApiCreateOrder("Bearer "+userReaderSqlite.getUser().getAccessToken(), shipmentDetail, false,priceShipping );
                 }
 
@@ -119,11 +128,8 @@ public class PaymentActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
                 if (response.isSuccessful()) {
-                    OrderResponse orderResponse = response.body();
-                    Order order = orderResponse.getOrder();
-                    setToast(PaymentActivity.this,  orderResponse.getMessage());
-                    finish();
-                    startActivity(new Intent(PaymentActivity.this,MainActivity.class));
+                    dialog.dismiss();
+                    openDialogSuccessOrder();
                 }else {
                     try {
                         Gson gson = new Gson();
@@ -134,10 +140,8 @@ public class PaymentActivity extends AppCompatActivity {
                     }
                 }
             }
-
             @Override
             public void onFailure(Call<OrderResponse> call, Throwable t) {
-
                 setToast(PaymentActivity.this, "Lỗi Server !");
             }
         });
@@ -150,7 +154,30 @@ public class PaymentActivity extends AppCompatActivity {
         totalQuantityItem.setText(cart.getCartItems().size() + "");
         setTotalPrice(cart);
     }
-
+    private void openDialogSuccessOrder() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.layout_dialog_success_order);
+        Window window = dialog.getWindow();
+        if (window == null) {
+            return;
+        }
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        WindowManager.LayoutParams windowAttributes = window.getAttributes();
+        windowAttributes.gravity = Gravity.CENTER;
+        window.setAttributes(windowAttributes);
+        dialog.setCancelable(false);
+        TextView btnContinue = dialog.findViewById(R.id.btn_continue);
+        btnContinue.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PaymentActivity.this, MainActivity.class));
+                finish();
+            }
+        });
+        dialog.show();
+    }
     private void callApiMyAccount(String token) {
         String accept = "application/json;versions=1";
         ApiService.apiService.getMyAccount(accept, token).enqueue(new Callback<UserResponse>() {
