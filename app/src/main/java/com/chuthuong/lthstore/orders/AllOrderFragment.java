@@ -49,12 +49,8 @@ public class AllOrderFragment extends Fragment {
         userReaderSqlite= new UserReaderSqlite(getActivity(),"user.db",null,1);
         Util.refreshToken(getActivity());
         user = userReaderSqlite.getUser();
-
         addControls(view);
-
         loadOrders();
-
-
         return view;
     }
 
@@ -63,6 +59,12 @@ public class AllOrderFragment extends Fragment {
             callApiGetMyOrder("Bearer " + user.getAccessToken());
 
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadOrders();
     }
 
     private void addControls(View view) {

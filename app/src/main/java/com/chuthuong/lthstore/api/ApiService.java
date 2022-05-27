@@ -202,6 +202,13 @@ public interface ApiService {
     Call<OrderResponse> getAnOrderMe(@Header("token") String token,
                                      @Path("id") String id);
 
+    // cancel order
+    @FormUrlEncoded
+    @PUT("order/cancel/{id}")
+    Call<OrderResponse> cancelOrder(@Header("token") String token,
+                                    @Path("id") String id,
+                                    @Field("reason") String reason);
+
     // delete review
     @DELETE("review/{id}")
     Call<ApiResponse> deleteReview(@Header("token") String token,

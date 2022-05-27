@@ -60,7 +60,11 @@ public class DeliveryFragment extends Fragment {
             callApiGetMyOrder("Bearer " + user.getAccessToken());
         }
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadOrders();
+    }
     private void addControls(View view) {
         recOrder = view.findViewById(R.id.rec_order_delivery);
         txtNoOrder = view.findViewById(R.id.no_order);

@@ -111,6 +111,7 @@
                     android:paddingTop="10dp"
                     android:paddingRight="10dp"
                     android:paddingBottom="10dp"
+                    android:background="@drawable/line_top"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -154,7 +155,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="300.000 đ"
-                        android:textColor="@color/black"
+                        android:textColor="@color/pink"
+                        android:layout_marginRight="5dp"
                         app:layout_constraintEnd_toEndOf="parent" />
 
                     <TextView

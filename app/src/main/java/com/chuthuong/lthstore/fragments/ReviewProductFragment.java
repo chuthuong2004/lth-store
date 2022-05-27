@@ -62,7 +62,6 @@ public class ReviewProductFragment extends Fragment {
         rating.setText(product.getRate() + "/5");
         recyclerViewReview = view.findViewById(R.id.rec_review);
         recyclerViewReview.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
-        ;
         callApiGetAllReviewByProduct(product.getId());
         quantityReviewProduct = view.findViewById(R.id.quantity_review_product);
         reviewNull = view.findViewById(R.id.review_null);
@@ -70,38 +69,6 @@ public class ReviewProductFragment extends Fragment {
         registerForContextMenu(recyclerViewReview);
         return view;
     }
-//    @Override
-//    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-//        super.onCreateContextMenu(menu, v, menuInfo);
-//        // inflate menu
-//        MenuInflater inflater = getActivity().getMenuInflater();
-//        inflater.inflate(R.menu.menu_review_product, menu);
-//    }
-//
-//    @Override
-//    public boolean onContextItemSelected(MenuItem item) {
-//        return super.onContextItemSelected(item);
-//        Recy info = (RecyclerViewContextMenuInfo) item.getMenuInfo();
-//        // handle menu item here
-//    }
-//    @Override
-//    public boolean onContextItemSelected(@NonNull MenuItem item) {
-//        int position = -1;
-//        try {
-//            position = ((ReviewProductAdapter) recyclerViewReview.getAdapter()).getPosition();
-//        } catch (Exception e) {
-//            return super.onContextItemSelected(item);
-//        }
-//        switch (item.getItemId()) {
-//            case R.id.ctx_menu_remove_backup:
-//                // do your stuff
-//                break;
-//            case R.id.ctx_menu_restore_backup:
-//                // do your stuff
-//                break;
-//        }
-//        return super.onContextItemSelected(item);
-//    }
 
     private void callApiGetAllReviewByProduct(String productID) {
         ApiService.apiService.getAllReviewByProduct(productID).enqueue(new Callback<ListReviewResponse>() {

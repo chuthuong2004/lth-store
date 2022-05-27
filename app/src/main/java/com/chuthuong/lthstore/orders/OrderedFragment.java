@@ -57,7 +57,11 @@ public class OrderedFragment extends Fragment {
 
         return view;
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadOrders();
+    }
     private void loadOrders() {
         //  Log.e("User order ",user.toString());
         if(user!=null){

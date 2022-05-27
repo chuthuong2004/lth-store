@@ -59,7 +59,11 @@ public class CancelFragment extends Fragment {
 
         }
     }
-
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadOrders();
+    }
     private void addControls(View view) {
         recOrder = view.findViewById(R.id.rec_order_cancel);
         txtNoOrder = view.findViewById(R.id.no_order);

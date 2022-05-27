@@ -16,6 +16,9 @@
         android:theme="@style/Theme.LTHStore"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".activities.detailActivities.OrderDetailActivity"
+            android:exported="false" />
+        <activity
             android:name=".activities.ReviewProductActivity"
             android:exported="false" />
         <activity

@@ -274,4 +274,11 @@ public class OrderFragment extends Fragment {
         layoutNotUser = view.findViewById(R.id.layout_not_user);
         btnLogin = view.findViewById(R.id.btn_login);
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadCart();
+    }
 }
