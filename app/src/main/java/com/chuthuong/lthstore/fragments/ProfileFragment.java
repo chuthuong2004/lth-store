@@ -111,10 +111,7 @@ public class ProfileFragment extends Fragment {
             public void onClick(View v) {
                 if(userReaderSqlite.getUser()!=null){
                     openDialogConfirmLogout();
-                }else {
-                    Log.e("Không","Có");
                 }
-
             }
         });
 

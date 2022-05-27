@@ -6,7 +6,6 @@ public class ApiToken {
 
     public ApiToken() {
     }
-
     public ApiToken(String accessToken, String refreshToken) {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;

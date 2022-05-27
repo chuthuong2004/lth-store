@@ -40,6 +40,7 @@
     <string name="strTitleSeeAll">See All</string>
     <string name="strTitleNewProducts">New Products</string>
     <string name="strTitleFlashSaleProducts">Flash Sale</string>
+    <string name="strTitleBestSellingProducts">Best Selling Products</string>
     <string name="strTitlePopularProduct">Popular Products</string>
     <string name="strTitleHomeNavigation">Home</string>
     <string name="strTitleProductNavigation">Products</string>
@@ -67,6 +68,4 @@
 
     <string name="strTitleBuyNow">BUY NOW</string>
     <string name="strTitleMyCart">My Cart</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

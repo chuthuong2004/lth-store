@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,8 +75,10 @@ public class OrderDetailActivity extends AppCompatActivity {
     private TextView txtDateConfirm, txtDateDelivery, txtDateDelivered, txtDateCanceled;
     private CustomProgressDialog dialogAddItem;
     private int numberLoop;
-    private String reasonCancelChecked ="";
+    private String reasonCancelChecked = "";
     private CustomProgressDialog dialogCancel;
+    private TextView btnContactWithShop;
+    private boolean isOk;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -184,6 +187,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             dateConfirm.setVisibility(View.VISIBLE);
             dateConfirm.setText(fmtDateShipping);
             txtDateConfirm.setVisibility(View.VISIBLE);
+            btnContactWithShop.setVisibility(View.VISIBLE);
         }
         if (order.getOrderStatus().equals("Delivery")) {
             // thời gian giao hàng
@@ -197,9 +201,16 @@ public class OrderDetailActivity extends AppCompatActivity {
             dateConfirm.setVisibility(View.VISIBLE);
             dateConfirm.setText(fmtDateShipping);
             txtDateConfirm.setVisibility(View.VISIBLE);
+            btnContactWithShop.setVisibility(View.VISIBLE);
         }
         if (order.getOrderStatus().equals("Delivered")) {
-            btnReview.setVisibility(View.VISIBLE);
+            if (order.isCommented()) {
+                btnReview.setVisibility(View.GONE);
+                btnReOrder.setVisibility(View.VISIBLE);
+            } else {
+                btnReview.setVisibility(View.VISIBLE);
+                btnReOrder.setVisibility(View.GONE);
+            }
             // thời gian giao hàng thành công
             String fmtDateDelivered = sdf.format(order.getDeliveredAt());
             dateDelivered.setVisibility(View.VISIBLE);
@@ -289,6 +300,12 @@ public class OrderDetailActivity extends AppCompatActivity {
                 openDialogCancel();
             }
         });
+        btnContactWithShop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setToast(OrderDetailActivity.this, "Chức năng chat với shop đang cập nhật !");
+            }
+        });
     }
 
     private void openDialogCancel() {
@@ -310,7 +327,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             dialog.setCancelable(false);
         }
         EditText edtReason = dialog.findViewById(R.id.edt_reason);
-        AppCompatRadioButton rad1,rad2,rad3,rad4,rad5,rad6,rad7;
+        AppCompatRadioButton rad1, rad2, rad3, rad4, rad5, rad6, rad7;
         rad1 = dialog.findViewById(R.id.rad_1);
         rad2 = dialog.findViewById(R.id.rad_2);
         rad3 = dialog.findViewById(R.id.rad_3);
@@ -361,8 +378,8 @@ public class OrderDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 int checked = radioGroup.getCheckedRadioButtonId();
-                if(checked> 0) {
-                    if(edtReason.getVisibility()== View.VISIBLE && edtReason.getText().toString()!=null) {
+                if (checked > 0) {
+                    if (edtReason.getVisibility() == View.VISIBLE && edtReason.getText().toString() != null) {
                         reasonCancelChecked = edtReason.getText().toString();
                     }
                     dialogCancel = new CustomProgressDialog(OrderDetailActivity.this);
@@ -375,14 +392,14 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void callApiCancelOrder(String accessToken, String id, String reason) {
-        String token = "Bearer "+accessToken;
-        ApiService.apiService.cancelOrder(token,id, reason).enqueue(new Callback<OrderResponse>() {
+        String token = "Bearer " + accessToken;
+        ApiService.apiService.cancelOrder(token, id, reason).enqueue(new Callback<OrderResponse>() {
             @Override
             public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
-                if(response.isSuccessful()) {
+                if (response.isSuccessful()) {
                     dialogCancel.dismiss();
                     finish();
-                }else {
+                } else {
                     dialogCancel.dismiss();
                     try {
                         Gson gson = new Gson();
@@ -396,7 +413,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<OrderResponse> call, Throwable t) {
-                setToast(OrderDetailActivity.this,"Lỗi server !");
+                setToast(OrderDetailActivity.this, "Lỗi server !");
             }
         });
     }
@@ -443,10 +460,11 @@ public class OrderDetailActivity extends AppCompatActivity {
             public void onClick(View v) {
                 dialogAddItem = new CustomProgressDialog(OrderDetailActivity.this);
                 dialogAddItem.show();
+                numberLoop = 0;
                 for (int i = 0; i < order.getOrderItems().size(); i++) {
                     OrderItem orderItem = order.getOrderItems().get(i);
-                    numberLoop = i + 1;
-                    callApiAddItemToCart(userToken.getAccessToken(), orderItem.getProduct(), orderItem.getSize(), orderItem.getColor(), orderItem.getQuantity());
+                    int quantity = orderItem.getQuantity();
+                    callApiAddItemToCart(userToken.getAccessToken(), orderItem.getProduct(), orderItem.getSize(), orderItem.getColor(), quantity);
                 }
 
             }
@@ -456,15 +474,17 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private void callApiAddItemToCart(String accessToken, String productID, String size, String color, int quantity) {
         String token = "Bearer " + accessToken;
+        Log.e("toke", size + ", " + color + ", " + quantity);
         String accept = "application/json;versions=1";
         ApiService.apiService.addItemToCart(accept, token, productID, size, color, quantity).enqueue(new Callback<CartResponse>() {
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
+                    numberLoop += 1;
                     if (numberLoop == order.getOrderItems().size()) {
                         dialogAddItem.dismiss();
-                        startActivity(new Intent(OrderDetailActivity.this, MyCartActivity.class));
                         finish();
+                        startActivity(new Intent(OrderDetailActivity.this, MyCartActivity.class));
                     }
                 } else {
                     dialogAddItem.dismiss();
@@ -513,5 +533,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         txtDateDelivered = findViewById(R.id.txt_time_delivered);
         dateCanceled = findViewById(R.id.time_canceled);
         txtDateCanceled = findViewById(R.id.txt_time_canceled);
+        btnContactWithShop = findViewById(R.id.btn_contact_with_shop);
+
     }
 }

@@ -2,8 +2,11 @@ package com.chuthuong.lthstore.activities;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +22,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chuthuong.lthstore.R;
+import com.chuthuong.lthstore.activities.detailActivities.OrderDetailActivity;
+import com.chuthuong.lthstore.adapter.ItemReviewAdapter;
+import com.chuthuong.lthstore.adapter.MyItemOrderAdapter;
 import com.chuthuong.lthstore.api.ApiService;
+import com.chuthuong.lthstore.model.Order;
 import com.chuthuong.lthstore.model.OrderItem;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.response.OrderResponse;
@@ -28,6 +35,7 @@ import com.chuthuong.lthstore.response.ReviewResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.chuthuong.lthstore.utils.UserReaderSqlite;
 import com.chuthuong.lthstore.utils.Util;
+import com.chuthuong.lthstore.widget.CustomProgressDialog;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -39,15 +47,18 @@ import retrofit2.Response;
 
 public class ReviewProductActivity extends AppCompatActivity {
 
-    ImageView imageProductReview, imageViewBack;
-    TextView txtNameProductReview, txtTypeProductReview, txtConfirmReview;
-    RatingBar ratingBarReviewProduct;
-    EditText editTextFeelings;
-    String productID;
-    List<OrderItem> orderItems;
-    ReviewResponse reviewResponse;
+    ImageView imageViewBack;
+    TextView txtConfirmReview;
     User user;
     private UserReaderSqlite userReaderSqlite;
+    private RecyclerView recOrderItemReviews;
+    private ItemReviewAdapter itemReviewAdapter;
+    private Order order;
+    public boolean isClickedReviews = false;
+    private String orderID;
+    public List<Float> listRatings;
+    private int numberLoop;
+    private CustomProgressDialog dialog;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -57,29 +68,28 @@ public class ReviewProductActivity extends AppCompatActivity {
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
         Util.refreshToken(this);
         user = userReaderSqlite.getUser();
-        String orderID = getIntent().getStringExtra("order_id");
-        if(orderID!= null){
-            setToast(this, orderID);
+        orderID = getIntent().getStringExtra("order_id");
+        if (orderID != null) {
             callApiGetAnOrderMe(user.getAccessToken(), orderID);
         }
-//        productID = orderItem.getProduct();
         addControls();
-//        loadProduct();
         addEvent();
 
 
     }
 
     private void callApiGetAnOrderMe(String accessToken, String orderID) {
-        String token = "Bearer "+accessToken;
-        ApiService.apiService.getAnOrderMe(token,orderID).enqueue(new Callback<OrderResponse>() {
+        String token = "Bearer " + accessToken;
+        ApiService.apiService.getAnOrderMe(token, orderID).enqueue(new Callback<OrderResponse>() {
             @Override
             public void onResponse(Call<OrderResponse> call, Response<OrderResponse> response) {
-                if(response.isSuccessful()) {
-                    orderItems = response.body().getOrder().getOrderItems();
-                    Log.e("Odder", orderItems.toString());
-                }
-                else {
+                if (response.isSuccessful()) {
+                    order = response.body().getOrder();
+                    recOrderItemReviews.setLayoutManager(new LinearLayoutManager(ReviewProductActivity.this, RecyclerView.VERTICAL, false));
+                    itemReviewAdapter = new ItemReviewAdapter(ReviewProductActivity.this, order);
+                    recOrderItemReviews.setAdapter(itemReviewAdapter);
+                    itemReviewAdapter.notifyDataSetChanged();
+                } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
@@ -99,42 +109,20 @@ public class ReviewProductActivity extends AppCompatActivity {
 
 
     private void addEvent() {
-        ratingBarReviewProduct.setOnRatingBarChangeListener(new RatingBar.OnRatingBarChangeListener() {
-            @Override
-            public void onRatingChanged(RatingBar ratingBar, float rating, boolean fromUser) {
-                switch ((int) rating) {
-                    case 1:
-                        editTextFeelings.setHint("Hãy chia sẻ vì sao sản phẩm này không tốt nhé");
-                        break;
-                    case 2:
-                        editTextFeelings.setHint("Hãy chia sẻ vì sao bạn không thích sản phẩm này nhé");
-                        break;
-                    case 3:
-                        editTextFeelings.setHint("Hãy chia sẻ vì sao bạn chưa thật sự thích sản phẩm này nhé");
-                        break;
-                    case 4:
-                        editTextFeelings.setHint("Hãy chia sẻ ví sao bạn thích sản phẩm này nhé");
-                        break;
-                    case 5:
-                    default:
-                        editTextFeelings.setHint("Hãy chia sẻ những điều bạn thích về sản phẩm này nhé");
-                        break;
 
-                }
-            }
-        });
         txtConfirmReview.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                if (user != null) {
-                    Util.refreshToken(ReviewProductActivity.this);
-                    user = userReaderSqlite.getUser();
-                    setToast(ReviewProductActivity.this, "Đánh giá " + ratingBarReviewProduct.getRating() + " sao" + "\nNội dung " + editTextFeelings.getText());
-//                    addReview(userReaderSqlite.getUser().getAccessToken(), productID, editTextFeelings.getText().toString(),
-//                            (int) ratingBarReviewProduct.getRating(), orderItem.getId());
+                dialog = new CustomProgressDialog(ReviewProductActivity.this);
+                dialog.show();
+                for (int i = 0; i < order.getOrderItems().size(); i++) {
+                    numberLoop = i + 1;
+                    OrderItem orderItem = order.getOrderItems().get(i);
+                    String content = itemReviewAdapter.reviews.get(i);
+                    Float star = itemReviewAdapter.rates.get(i);
+                    callApiCreateReviews(user.getAccessToken(), orderItem.getProduct(), content, star, orderItem.getId());
                 }
-
             }
         });
         imageViewBack.setOnClickListener(new View.OnClickListener() {
@@ -145,22 +133,20 @@ public class ReviewProductActivity extends AppCompatActivity {
         });
     }
 
-    private void addReview(String accessToken, String productID, String content, int star, String orderItemID) {
+    private void callApiCreateReviews(String accessToken, String productID, String content, float star, String orderItemID) {
         String token = "Bearer " + accessToken;
-        String accept = "application/json;versions=1";
 
-        ApiService.apiService.addReview(accept, token, content, productID, star, orderItemID).enqueue(new Callback<ReviewResponse>() {
+        ApiService.apiService.createNewReviews(token, content, productID, star, orderItemID).enqueue(new Callback<ReviewResponse>() {
             @Override
             public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
                 if (response.isSuccessful()) {
-//                    reviewResponse=response.body();
-                    ReviewModel review = response.body().getReview();
-                    Log.e("review", review.getContent());
-                    setToast(ReviewProductActivity.this, response.body().getMessage());
-                    onBackPressed();
+                    if (numberLoop == order.getOrderItems().size()) {
+                        dialog.dismiss();
+                        setToast(ReviewProductActivity.this, response.body().getMessage());
+                        finish();
+                    }
                 } else {
-                    Log.e("Code", response.code() + "");
-                    Log.e("Code", response.errorBody().toString() + "");
+                    dialog.dismiss();
                     Gson gson = new Gson();
                     try {
                         ApiResponse apiResponse = gson.fromJson(response.errorBody().string(), ApiResponse.class);
@@ -180,13 +166,9 @@ public class ReviewProductActivity extends AppCompatActivity {
     }
 
     private void addControls() {
-        txtNameProductReview = findViewById(R.id.txt_name_product_review);
-        txtTypeProductReview = findViewById(R.id.txt_type_product);
-        imageProductReview = findViewById(R.id.img_product_review);
-        ratingBarReviewProduct = findViewById(R.id.rating_bar_review_product);
-        editTextFeelings = findViewById(R.id.edit_text_feelings);
         txtConfirmReview = findViewById(R.id.txt_confirm_review);
         imageViewBack = findViewById(R.id.img_back_detail);
+        recOrderItemReviews = findViewById(R.id.rec_item_review_order);
     }
 
 

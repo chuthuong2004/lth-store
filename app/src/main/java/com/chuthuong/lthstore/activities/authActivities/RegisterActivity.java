@@ -51,7 +51,6 @@ public class RegisterActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("firstTime", false);
             editor.commit();
-
             Intent intent = new Intent(RegisterActivity.this, OnBoardingActivity.class);
             startActivity(intent);
             finish();
@@ -63,22 +62,6 @@ public class RegisterActivity extends AppCompatActivity {
         String username = edtUsername.getText().toString();
         String email = edtEmail.getText().toString();
         String password = edtPassword.getText().toString();
-//        if (TextUtils.isEmpty(username)) {
-//            Toast.makeText(this, "Vui lòng nhập tên đăng nhập !", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        if (TextUtils.isEmpty(email)) {
-//            Toast.makeText(this, "Vui lòng nhập địa chỉ email !", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        if (TextUtils.isEmpty(password)) {
-//            Toast.makeText(this, "Vui lòng nhập mật khẩu !", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        if (password.length() < 6) {
-//            Toast.makeText(this, "Mật khẩu quá ngắn, hãy nhập tối thiểu 6 ký tự!", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
         callApiRegister(username, email, password);
 
     }

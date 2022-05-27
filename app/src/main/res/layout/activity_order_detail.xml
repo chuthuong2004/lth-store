@@ -493,6 +493,23 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints" />
+        <TextView
+            android:id="@+id/btn_contact_with_shop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_button_profile"
+            android:backgroundTint="@color/orange"
+            android:gravity="center"
+            android:padding="5dp"
+            android:visibility="gone"
+            android:layout_margin="10dp"
+            android:text="Liên hệ với shop"
+            android:textSize="20dp"
+            android:textColor="@color/grey_3"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:ignore="MissingConstraints" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

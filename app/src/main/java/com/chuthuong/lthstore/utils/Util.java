@@ -44,7 +44,6 @@ public class Util {
                             edtPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_visibility_off_24, 0);
                             edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
                         }
-
                         return true;
                     }
                 }
@@ -60,9 +59,9 @@ public class Util {
             Log.e("K có", "không có");
         } else {
             long currentSecond = System.currentTimeMillis() / 1000;
-            String accessToken = user.getAccessToken();
+            String refreshToken = user.getRefreshToken();
             Base64.Decoder decoder = Base64.getUrlDecoder();
-            String[] verifyTokens = accessToken.split("\\.");
+            String[] verifyTokens = refreshToken.split("\\.");
             String header = new String(decoder.decode(verifyTokens[0]));
             String payload = new String(decoder.decode(verifyTokens[1]));
             String p = payload.split(",")[3];

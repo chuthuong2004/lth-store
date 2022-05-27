@@ -59,7 +59,9 @@ public class ReviewProductFragment extends Fragment {
         ratingBar = view.findViewById(R.id.detail_product_review_rating_bar);
         ratingBar.setRating(product.getRate());
         rating = view.findViewById(R.id.rating_product_review);
-        rating.setText(product.getRate() + "/5");
+
+        float rate = product.getRate();
+        rating.setText((float) Math.round(rate * 10) / 10 + "/5");
         recyclerViewReview = view.findViewById(R.id.rec_review);
         recyclerViewReview.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
         callApiGetAllReviewByProduct(product.getId());

@@ -246,7 +246,7 @@ public class PaymentActivity extends AppCompatActivity {
     private ShipmentDetail findDefaultShipmentDetail(User user) {
         List<ShipmentDetail> shipmentDetails = user.getShipmentDetails();
         if (shipmentDetails == null) return null;
-        if (shipmentDetails.size() == 0) return shipmentDetails.get(0);
+        if (shipmentDetails.size() == 0) return null;
         for (int i = 0; i < shipmentDetails.size(); i++) {
             if (shipmentDetails.get(i).isDefault() == true) {
                 return shipmentDetails.get(i);

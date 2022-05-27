@@ -217,11 +217,10 @@ public interface ApiService {
     // create new review
     @FormUrlEncoded
     @POST("review/new/{id}")
-    Call<ReviewResponse> addReview(@Header("Accept") String accept,
-                                   @Header("token") String token,
+    Call<ReviewResponse> createNewReviews(@Header("token") String token,
                                    @Field("content") String content,
                                    @Field("product") String productID,
-                                   @Field("star") int star,
+                                   @Field("star") float star,
                                    @Path("id") String orderItemID);
 
 

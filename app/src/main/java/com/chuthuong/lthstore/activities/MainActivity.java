@@ -183,55 +183,6 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.getMenu().findItem(R.id.mnu_order_navigation).setChecked(true);
     }
 
-//    @RequiresApi(api = Build.VERSION_CODES.O)
-//    public void showToken() {
-//        ApiToken apiToken = getToken("account");
-//        String accessToken = apiToken.getAccessToken();
-//        if (accessToken == "") {
-////            startActivity(new Intent(MainActivity.this, LoginActivity.class));
-//        } else {
-//            Base64.Decoder decoder = Base64.getUrlDecoder();
-//            String[] verifyTokens = accessToken.split("\\.");
-//            String header = new String(decoder.decode(verifyTokens[0]));
-//            String payload = new String(decoder.decode(verifyTokens[1]));
-//            String p = payload.split(",")[3];
-//            String newPayload = p.substring(0, p.length() - 1);
-//            long exp = Long.parseLong(newPayload.split(":")[1]);
-//            long date = Calendar.getInstance().getTimeInMillis();
-//            Date date1 = new Date(exp);
-//            SimpleDateFormat df2 = null;
-//            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//                df2 = new SimpleDateFormat("DD/MM/YYYY hh:mm:ss");
-//            }
-//            String date2 = df2.format(date1);
-//        }
-//    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.mnuChangePassword:
-                Intent intent = new Intent(MainActivity.this, ChangePasswordActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.mnuLogout:
-//                callApiLogout();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-    private void setToast(Activity activity, String msg) {
-        Toast toast = new Toast(activity);
-        LayoutInflater inflater = getLayoutInflater();
-        View view = inflater.inflate(R.layout.custom_toast, (ViewGroup) findViewById(R.id.layout_toast));
-        TextView message = view.findViewById(R.id.message_toast);
-        message.setText(msg);
-        toast.setView(view);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.setDuration(Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onRestart() {

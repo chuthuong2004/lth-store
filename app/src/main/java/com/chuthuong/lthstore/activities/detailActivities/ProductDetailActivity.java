@@ -289,7 +289,8 @@ public class ProductDetailActivity extends AppCompatActivity {
         imageSlider.setImageList(slideModelList);
 
         name.setText(product.getName());
-        rating.setText(product.getRate() + "");
+        float rate = product.getRate();
+        rating.setText((float) Math.round(rate * 10) / 10 + "");
         discount.setText("-" + product.getDiscount() + "%");
 
         ratingBar.setRating(product.getRate());

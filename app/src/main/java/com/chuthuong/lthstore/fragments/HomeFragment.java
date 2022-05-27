@@ -36,6 +36,7 @@ import com.chuthuong.lthstore.activities.MainActivity;
 import com.chuthuong.lthstore.activities.MyCartActivity;
 import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
 import com.chuthuong.lthstore.activities.detailActivities.ShowAllActivity;
+import com.chuthuong.lthstore.adapter.BestSellingProductAdapter;
 import com.chuthuong.lthstore.adapter.CategoryAdapter;
 import com.chuthuong.lthstore.adapter.FlashSaleProductAdapter;
 import com.chuthuong.lthstore.adapter.NewProductsAdapter;
@@ -66,7 +67,7 @@ public class HomeFragment extends Fragment {
     ConstraintLayout homeLayout;
     ProgressDialog progressDialog;
 
-    RecyclerView catRecyclerView, newProductRecycleView, flashSaleProductRecycleView, popularRecycleView;
+    RecyclerView catRecyclerView, newProductRecycleView, flashSaleProductRecycleView, popularRecycleView, bestSellingProductRecycleView;
 
     TextView categoryShowAll, newProductShowALl, flashSaleProductShowAll, popularProductShowAll;
     ImageView imgCart;
@@ -84,12 +85,16 @@ public class HomeFragment extends Fragment {
     FlashSaleProductAdapter flashSaleProductAdapter;
     ListProductResponse flashSaleProductList;
 
+    BestSellingProductAdapter bestSellingProductAdapter;
+    ListProductResponse bestSellingProductList;
+
     // Popular product RecycleView
     PopularProductAdapter popularProductAdapter;
     ListProductResponse popularProductList;
     User user;
     CartResponse cartResponse =null;
     UserReaderSqlite userReaderSqlite;
+
     public HomeFragment() {
         // Required empty public constructor
     }
@@ -111,6 +116,7 @@ public class HomeFragment extends Fragment {
         newProductRecycleView = view.findViewById(R.id.new_product_rec);
         popularRecycleView = view.findViewById(R.id.popular_rec);
         flashSaleProductRecycleView = view.findViewById(R.id.sale_product_rec);
+        bestSellingProductRecycleView = view.findViewById(R.id.best_selling_product_rec);
         categoryShowAll = view.findViewById(R.id.category_see_all);
         newProductShowALl = view.findViewById(R.id.new_product_see_all);
         flashSaleProductShowAll = view.findViewById(R.id.flash_sale_product_see_all);
@@ -119,8 +125,6 @@ public class HomeFragment extends Fragment {
         imgCart = view.findViewById(R.id.cart_img_toolbar);
         quantityCart = view.findViewById(R.id.quantity_cart_toolbar);
     }
-
-    ;
 
     private void addEvents() {
         categoryShowAll.setOnClickListener(new View.OnClickListener() {
@@ -181,7 +185,6 @@ public class HomeFragment extends Fragment {
                 else {
                     // start vô cart
                     Intent intent = new Intent(getActivity(), MyCartActivity.class);
-                    intent.putExtra("my_cart", cartResponse);
                     intent.putExtra("title_my_cart", getResources().getString(R.string.strTitleMyCart));
                     startActivity(intent);
                 }
@@ -262,9 +265,6 @@ public class HomeFragment extends Fragment {
         // Category
         catRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
         categoryList = new ListCategoryResponse();
-//        categoryAdapter = new CategoryAdapter(getContext(), categoryList);
-//        catRecyclerView.setAdapter(categoryAdapter)
-
         Util.refreshToken(getActivity());
         callApiGetAllCategories();
 
@@ -279,6 +279,10 @@ public class HomeFragment extends Fragment {
 
         Util.refreshToken(getActivity());
         callApiGetAllFlashSaleProducts();
+
+        bestSellingProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        Util.refreshToken(getActivity());
+        callApiGetAllBestSellingProducts();
 
         // popular products
         popularRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 2));
@@ -312,6 +316,7 @@ public class HomeFragment extends Fragment {
         });
         return root;
     }
+
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadCart() {
@@ -404,6 +409,35 @@ public class HomeFragment extends Fragment {
                     flashSaleProductAdapter = new FlashSaleProductAdapter(getContext(), flashSaleProductList);
                     flashSaleProductRecycleView.setAdapter(flashSaleProductAdapter);
                     flashSaleProductAdapter.notifyDataSetChanged();
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(getActivity(),apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
+                setToast(getActivity(),"Lỗi server !");
+            }
+        });
+    }
+
+    private void callApiGetAllBestSellingProducts() {
+        ApiService.apiService.getAllProducts("0", "1", "-quantitySold", "0").enqueue(new Callback<ListProductResponse>() {
+            @Override
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
+                if (response.isSuccessful()) {
+                    ListProductResponse products = response.body();
+                    bestSellingProductList = new ListProductResponse();
+                    bestSellingProductList = products;
+                    bestSellingProductAdapter = new BestSellingProductAdapter(getContext(), bestSellingProductList);
+                    bestSellingProductRecycleView.setAdapter(bestSellingProductAdapter);
+                    bestSellingProductAdapter.notifyDataSetChanged();
                 } else {
                     try {
                         Gson gson = new Gson();

@@ -203,9 +203,9 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             public void onClick(View v) {
                 dialogAddItem = new CustomProgressDialog(context);
                 dialogAddItem.show();
+                numberLoop = 0;
                 for (int i = 0; i < order.getOrderItems().size(); i++) {
                     OrderItem orderItem = order.getOrderItems().get(i);
-                    numberLoop = i+1;
                     callApiAddItemToCart(order,userToken.getAccessToken(), orderItem.getProduct(), orderItem.getSize(), orderItem.getColor(), orderItem.getQuantity());
                 }
 
@@ -221,6 +221,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
+                    numberLoop +=1;
                     if(numberLoop==order.getOrderItems().size()) {
                         dialogAddItem.dismiss();
                         context.startActivity(new Intent(context, MyCartActivity.class));

@@ -79,6 +79,7 @@ public class MyItemOrderAdapter extends RecyclerView.Adapter<MyItemOrderAdapter.
             quantityItemOrder = itemView.findViewById(R.id.txt_quantity_item_order);
             txtSizeColor = itemView.findViewById(R.id.txt_size_color);
             currentPrice = itemView.findViewById(R.id.txt_price_current_item_order);
+
         }
     }
 }

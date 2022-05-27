@@ -30,9 +30,11 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_menu_24.xml" value="0.3055" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_message_24.xml" value="0.3055" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.336" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_remove_red_eye_24.xml" value="0.336" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.3485" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_shopping_cart_24.xml" value="0.2525" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_star_24.xml" value="0.3485" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_visibility_off_24.xml" value="0.336" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_home_bottom_navigation.xml" value="0.1935" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_launcher_background.xml" value="0.3095" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_logo_brand_foreground.xml" value="0.11" />
@@ -59,6 +61,7 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_change_password.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_edit_personal_profile.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_list_shipment_detail.xml" value="0.3625" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_login.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_main.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_my_cart.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_on_boarding.xml" value="0.18541666666666667" />
@@ -66,6 +69,7 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_payment.xml" value="0.5" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_personal_infor.xml" value="0.33" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_product_detail.xml" value="0.3537037037037037" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_register.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_review_product.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_shipment_detail.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_show_all.xml" value="0.3625" />
@@ -98,7 +102,7 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_delivered.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_delivery.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_description_product.xml" value="0.33" />
-        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_home.xml" value="0.3625" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_order.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_ordered.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_product.xml" value="0.3625" />
@@ -111,6 +115,7 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_tab2.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/fragment_tab3.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/item.xml" value="0.30277777777777776" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/item_create_review_product.xml" value="0.3614583333333333" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/item_detail_order.xml" value="0.5" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/item_list_shipment_detail.xml" value="0.33" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/item_order.xml" value="0.3625" />

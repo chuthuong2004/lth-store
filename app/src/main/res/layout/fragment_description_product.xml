@@ -35,14 +35,14 @@
 
             <TextView
                 android:id="@+id/txt_description_product_detail"
-                android:layout_width="380dp"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="200px"
                 android:layout_below="@+id/text_view1"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="-10dp"
-                android:layout_marginEnd="17dp"
+                android:layout_marginStart="46px"
+                android:layout_marginTop="-26px"
+                android:layout_marginEnd="44px"
                 android:text="CHI TIẾT SẢN PHẨM
             \n- Size: S, M, L
             \n- Chất liệu: Cotton 100% chính phẩm co dãn, vải dày, mềm mịn, thoáng mát và không xù lông
@@ -56,6 +56,23 @@
             \n- Để áo khô tự nhiên - phơi áo ở nơi có bóng râm. Tránh ánh nắng trực tiếp vì sẽ làm áo mau phai màu
             \n- Ủi mặt trái áo ở nhiệt độ thấp, không ủi trực tiếp lên hình in"
                 android:textSize="15sp" />
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_below="@id/txt_description_product_detail"
+               android:orientation="vertical">
+               <TextView
+                   android:id="@+id/read_more_desc"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                   android:drawableTint="@color/pink"
+                   android:gravity="center"
+                   android:layout_gravity="center"
+                   android:text="Xem thêm"
+                   android:textColor="@color/pink" />
+           </LinearLayout>
         </RelativeLayout>
 
         <RelativeLayout
@@ -154,14 +171,15 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:layout_width="380dp"
-                android:layout_height="wrap_content"
+                android:id="@+id/policy"
+                android:layout_width="match_parent"
+                android:layout_height="200px"
                 android:layout_below="@+id/text_view2"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentEnd="true"
-                android:layout_marginStart="18dp"
-                android:layout_marginTop="-10dp"
-                android:layout_marginEnd="17dp"
+                android:layout_marginStart="46px"
+                android:layout_marginTop="-26px"
+                android:layout_marginEnd="44px"
                 android:text="CHÍNH SÁCH ĐỔI HÀNG
                 \n- Sản phẩm được đổi trong vòng 2 ngày (tính từ thời điểm khách nhận được hàng và không kể thời gian giao hàng)
                 \n- Đối với mỗi sản phẩm, khách hàng được đổi duy nhất 1 lần nếu lỗi không thuộc về shop - các sản phẩm được khuyến mãi, giảm giá sẽ không được hỗ trở đổi
@@ -173,6 +191,22 @@
                 \n- Sản phẩm được nhận bị lỗi
                 \n- Sản phẩm được nhận không đúng với sản phẩm đã yêu cầu (Sai mẫu/màu/size)\n"
                 android:textSize="15sp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/policy"
+                android:orientation="vertical">
+                <TextView
+                    android:id="@+id/read_more_policy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
+                    android:drawableTint="@color/pink"
+                    android:gravity="center"
+                    android:layout_gravity="center"
+                    android:text="Xem thêm"
+                    android:textColor="@color/pink" />
+            </LinearLayout>
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.core.widget.NestedScrollView>

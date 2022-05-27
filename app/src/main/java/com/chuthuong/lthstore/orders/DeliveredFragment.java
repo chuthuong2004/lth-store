@@ -55,11 +55,8 @@ public class DeliveredFragment extends Fragment {
     }
 
     private void loadOrders() {
-        Log.e("User order ",user.toString());
         if(user!=null){
-            Log.e("User order ",user.toString());
             callApiGetMyOrder("Bearer " + user.getAccessToken());
-
         }
     }
     @Override
