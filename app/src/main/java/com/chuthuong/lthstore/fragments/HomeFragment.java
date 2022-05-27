@@ -69,7 +69,7 @@ public class HomeFragment extends Fragment {
 
     RecyclerView catRecyclerView, newProductRecycleView, flashSaleProductRecycleView, popularRecycleView, bestSellingProductRecycleView;
 
-    TextView categoryShowAll, newProductShowALl, flashSaleProductShowAll, popularProductShowAll;
+    TextView categoryShowAll, newProductShowALl, flashSaleProductShowAll, popularProductShowAll,bestSellingProductShowAll;
     ImageView imgCart;
     TextView quantityCart;
 
@@ -124,6 +124,7 @@ public class HomeFragment extends Fragment {
         homeLayout = view.findViewById(R.id.home_layout);
         imgCart = view.findViewById(R.id.cart_img_toolbar);
         quantityCart = view.findViewById(R.id.quantity_cart_toolbar);
+        bestSellingProductShowAll = view.findViewById(R.id.best_selling_product_see_all);
     }
 
     private void addEvents() {
@@ -158,6 +159,17 @@ public class HomeFragment extends Fragment {
                 Intent intent = new Intent(getContext(), ShowAllActivity.class);
                 intent.putExtra("list_see_all", flashSaleProductList);
                 intent.putExtra("title_see_all", getResources().getString(R.string.strTitleFlashSaleProducts));
+                startActivity(intent);
+            }
+        });
+        bestSellingProductShowAll.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                Util.refreshToken(getActivity());
+                Intent intent = new Intent(getContext(), ShowAllActivity.class);
+                intent.putExtra("list_see_all", bestSellingProductList);
+                intent.putExtra("title_see_all", getResources().getString(R.string.strTitleBestSellingProducts));
                 startActivity(intent);
             }
         });
