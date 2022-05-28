@@ -195,6 +195,7 @@ public interface ApiService {
     @GET("order/me")
     Call<ListOrderResponse> getMyOrder(@Header("Accept") String accept,
                                        @Header("token") String token,
+                                       @Query("sort") String sort,
                                        @Query("orderStatus[regex]") String filterStatus);
 
     // get a order

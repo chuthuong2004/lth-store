@@ -79,7 +79,7 @@ public class OrderedFragment extends Fragment {
 
     public void callApiGetMyOrder(String accessToken){
         String accept = "application/json;versions=1";
-        ApiService.apiService.getMyOrder(accept, accessToken,"Processing").enqueue(new Callback<ListOrderResponse>() {
+        ApiService.apiService.getMyOrder(accept, accessToken, "-createdAt","Processing").enqueue(new Callback<ListOrderResponse>() {
             @Override
             public void onResponse(Call<ListOrderResponse> call, Response<ListOrderResponse> response) {
                 if(response.isSuccessful()){

@@ -72,7 +72,7 @@ public class DeliveredFragment extends Fragment {
 
     public void callApiGetMyOrder(String accessToken){
         String accept = "application/json;versions=1";
-        ApiService.apiService.getMyOrder(accept, accessToken,"Delivered").enqueue(new Callback<ListOrderResponse>() {
+        ApiService.apiService.getMyOrder(accept, accessToken, "-deliveredAt","Delivered").enqueue(new Callback<ListOrderResponse>() {
             @Override
             public void onResponse(Call<ListOrderResponse> call, Response<ListOrderResponse> response) {
                 if(response.isSuccessful()){

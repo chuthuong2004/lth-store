@@ -78,18 +78,18 @@ public class OrderDetailActivity extends AppCompatActivity {
     private String reasonCancelChecked = "";
     private CustomProgressDialog dialogCancel;
     private TextView btnContactWithShop;
-    private boolean isOk;
+    private String orderID;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_detail);
-        String orderID = getIntent().getStringExtra("order_id");
+        orderID = getIntent().getStringExtra("order_id");
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
         Util.refreshToken(this);
         userToken = userReaderSqlite.getUser();
-        callApiGetAnOrderMe(userToken.getAccessToken(), orderID);
+
         addControls();
         addEvents();
     }
@@ -535,5 +535,11 @@ public class OrderDetailActivity extends AppCompatActivity {
         txtDateCanceled = findViewById(R.id.txt_time_canceled);
         btnContactWithShop = findViewById(R.id.btn_contact_with_shop);
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        callApiGetAnOrderMe(userToken.getAccessToken(), orderID);
     }
 }

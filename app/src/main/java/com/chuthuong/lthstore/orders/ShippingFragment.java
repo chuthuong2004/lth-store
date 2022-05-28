@@ -43,8 +43,6 @@ public class ShippingFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        Toast.makeText(getActivity(),"Vô rồi á",Toast.LENGTH_SHORT);
         View view =inflater.inflate(R.layout.fragment_shipping, container, false);
         userReaderSqlite= new UserReaderSqlite(getActivity(),"user.db",null,1);
         Util.refreshToken(getActivity());
@@ -55,9 +53,7 @@ public class ShippingFragment extends Fragment {
     }
 
     private void loadOrders() {
-        //  Log.e("User order ",user.toString());
         if(user!=null){
-            Log.e("User order ",user.toString());
             callApiGetMyOrder("Bearer " + user.getAccessToken());
 
         }
@@ -74,9 +70,9 @@ public class ShippingFragment extends Fragment {
 
     }
 
-    public void callApiGetMyOrder(String accessToken){
+    public void callApiGetMyOrder(String token){
         String accept = "application/json;versions=1";
-        ApiService.apiService.getMyOrder(accept, accessToken,"Shipping").enqueue(new Callback<ListOrderResponse>() {
+        ApiService.apiService.getMyOrder(accept, token, "-shippingAt","Shipping").enqueue(new Callback<ListOrderResponse>() {
             @Override
             public void onResponse(Call<ListOrderResponse> call, Response<ListOrderResponse> response) {
                 if(response.isSuccessful()){
