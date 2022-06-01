@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class Product implements Serializable{
+public class Product implements Serializable {
     @SerializedName("_id")
     private String id;
     private String name;
@@ -16,9 +16,9 @@ public class Product implements Serializable{
     private int quantitySold;
     private int discount;
     private String desProduct;
-    private  List<ProductDetail> detail;
+    private List<ProductDetail> detail;
     private String category;
-    private  List<ProductImage> images;
+    private List<ProductImage> images;
     private int likeCount;
     private List<String> keywords;
     private List<String> reviews;
@@ -27,11 +27,12 @@ public class Product implements Serializable{
     private String updatedAt;
     private String slug;
     private Float rate;
+    private List<String> favorites;
 
     public Product() {
     }
 
-    public Product(String id, String name, String title, int price, int quantitySold, int discount, String desProduct, List<ProductDetail> detail, String category, List<ProductImage> images, int likeCount, List<String> keywords, List<String> reviews, boolean deleted, String createdAt, String updatedAt, String slug, Float rate) {
+    public Product(String id, String name, String title, int price, int quantitySold, int discount, String desProduct, List<ProductDetail> detail, String category, List<ProductImage> images, int likeCount, List<String> keywords, List<String> reviews, boolean deleted, String createdAt, String updatedAt, String slug, Float rate,List<String> favorites) {
         this.id = id;
         this.name = name;
         this.title = title;
@@ -50,6 +51,7 @@ public class Product implements Serializable{
         this.updatedAt = updatedAt;
         this.slug = slug;
         this.rate = rate;
+        this.favorites = favorites;
     }
 
     public String getId() {
@@ -196,6 +198,14 @@ public class Product implements Serializable{
         this.rate = rate;
     }
 
+    public List<String> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<String> favorites) {
+        this.favorites = favorites;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -217,6 +227,7 @@ public class Product implements Serializable{
                 ", updatedAt='" + updatedAt + '\'' +
                 ", slug='" + slug + '\'' +
                 ", rate=" + rate +
+                ", favorites=" + favorites +
                 '}';
     }
 }

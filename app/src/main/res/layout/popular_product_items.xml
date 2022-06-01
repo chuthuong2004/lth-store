@@ -39,12 +39,14 @@ app:cardCornerRadius="10dp">
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
+        android:id="@+id/img_favorite_popular"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/ic_baseline_favorite_24"
         android:background="@drawable/image_view_bg_circle"
         app:layout_constraintBottom_toBottomOf="@+id/popular_product_img"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/pink" />
 
     <TextView
         android:id="@+id/popular_product_name"

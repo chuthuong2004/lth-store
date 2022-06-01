@@ -13,14 +13,15 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true" />
+
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
 
+        android:layout_above="@+id/bottom_navigation"
+        android:layout_below="@+id/toolbar_detail_product"
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/toolbar_detail_product"
-        android:layout_above="@+id/bottom_navigation"
         tools:context=".activities.detailActivities.ProductDetailActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -99,7 +100,7 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/image_view_bg_circle"
+                    android:background="@drawable/text_view_bg_circle"
                     android:backgroundTint="@color/blue"
                     android:gravity="center"
                     android:padding="2dp"
@@ -193,6 +194,7 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:isIndicator="true"
+                    android:rating="4"
                     android:numStars="5"
                     android:stepSize="0.1" />
 
@@ -224,7 +226,7 @@
                     android:textColor="@color/grey" />
             </LinearLayout>
 
-            <LinearLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/linear_layout2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -235,119 +237,98 @@
                 tools:ignore="MissingConstraints">
 
                 <TextView
+                    android:id="@+id/textView57"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginLeft="10dp"
                     android:padding="5dp"
                     android:text="@string/strSize"
-                    android:textColor="@color/grey" />
+                    android:textColor="@color/grey"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
                     android:id="@+id/linear_layout_size"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="15px"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:gravity="right"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textView57"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <!--                <TextView-->
-                    <!--                    android:id="@+id/sizeS"-->
-                    <!--                    android:layout_width="80px"-->
-                    <!--                    android:layout_height="wrap_content"-->
-                    <!--                    android:layout_gravity="center"-->
-                    <!--                    android:layout_marginRight="15px"-->
-                    <!--                    android:backgroundTint="@color/pink"-->
-                    <!--                    android:background="@drawable/image_view_bg_circle"-->
-                    <!--                    android:gravity="center"-->
-                    <!--                    android:text="S" />-->
+                    <RadioGroup
+                        android:id="@+id/rad_group_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginRight="10dp"
+                        android:gravity="right"
+                        android:orientation="horizontal"></RadioGroup>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:id="@+id/linearLayout3"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layout_color"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:orientation="horizontal"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/linear_layout2"
                 tools:ignore="MissingConstraints">
 
                 <TextView
+                    android:id="@+id/textView58"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_marginLeft="10dp"
                     android:padding="5dp"
                     android:text="@string/strColor"
-                    android:textColor="@color/grey" />
+                    android:textColor="@color/grey"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
                     android:id="@+id/linear_layout_color"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginRight="5dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:gravity="right"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textView58"
+                    app:layout_constraintTop_toTopOf="parent">
 
-                    <TextView
-                        android:layout_width="80px"
+                    <RadioGroup
+                        android:id="@+id/rad_group_color"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone"
-                        android:layout_marginRight="15px"
-                        android:background="@drawable/image_view_bg_circle"
-                        android:gravity="center" />
+                        android:layout_marginRight="10dp"
+                        android:gravity="right"
+                        android:orientation="horizontal">
+                         </RadioGroup>
 
-                    <TextView
-                        android:layout_width="80px"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:visibility="gone"
-                        android:layout_marginRight="15px"
-                        android:background="@drawable/image_view_bg_circle"
-                        android:backgroundTint="@color/pink"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:id="@+id/txt_color_product_detail"
-                        android:layout_width="80px"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="15px"
-                        android:background="@drawable/image_view_bg_circle"
-                        android:backgroundTint="@color/pink"
-                        android:text="X"
-                        android:gravity="center" />
-
-                    <TextView
-                        android:visibility="gone"
-                        android:layout_width="80px"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:layout_marginRight="15px"
-                        android:background="@drawable/image_view_bg_circle"
-                        android:backgroundTint="@color/blue"
-                        android:gravity="center" />
-                    <!--                android:backgroundTint="@color/pink"-->
-                    <!--                android:textColor="@color/white"-->
                 </LinearLayout>
-
-            </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.google.android.material.tabs.TabLayout
                 android:id="@+id/tab_layout_detail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/view_pager_detail"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layout_color"
                 app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
-                app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-                app:layout_constraintBottom_toTopOf="@+id/view_pager_detail"
                 tools:ignore="MissingConstraints">
 
             </com.google.android.material.tabs.TabLayout>
@@ -357,10 +338,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tab_layout_detail"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent">
-            </androidx.viewpager2.widget.ViewPager2>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tab_layout_detail"></androidx.viewpager2.widget.ViewPager2>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

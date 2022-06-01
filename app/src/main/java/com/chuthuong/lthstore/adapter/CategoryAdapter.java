@@ -54,8 +54,11 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                callApiProductByCategory(category);
-
+                Intent intent = new Intent(context, ShowAllActivity.class);
+                intent.putExtra("condition", "product by category");
+                intent.putExtra("categoryID", category.getId());
+                intent.putExtra("title_see_all", category.getName());
+                context.startActivity(intent);
             }
         });
     }
@@ -75,35 +78,5 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             catName = itemView.findViewById(R.id.cat_name);
 
         }
-    }
-
-    private void callApiProductByCategory(Category category) {
-        ApiService.apiService.getAllProductByCategory(category.getId()).enqueue(new Callback<ListProductResponse>() {
-            @Override
-            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
-                if (response.isSuccessful()) {
-                    listProductResponse = response.body();
-                    Intent intent = new Intent(context, ShowAllActivity.class);
-                    intent.putExtra("list_see_all", listProductResponse);
-                    intent.putExtra("title_see_all", category.getName());
-                    context.startActivity(intent);
-                } else {
-                    try {
-                        Gson gson = new Gson();
-                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        Log.e("Message", apiError.getMessage());
-//                        Toast.makeText(HomeFragment.this, apiError.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ListProductResponse> call, Throwable t) {
-                Log.e("Lỗi server ", t.toString());
-                Toast.makeText(context, "lỗi", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }

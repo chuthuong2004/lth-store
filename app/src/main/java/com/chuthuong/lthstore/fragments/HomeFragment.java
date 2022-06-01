@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ import android.widget.Toast;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.MainActivity;
 import com.chuthuong.lthstore.activities.MyCartActivity;
+import com.chuthuong.lthstore.activities.SearchActivity;
 import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
 import com.chuthuong.lthstore.activities.detailActivities.ShowAllActivity;
 import com.chuthuong.lthstore.adapter.BestSellingProductAdapter;
@@ -46,6 +48,7 @@ import com.chuthuong.lthstore.response.CartResponse;
 import com.chuthuong.lthstore.response.ListCategoryResponse;
 import com.chuthuong.lthstore.response.ListProductResponse;
 import com.chuthuong.lthstore.model.User;
+import com.chuthuong.lthstore.response.UserResponse;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.chuthuong.lthstore.utils.UserReaderSqlite;
 import com.chuthuong.lthstore.utils.Util;
@@ -69,7 +72,7 @@ public class HomeFragment extends Fragment {
 
     RecyclerView catRecyclerView, newProductRecycleView, flashSaleProductRecycleView, popularRecycleView, bestSellingProductRecycleView;
 
-    TextView categoryShowAll, newProductShowALl, flashSaleProductShowAll, popularProductShowAll,bestSellingProductShowAll;
+    TextView categoryShowAll, newProductShowALl, flashSaleProductShowAll, popularProductShowAll, bestSellingProductShowAll;
     ImageView imgCart;
     TextView quantityCart;
 
@@ -92,8 +95,9 @@ public class HomeFragment extends Fragment {
     PopularProductAdapter popularProductAdapter;
     ListProductResponse popularProductList;
     User user;
-    CartResponse cartResponse =null;
+    CartResponse cartResponse = null;
     UserReaderSqlite userReaderSqlite;
+    private TextView seeAll;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -102,13 +106,92 @@ public class HomeFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        Log.e("HomeFragment", "Fragment 1");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Log.e("Thuong", "Reload FragmentHome");
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        userReaderSqlite = new UserReaderSqlite(getActivity(), "user.db", null, 1);
+
+        Util.refreshToken(getActivity());
+        user = userReaderSqlite.getUser();
+        loadCart();
+        // Inflate the layout for this fragment
+        View root = inflater.inflate(R.layout.fragment_home, container, false);
+
+        progressDialog = new ProgressDialog(getActivity());
+        addControls(root);
+        addEvents();
+        homeLayout.setVisibility(View.GONE);
+
+        // image slider
+        ImageSlider imageSlider = root.findViewById(R.id.image_slider);
+        List<SlideModel> slideModelList = new ArrayList<>();
+        slideModelList.add(new SlideModel(R.drawable.banner1, ScaleTypes.CENTER_CROP));
+        slideModelList.add(new SlideModel(R.drawable.banner2, ScaleTypes.CENTER_CROP));
+        slideModelList.add(new SlideModel(R.drawable.banner3, ScaleTypes.CENTER_CROP));
+        imageSlider.setImageList(slideModelList);
+
+        progressDialog.setTitle("Welcome to LTH Store");
+        progressDialog.setMessage("Please wait....");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.show();
+
+        SearchView searchView = root.findViewById(R.id.search_view_home);
+        CardView cardView = root.findViewById(R.id.card_view_search_home);
+        TextView textView = root.findViewById(R.id.text_view_hint_search);
+        Util.refreshToken(getActivity());
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().startActivity(new Intent(getActivity(), SearchActivity.class));
+            }
+        });
+        return root;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void doLoadData() {
+        // Category
+        catRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
+        categoryList = new ListCategoryResponse();
+        Util.refreshToken(getActivity());
+        callApiGetAllCategories();
+
+        // new Products
+        newProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        Util.refreshToken(getActivity());
+        callApiGetAllNewProducts();
+
+        // Flash Sale Products
+        flashSaleProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        Util.refreshToken(getActivity());
+        callApiGetAllFlashSaleProducts();
+
+
+        bestSellingProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
+        Util.refreshToken(getActivity());
+        callApiGetAllBestSellingProducts();
+
+        // popular products
+        popularRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        Util.refreshToken(getActivity());
+        callApiGetAllPopularProducts();
+    }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void loadCart() {
+        Util.refreshToken(getActivity());
+        if (user != null) {
+            callApiGetMyCart("Bearer " + user.getAccessToken());
+        }
     }
 
     public void addControls(View view) {
@@ -125,6 +208,7 @@ public class HomeFragment extends Fragment {
         imgCart = view.findViewById(R.id.cart_img_toolbar);
         quantityCart = view.findViewById(R.id.quantity_cart_toolbar);
         bestSellingProductShowAll = view.findViewById(R.id.best_selling_product_see_all);
+        seeAll = view.findViewById(R.id.see_all);
     }
 
     private void addEvents() {
@@ -137,7 +221,7 @@ public class HomeFragment extends Fragment {
 //                Intent intent = new Intent(getContext(), ShowAllActivity.class);
 //                intent.putExtra("list_see_all", categoryList);
 //                startActivity(intent);
-                setToast(getActivity(),"Đang bảo trì !");
+                setToast(getActivity(), "Đang bảo trì !");
             }
         });
         newProductShowALl.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +230,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Util.refreshToken(getActivity());
                 Intent intent = new Intent(getContext(), ShowAllActivity.class);
-                intent.putExtra("list_see_all", newProductList);
+                intent.putExtra("condition", "new product");
                 intent.putExtra("title_see_all", getResources().getString(R.string.strTitleNewProducts));
                 startActivity(intent);
             }
@@ -157,7 +241,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Util.refreshToken(getActivity());
                 Intent intent = new Intent(getContext(), ShowAllActivity.class);
-                intent.putExtra("list_see_all", flashSaleProductList);
+                intent.putExtra("condition", "flash sale");
                 intent.putExtra("title_see_all", getResources().getString(R.string.strTitleFlashSaleProducts));
                 startActivity(intent);
             }
@@ -168,7 +252,7 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Util.refreshToken(getActivity());
                 Intent intent = new Intent(getContext(), ShowAllActivity.class);
-                intent.putExtra("list_see_all", bestSellingProductList);
+                intent.putExtra("condition", "best selling");
                 intent.putExtra("title_see_all", getResources().getString(R.string.strTitleBestSellingProducts));
                 startActivity(intent);
             }
@@ -179,7 +263,18 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
                 Util.refreshToken(getActivity());
                 Intent intent = new Intent(getContext(), ShowAllActivity.class);
-                intent.putExtra("list_see_all", popularProductList);
+                intent.putExtra("condition", "popular");
+                intent.putExtra("title_see_all", getResources().getString(R.string.strTitlePopularProduct));
+                startActivity(intent);
+            }
+        });
+        seeAll.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                Util.refreshToken(getActivity());
+                Intent intent = new Intent(getContext(), ShowAllActivity.class);
+                intent.putExtra("condition", "popular");
                 intent.putExtra("title_see_all", getResources().getString(R.string.strTitlePopularProduct));
                 startActivity(intent);
             }
@@ -243,101 +338,6 @@ public class HomeFragment extends Fragment {
         dialog.show();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        userReaderSqlite = new UserReaderSqlite(getActivity(), "user.db", null, 1);
-
-        Util.refreshToken(getActivity());
-        user = userReaderSqlite.getUser();
-        loadCart();
-        // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-
-        progressDialog = new ProgressDialog(getActivity());
-
-        addControls(root);
-        addEvents();
-        homeLayout.setVisibility(View.GONE);
-
-        // image slider
-        ImageSlider imageSlider = root.findViewById(R.id.image_slider);
-        List<SlideModel> slideModelList = new ArrayList<>();
-        slideModelList.add(new SlideModel(R.drawable.banner1, ScaleTypes.CENTER_CROP));
-        slideModelList.add(new SlideModel(R.drawable.banner2,  ScaleTypes.CENTER_CROP));
-        slideModelList.add(new SlideModel(R.drawable.banner3,  ScaleTypes.CENTER_CROP));
-        imageSlider.setImageList(slideModelList);
-
-        progressDialog.setTitle("Welcome to LTH Store");
-        progressDialog.setMessage("Please wait....");
-        progressDialog.setCanceledOnTouchOutside(false);
-        progressDialog.show();
-
-        // Category
-        catRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.HORIZONTAL, false));
-        categoryList = new ListCategoryResponse();
-        Util.refreshToken(getActivity());
-        callApiGetAllCategories();
-
-        // new Products
-        newProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-
-        Util.refreshToken(getActivity());
-        callApiGetAllNewProducts();
-
-        // Flash Sale Products
-        flashSaleProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-
-        Util.refreshToken(getActivity());
-        callApiGetAllFlashSaleProducts();
-
-        bestSellingProductRecycleView.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false));
-        Util.refreshToken(getActivity());
-        callApiGetAllBestSellingProducts();
-
-        // popular products
-        popularRecycleView.setLayoutManager(new GridLayoutManager(getContext(), 2));
-//        popularProductList = new ListProductResponse();
-//        popularProductAdapter = new PopularProductAdapter(getContext(), popularProductList);
-//        popularRecycleView.setAdapter(popularProductAdapter);
-        Util.refreshToken(getActivity());
-        callApiGetAllPopularProducts();
-
-        SearchView searchView = root.findViewById(R.id.search_view_home);
-        CardView cardView = root.findViewById(R.id.card_view_search_home);
-        TextView textView = root.findViewById(R.id.text_view_hint_search);
-        Util.refreshToken(getActivity());
-        cardView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Util.refreshToken(getActivity());
-                searchView.setIconified(false);
-                textView.setVisibility(View.GONE);
-//                getActivity().onSearchRequested();
-            }
-        });
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                Util.refreshToken(getActivity());
-                textView.setVisibility(View.VISIBLE);
-                return false;
-            }
-        });
-        return root;
-    }
-
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private void loadCart() {
-        Util.refreshToken(getActivity());
-        if (user != null) {
-            callApiGetMyCart("Bearer " + user.getAccessToken());
-        }
-    }
-
     public void callApiGetMyCart(String accessToken) {
         String accept = "application/json;versions=1";
         ApiService.apiService.getMyCart(accept, accessToken).enqueue(new Callback<CartResponse>() {
@@ -365,7 +365,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
-                setToast(getActivity(),"Lỗi server !");
+                setToast(getActivity(), "Lỗi server !");
             }
         });
     }
@@ -381,8 +381,9 @@ public class HomeFragment extends Fragment {
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.show();
     }
+
     private void callApiGetAllPopularProducts() {
-        ApiService.apiService.getAllProducts("0", "1", "-likeCount", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(20, 1, "-likeCount", "0").enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -411,7 +412,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void callApiGetAllFlashSaleProducts() {
-        ApiService.apiService.getAllProducts("0", "1", "-discount", "20").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(0, 1, "-discount", "20").enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -425,7 +426,7 @@ public class HomeFragment extends Fragment {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        setToast(getActivity(),apiError.getMessage());
+                        setToast(getActivity(), apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -434,13 +435,13 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListProductResponse> call, Throwable t) {
-                setToast(getActivity(),"Lỗi server !");
+                setToast(getActivity(), "Lỗi server !");
             }
         });
     }
 
     private void callApiGetAllBestSellingProducts() {
-        ApiService.apiService.getAllProducts("0", "1", "-quantitySold", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(0, 1, "-quantitySold", "0").enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -454,7 +455,7 @@ public class HomeFragment extends Fragment {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        setToast(getActivity(),apiError.getMessage());
+                        setToast(getActivity(), apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -463,13 +464,13 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListProductResponse> call, Throwable t) {
-                setToast(getActivity(),"Lỗi server !");
+                setToast(getActivity(), "Lỗi server !");
             }
         });
     }
 
     private void callApiGetAllNewProducts() {
-        ApiService.apiService.getAllProducts("0", "1", "-createdAt", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(0, 1, "-createdAt", "0").enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -483,7 +484,7 @@ public class HomeFragment extends Fragment {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        setToast(getActivity(),apiError.getMessage());
+                        setToast(getActivity(), apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -492,7 +493,7 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListProductResponse> call, Throwable t) {
-                setToast(getActivity(),"Lỗi server !");
+                setToast(getActivity(), "Lỗi server !");
             }
         });
     }
@@ -512,7 +513,7 @@ public class HomeFragment extends Fragment {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
-                        setToast(getActivity(),apiError.getMessage());
+                        setToast(getActivity(), apiError.getMessage());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -521,13 +522,13 @@ public class HomeFragment extends Fragment {
 
             @Override
             public void onFailure(Call<ListCategoryResponse> call, Throwable t) {
-                setToast(getActivity(),"Lỗi server !");
+                setToast(getActivity(), "Lỗi server !");
             }
         });
     }
 
     public void reloadData() {
-        setToast(getActivity(),"Reload Fragment Homt");
+        setToast(getActivity(), "Reload Fragment Homt");
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -535,5 +536,6 @@ public class HomeFragment extends Fragment {
     public void onStart() {
         super.onStart();
         loadCart();
+        doLoadData();
     }
 }

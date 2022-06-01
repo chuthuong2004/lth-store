@@ -39,12 +39,15 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
+            android:id="@+id/img_favorite_new_product"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:src="@drawable/ic_baseline_favorite_24"
+            android:tag="liked"
+            android:src="@drawable/ic_baseline_favorite_border_24"
             android:background="@drawable/image_view_bg_circle"
             app:layout_constraintBottom_toBottomOf="@+id/img_new_product"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:tint="@color/pink" />
 
         <TextView
             android:id="@+id/name_product_new"

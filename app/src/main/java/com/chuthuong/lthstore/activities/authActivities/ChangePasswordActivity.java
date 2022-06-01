@@ -12,10 +12,12 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -73,9 +75,32 @@ public class ChangePasswordActivity extends AppCompatActivity {
         edtConfirmPassword = findViewById(R.id.edit_text_confirm_password);
         back = findViewById(R.id.img_back_detail);
         backToHome = findViewById(R.id.back_to_home);
-        Util.showPassword(edtCurrentPassword);
-        Util.showPassword(edtNewPassword);
-        Util.showPassword(edtConfirmPassword);
+        showPassword(edtCurrentPassword);
+        showPassword(edtNewPassword);
+        showPassword(edtConfirmPassword);
+    }
+
+    private void showPassword(EditText edtPassword) {
+        // hiển thị mật khẩu
+        edtPassword.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                final int DRAWABLE_RIGHT = 2;
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if (motionEvent.getRawX() >= (edtPassword.getRight() - (edtPassword.getLeft() / 2) - edtPassword.getCompoundDrawables()[DRAWABLE_RIGHT].getBounds().width())) {
+                        if (edtPassword.getInputType() == (InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD)) {
+                            edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);
+                            edtPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_remove_red_eye_24, 0);
+                        } else {
+                            edtPassword.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_baseline_visibility_off_24, 0);
+                            edtPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                        }
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
     }
     private void setToast(Activity activity, String msg) {
         Toast toast = new Toast(activity);

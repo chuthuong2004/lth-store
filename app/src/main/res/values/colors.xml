@@ -33,4 +33,7 @@
     <color name="delivered">#DF9F4F</color>
     <color name="cancel_order">#E46605</color>
 
+
+    <color name="transparent">#00000000</color>
+
 </resources>

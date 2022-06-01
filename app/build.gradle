@@ -59,4 +59,7 @@ dependencies {
     // custom progressbar loading
     implementation 'com.github.ybq:Android-SpinKit:1.4.0'
 
+    // momo
+//    implementation 'com.github.momo-wallet:mobile-sdk:1.0.7'
+
 }

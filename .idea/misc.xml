@@ -21,6 +21,7 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_add_shopping_cart_24.xml" value="0.3095" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.3095" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_arrow_forward_ios_24.xml" value="0.3095" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_check_24.xml" value="0.3635" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_favorite_24.xml" value="0.3485" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_favorite_24_pink.xml" value="0.3485" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/ic_baseline_favorite_border_24.xml" value="0.3095" />
@@ -48,10 +49,20 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/line_top.xml" value="0.3095" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/menu_shopping.xml" value="0.3055" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/mycart.xml" value="0.3095" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_color_normal.xml" value="0.3635" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_color_selected.xml" value="0.3635" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_color_selector.xml" value="0.3635" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_nomal.xml" value="0.336" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_normal.xml" value="0.3625" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_product_detail_normal.xml" value="0.3625" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_product_detail_selected.xml" value="0.3625" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_product_detail_selector.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_selected.xml" value="0.336" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_selector.xml" value="0.336" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_size_selected.xml" value="0.3635" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_text_color.xml" value="0.336" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_text_color_product_detail.xml" value="0.3625" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/radio_button_text_size.xml" value="0.2855" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/strikethrough_foreground.xml" value="0.3635" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/tab_background.xml" value="0.336" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/drawable/text_view_bg_circle.xml" value="0.106" />
@@ -68,11 +79,12 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_order_detail.xml" value="0.33" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_payment.xml" value="0.5" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_personal_infor.xml" value="0.33" />
-        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_product_detail.xml" value="0.3537037037037037" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_product_detail.xml" value="0.5" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_register.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_review_product.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_shipment_detail.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/activity_show_all.xml" value="0.3625" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/best_selling_product_items.xml" value="0.5" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/border_left.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/cart_item.xml" value="0.5" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/cart_item_payment.xml" value="0.67" />
@@ -132,7 +144,7 @@
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/line_bottom.xml" value="0.35833333333333334" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/loading_layout.xml" value="0.3625" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/new_products.xml" value="0.67" />
-        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/popular_product_items.xml" value="0.75" />
+        <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/popular_product_items.xml" value="0.33" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/same_product_detail_item.xml" value="0.67" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/show_all_item.xml" value="0.9" />
         <entry key="..\:/Android App/LTHStore/app/src/main/res/layout/sliding_layout.xml" value="0.35833333333333334" />

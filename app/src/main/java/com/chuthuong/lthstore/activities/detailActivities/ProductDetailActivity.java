@@ -8,8 +8,13 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,8 +24,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,10 +36,10 @@ import android.widget.Toast;
 import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.MainActivity;
 import com.chuthuong.lthstore.activities.MyCartActivity;
+import com.chuthuong.lthstore.activities.PaymentActivity;
 import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
 import com.chuthuong.lthstore.adapter.ViewPagerDetailProductAdapter;
 import com.chuthuong.lthstore.api.ApiService;
-import com.chuthuong.lthstore.model.Order;
 import com.chuthuong.lthstore.response.CartResponse;
 import com.chuthuong.lthstore.model.Product;
 import com.chuthuong.lthstore.model.ProductDetail;
@@ -75,15 +83,17 @@ public class ProductDetailActivity extends AppCompatActivity {
     LinearLayout linearLayoutSize;
     // Product
     Product product = null;
-    private int count = 0;
     private TabLayout tabLayout;
     private ViewPager2 viewPager2;
     private ViewPagerDetailProductAdapter viewPagerDetailProductAdapter;
     private CartResponse cartResponse = null;
-    private TextView txtColorProductDetail;
-    CustomProgressDialog dialogAddItem,dialogMyCart;
+    CustomProgressDialog dialogAddItem, dialogMyCart;
     String productID;
     private UserReaderSqlite userReaderSqlite;
+    private String strSize, strColor;
+    private List<ProductDetail> details;
+    private RadioGroup radioGroupSize, radioGroupColor;
+    private CustomProgressDialog dialogFavorite;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -148,7 +158,11 @@ public class ProductDetailActivity extends AppCompatActivity {
             Util.refreshToken(ProductDetailActivity.this);
             user = userReaderSqlite.getUser();
             if (user != null) {
-                setToast(ProductDetailActivity.this,"Chức năng yêu thích sản phẩm đang cập nhật !");
+                if(product.getFavorites().contains(user.getId())) {
+                    callApiRemoveFavorite(user.getAccessToken(), productID);
+                }else {
+                    callApiAddFavorite(user.getAccessToken(), productID);
+                }
             } else {
                 openDialogRequestLogin();
             }
@@ -157,7 +171,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             Util.refreshToken(ProductDetailActivity.this);
             user = userReaderSqlite.getUser();
             if (user != null) {
-                setToast(ProductDetailActivity.this,"Chức năng chat với shop đang cập nhật !");
+                setToast(ProductDetailActivity.this, "Chức năng chat với shop đang cập nhật !");
             } else {
                 openDialogRequestLogin();
             }
@@ -166,28 +180,37 @@ public class ProductDetailActivity extends AppCompatActivity {
             Util.refreshToken(ProductDetailActivity.this);
             user = userReaderSqlite.getUser();
             if (user != null) {
-                Util.refreshToken(ProductDetailActivity.this);
-                user = userReaderSqlite.getUser();
-                String size = product.getDetail().get(0).getSize();
-                String color = product.getDetail().get(0).getDetailColor().get(0).getColor();
-                 dialogAddItem= new CustomProgressDialog(ProductDetailActivity.this);
-                dialogAddItem.show();
-                callApiAddItemToCart("Bearer " + user.getAccessToken(), product.getId(),
-                        size, color, 1);
+                if (strSize != "" && strColor != "") {
+                    Util.refreshToken(ProductDetailActivity.this);
+                    user = userReaderSqlite.getUser();
+                    dialogAddItem = new CustomProgressDialog(ProductDetailActivity.this);
+                    dialogAddItem.show();
+                    callApiAddItemToCart("Bearer " + user.getAccessToken(), product.getId(),
+                            strSize, strColor, 1);
+                } else {
+                    setToast(ProductDetailActivity.this, "Vui lòng chọn size và color");
+                }
             } else {
                 openDialogRequestLogin();
             }
         });
-        buyNow.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Util.refreshToken(ProductDetailActivity.this);
-                user = userReaderSqlite.getUser();
-                if (user != null) {
-                    setToast(ProductDetailActivity.this,"Chức năng mua ngay đang cập nhật !");
+        buyNow.setOnClickListener(v -> {
+            Util.refreshToken(ProductDetailActivity.this);
+            user = userReaderSqlite.getUser();
+            if (user != null) {
+                if (strSize != "" && strColor != "") {
+                    Util.refreshToken(ProductDetailActivity.this);
+                    user = userReaderSqlite.getUser();
+                    dialogAddItem = new CustomProgressDialog(ProductDetailActivity.this);
+                    dialogAddItem.show();
+                    callApiAddItemToCart("Bearer " + user.getAccessToken(), product.getId(),
+                            strSize, strColor, 1);
+                    startActivity(new Intent(ProductDetailActivity.this, PaymentActivity.class));
                 } else {
-                    openDialogRequestLogin();
+                    setToast(ProductDetailActivity.this, "Vui lòng chọn size và color");
                 }
+            } else {
+                openDialogRequestLogin();
             }
         });
         imgCart.setOnClickListener(new View.OnClickListener() {
@@ -207,6 +230,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
     }
+
     private void openDialogRequestLogin() {
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -242,6 +266,7 @@ public class ProductDetailActivity extends AppCompatActivity {
         });
         dialog.show();
     }
+
     private void handleToolbar() {
         ImageView imgBack, imgSearch, imgHome;
         imgBack = findViewById(R.id.img_back_detail_toolbar);
@@ -274,6 +299,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadData(Product product) {
         Util.refreshToken(ProductDetailActivity.this);
@@ -287,61 +313,126 @@ public class ProductDetailActivity extends AppCompatActivity {
             slideModelList.add(new SlideModel(productImages.get(i).getImg(), ScaleTypes.CENTER_CROP));
         }
         imageSlider.setImageList(slideModelList);
-
         name.setText(product.getName());
         float rate = product.getRate();
         rating.setText((float) Math.round(rate * 10) / 10 + "");
         discount.setText("-" + product.getDiscount() + "%");
-
         ratingBar.setRating(product.getRate());
         NumberFormat formatter = new DecimalFormat("#,###");
         String formatterPriceProduct = formatter.format(product.getPrice() - (product.getPrice() * product.getDiscount() / 100));
         price.setText(formatterPriceProduct + "đ");
-        likeCount.setText(product.getLikeCount() + "");
         quantitySold.setText(product.getQuantitySold() + "");
         if (product.getDiscount() != 0) {
             String formatterCurrentPriceProduct = formatter.format(product.getPrice());
             currentPrice.setText(formatterCurrentPriceProduct + "đ");
         } else {
-            currentPrice.setText("");
+            currentPrice.setVisibility(View.GONE);
         }
-        List<ProductDetail> details = product.getDetail();
-        linearLayoutSize.clearChildFocus(findViewById(R.id.txt_size_detai_product));
-        for (int i = 0; i < details.size(); i++) {
-            txtSize = new TextView(ProductDetailActivity.this);
-            txtSize.setText(details.get(i).getSize() + "");
-            txtSize.setId(R.id.txt_size_detai_product);
-            txtSize.setBackgroundResource(R.drawable.image_view_bg_circle);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams
-                    (100, ViewGroup.LayoutParams.WRAP_CONTENT);
-            params.setMargins(0, 0, 20, 0);
-            txtSize.setLayoutParams(params);
-            txtSize.setGravity(Gravity.CENTER);
-            linearLayoutSize.addView(txtSize);
-            List<ProductDetailColor> detailColors = details.get(i).getDetailColor();
-            for (int j = 0; j < detailColors.size(); j++) {
-                txtColorProductDetail.setTextColor(Color.parseColor(detailColors.get(j).getColor()));
+        loadFavorite(product);
+        details = product.getDetail();
+        renderSizeColor(details);
+    }
+
+    private void loadFavorite(Product product) {
+        likeCount.setText(product.getLikeCount() + "");
+        if(user!=null){
+            if(product.getFavorites().contains(user.getId())) {
+                imgFavoriteProduct.setImageResource(R.drawable.ic_baseline_favorite_24);
+            }else {
+                imgFavoriteProduct.setImageResource(R.drawable.ic_baseline_favorite_border_24);
             }
-            txtSize.setOnClickListener(new View.OnClickListener() {
-                @SuppressLint("ResourceType")
-                @Override
-
-                public void onClick(View v) {
-                    Util.refreshToken(ProductDetailActivity.this);
-                    count++;
-                    if (count > 1) {
-                        txtSize.setTextColor(getResources().getColor(R.color.pink));
-                        txtSize.setBackgroundResource(R.drawable.image_view_bg_circle);
-                        count = 0;
-                    } else {
-                        txtSize.setTextColor(getResources().getColor(R.color.white));
-                        txtSize.setBackgroundResource(R.drawable.image_view_bg_circle_pink);
-
-                    }
-                }
-            });
         }
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.M)
+    @SuppressLint({"ResourceType", "UseCompatLoadingForDrawables"})
+    private void renderSizeColor(List<ProductDetail> productDetails) {
+        radioGroupSize = findViewById(R.id.rad_group_size);
+        radioGroupSize.removeAllViews();
+        radioGroupColor = findViewById(R.id.rad_group_color);
+        radioGroupColor.setVisibility(View.GONE);
+        strColor = "";
+        strSize = "";
+        for (int i = 0; i < productDetails.size(); i++) {
+            Log.e("i", i + "");
+            RadioButton radSize = new RadioButton(ProductDetailActivity.this);
+            RadioGroup.LayoutParams layoutParamsSize = new RadioGroup.LayoutParams(120, 120);
+            layoutParamsSize.setMarginStart(25);
+            radSize.setLayoutParams(layoutParamsSize);
+            radSize.setBackground(getResources().getDrawable(R.drawable.radio_button_size_selector));
+            radSize.setButtonDrawable(getResources().getDrawable(R.color.transparent));
+            radSize.setGravity(Gravity.CENTER);
+            radSize.setText(productDetails.get(i).getSize());
+            radSize.setTypeface(Typeface.DEFAULT_BOLD);
+            radSize.setTextColor(getResources().getColor(R.drawable.radio_button_text_size));
+            radioGroupSize.addView(radSize);
+        }
+        radioGroupSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                strColor = "";
+                radioGroupColor.setVisibility(View.VISIBLE);
+                RadioButton radChecked = findViewById(checkedId);
+                if (radChecked != null) {
+                    strSize = radChecked.getText().toString();
+                    for (int i = 0; i < productDetails.size(); i++) {
+                        if (productDetails.get(i).getSize().equals(radChecked.getText().toString())) {
+                            radioGroupColor.removeAllViews();
+                            List<ProductDetailColor> productDetailColors = productDetails.get(i).getDetailColor();
+                            for (int j = 0; j < productDetailColors.size(); j++) {
+                                RadioButton radColor = new RadioButton(ProductDetailActivity.this);
+                                RadioGroup.LayoutParams layoutParamsColor = new RadioGroup.LayoutParams(120, 120);
+                                layoutParamsColor.setMarginStart(25);
+                                radColor.setLayoutParams(layoutParamsColor);
+                                radColor.setBackground(getResources().getDrawable(R.drawable.radio_button_color_selector));
+                                radColor.setButtonDrawable(getResources().getDrawable(R.color.transparent));
+                                radColor.setGravity(Gravity.CENTER);
+                                radColor.setText(productDetailColors.get(j).getColor());
+                                radColor.setTextSize(1);
+                                if (productDetailColors.get(j).getColor().toLowerCase().equals("orange")) {
+                                    radColor.setTextColor(Color.parseColor("#FFA500"));
+                                    radColor.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#FFA500")));
+                                }
+                                else if (productDetailColors.get(j).getColor().toLowerCase().equals("dark red")) {
+                                    radColor.setTextColor(Color.parseColor("#7f0000"));
+                                    radColor.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor("#7f0000")));
+                                } else {
+                                    radColor.setTextColor(Color.parseColor(productDetailColors.get(j).getColor()));
+                                    radColor.setBackgroundTintList(ColorStateList.valueOf(Color.parseColor(productDetailColors.get(j).getColor())));
+                                }
+
+                                if (radColor.isChecked() == false) {
+                                    radColor.setForeground(null);
+                                }
+                                radColor.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                                    @Override
+                                    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                                        if (!isChecked) {
+                                            radColor.setForeground(null);
+                                        }
+                                    }
+                                });
+                                radioGroupColor.addView(radColor);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        radioGroupColor.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                RadioButton radCheckedColor = findViewById(checkedId);
+                if (radCheckedColor != null) {
+                    strColor = radCheckedColor.getText().toString();
+                    radCheckedColor.setForeground(getResources().getDrawable(R.drawable.ic_baseline_check_24));
+                    radCheckedColor.setForegroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.pink)));
+                }
+
+            }
+        });
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void loadCart() {
         if (user != null) {
@@ -351,6 +442,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             callApiGetMyCart("Bearer " + user.getAccessToken());
         }
     }
+
     private void setToast(Activity activity, String msg) {
         Toast toast = new Toast(activity);
         LayoutInflater inflater = getLayoutInflater();
@@ -362,21 +454,27 @@ public class ProductDetailActivity extends AppCompatActivity {
         toast.setDuration(Toast.LENGTH_SHORT);
         toast.show();
     }
+
     private void callApiAddItemToCart(String token, String productID, String size, String color, int quantity) {
         String accept = "application/json;versions=1";
         ApiService.apiService.addItemToCart(accept, token, productID, size, color, quantity).enqueue(new Callback<CartResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onResponse(Call<CartResponse> call, Response<CartResponse> response) {
                 if (response.isSuccessful()) {
                     cartResponse = response.body();
                     dialogAddItem.dismiss();
                     if (cartResponse.getCart().getCartItems() != null) {
-                        int size = cartResponse.getCart().getCartItems().size();
-                        if (size > 0) {
-                            quantityCart.setText(size + "");
+                        int sizeCart = cartResponse.getCart().getCartItems().size();
+                        if (sizeCart > 0) {
+                            quantityCart.setText(sizeCart + "");
                             quantityCart.setVisibility(View.VISIBLE);
                         }
-                        setToast(ProductDetailActivity.this,cartResponse.getMessage());
+                        strSize = "";
+                        strColor = "";
+                        radioGroupSize.clearCheck();
+                        radioGroupColor.setVisibility(View.GONE);
+                        setToast(ProductDetailActivity.this, cartResponse.getMessage());
                     }
                 } else {
                     dialogAddItem.dismiss();
@@ -397,6 +495,7 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
     }
+
     private void callApiGetMyCart(String accessToken) {
         String accept = "application/json;versions=1";
         ApiService.apiService.getMyCart(accept, accessToken).enqueue(new Callback<CartResponse>() {
@@ -422,12 +521,14 @@ public class ProductDetailActivity extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             public void onFailure(Call<CartResponse> call, Throwable t) {
                 setToast(ProductDetailActivity.this, "Lỗi server !");
             }
         });
     }
+
     private void callApiGetProduct(String id) {
         ApiService.apiService.getProduct(id).enqueue(new Callback<ProductResponse>() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -455,15 +556,65 @@ public class ProductDetailActivity extends AppCompatActivity {
             }
         });
     }
+    private  void callApiAddFavorite(String accessToken, String productID) {
+        String token = "Bearer "+ accessToken;
+        ApiService.apiService.addFavorite(token, productID).enqueue(new Callback<ProductResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                if(response.isSuccessful()) {
+                    product = response.body().getProduct();
+                    loadFavorite(product);
+                }else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(ProductDetailActivity.this, apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                setToast(ProductDetailActivity.this, "Lỗi server");
+            }
+        });
+    }
+    private  void callApiRemoveFavorite(String accessToken, String productID) {
+        String token = "Bearer "+ accessToken;
+        ApiService.apiService.removeFavorite(token, productID).enqueue(new Callback<ProductResponse>() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onResponse(Call<ProductResponse> call, Response<ProductResponse> response) {
+                if(response.isSuccessful()) {
+                    product = response.body().getProduct();
+                    loadFavorite(product);
+                }else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(ProductDetailActivity.this, apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            @Override
+            public void onFailure(Call<ProductResponse> call, Throwable t) {
+                setToast(ProductDetailActivity.this, "Lỗi server");
+            }
+        });
+    }
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void callProduct(String id) {
         Util.refreshToken(ProductDetailActivity.this);
         user = userReaderSqlite.getUser();
-        if(id!=null) {
-
+        if (id != null) {
             callApiGetProduct(id);
         }
     }
+
     private void addControls() {
         rating = findViewById(R.id.detail_product_rating);
         name = findViewById(R.id.detail_product_name);
@@ -482,14 +633,14 @@ public class ProductDetailActivity extends AppCompatActivity {
         buyNow = findViewById(R.id.txt_buy_now_navigation_detail);
         imgCart = findViewById(R.id.cart_img_toolbar);
         quantityCart = findViewById(R.id.quantity_cart_toolbar);
-        txtColorProductDetail = findViewById(R.id.txt_color_product_detail);
-
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
         user = userReaderSqlite.getUser();
     }
+
     public Product getProduct() {
         return product;
     }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onStart() {

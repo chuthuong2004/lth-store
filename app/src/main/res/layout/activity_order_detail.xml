@@ -119,17 +119,23 @@
                         app:layout_constraintTop_toTopOf="parent"
                         tools:ignore="MissingConstraints" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/rec_order_item"
+                <androidx.core.widget.NestedScrollView
+                    android:id="@+id/nestedScrollView_item"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout2"
-                    tools:ignore="MissingConstraints">
+                    app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rec_order_item"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:ignore="MissingConstraints">
+                    </androidx.recyclerview.widget.RecyclerView>
+                </androidx.core.widget.NestedScrollView>
 
-                </androidx.recyclerview.widget.RecyclerView>
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/layout_price"
                     android:visibility="gone"

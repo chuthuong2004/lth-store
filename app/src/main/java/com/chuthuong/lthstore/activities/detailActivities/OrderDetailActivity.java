@@ -4,6 +4,8 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatRadioButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -23,6 +25,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -79,6 +82,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     private CustomProgressDialog dialogCancel;
     private TextView btnContactWithShop;
     private String orderID;
+    private NestedScrollView nestedScrollViewItem;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -89,7 +93,6 @@ public class OrderDetailActivity extends AppCompatActivity {
         userReaderSqlite = new UserReaderSqlite(this, "user.db", null, 1);
         Util.refreshToken(this);
         userToken = userReaderSqlite.getUser();
-
         addControls();
         addEvents();
     }
@@ -120,6 +123,9 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void loadData(Order order) {
+        if(order.getOrderItems().size()>=3) {
+            nestedScrollViewItem.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 550));
+        }
         recOrderItem.setLayoutManager(new LinearLayoutManager(OrderDetailActivity.this, RecyclerView.VERTICAL, false));
         myItemOrderAdapter = new MyItemOrderAdapter(OrderDetailActivity.this, order);
         recOrderItem.setAdapter(myItemOrderAdapter);
@@ -436,7 +442,11 @@ public class OrderDetailActivity extends AppCompatActivity {
         } else {
             dialog.setCancelable(false);
         }
-
+        NestedScrollView nestedScrollView = dialog.findViewById(R.id.nestedScrollView_item_re_order);
+        if(order.getOrderItems().size()>=2) {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 550);
+            nestedScrollView.setLayoutParams(layoutParams);
+        }
         // load adapter
         RecyclerView recItemReOder = dialog.findViewById(R.id.rec_order_item_re_order);
         recItemReOder.setLayoutManager(new LinearLayoutManager(OrderDetailActivity.this, RecyclerView.VERTICAL, false));
@@ -534,6 +544,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         dateCanceled = findViewById(R.id.time_canceled);
         txtDateCanceled = findViewById(R.id.txt_time_canceled);
         btnContactWithShop = findViewById(R.id.btn_contact_with_shop);
+        nestedScrollViewItem = findViewById(R.id.nestedScrollView_item);
+
 
     }
 

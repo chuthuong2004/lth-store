@@ -201,6 +201,7 @@ public class EditPersonalProfile extends AppCompatActivity {
             if (shipmentDetail.getPhone() != null) {
                 edtPhonePersonal.setText(shipmentDetail.getPhone());
             }
+
         }
     }
 

@@ -99,8 +99,8 @@ public interface ApiService {
 
     // get all products
     @GET("products")
-    Call<ListProductResponse> getAllProducts(@Query("limit") String limit,
-                                             @Query("page") String page,
+    Call<ListProductResponse> getAllProducts(@Query("limit") int limit,
+                                             @Query("page") int page,
                                              @Query("sort") String sort,
                                              @Query("discount[gte]") String filterDiscount);
 
@@ -114,7 +114,9 @@ public interface ApiService {
 
     // get all products by category
     @GET("products/{idCate}")
-    Call<ListProductResponse> getAllProductByCategory(@Path("idCate") String categoryID);
+    Call<ListProductResponse> getAllProductByCategory(@Path("idCate") String categoryID,
+                                                      @Query("limit") int limit,
+                                                      @Query("page") int page);
 
     // get my cart
     @GET("cart/my-cart")
@@ -224,5 +226,10 @@ public interface ApiService {
                                    @Field("star") float star,
                                    @Path("id") String orderItemID);
 
-
+    @PUT("products/favorite/add/{id}")
+    Call<ProductResponse> addFavorite(@Header("token") String token,
+                                      @Path("id") String productID);
+    @PUT("products/favorite/remove/{id}")
+    Call<ProductResponse> removeFavorite(@Header("token") String token,
+                                      @Path("id") String productID);
 }

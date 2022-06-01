@@ -2,10 +2,12 @@ package com.chuthuong.lthstore.activities.detailActivities;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.widget.NestedScrollView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
@@ -22,6 +24,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,18 +32,29 @@ import com.chuthuong.lthstore.R;
 import com.chuthuong.lthstore.activities.MainActivity;
 import com.chuthuong.lthstore.activities.MyCartActivity;
 import com.chuthuong.lthstore.activities.authActivities.LoginActivity;
+import com.chuthuong.lthstore.adapter.BestSellingProductAdapter;
+import com.chuthuong.lthstore.adapter.FlashSaleProductAdapter;
+import com.chuthuong.lthstore.adapter.NewProductsAdapter;
+import com.chuthuong.lthstore.adapter.PopularProductAdapter;
+import com.chuthuong.lthstore.adapter.SameProductDetailAdapter;
 import com.chuthuong.lthstore.adapter.ShowAllAdapter;
 import com.chuthuong.lthstore.api.ApiService;
 import com.chuthuong.lthstore.fragments.SearchFragment;
+import com.chuthuong.lthstore.model.Product;
 import com.chuthuong.lthstore.response.CartResponse;
+import com.chuthuong.lthstore.response.ListCategoryResponse;
 import com.chuthuong.lthstore.response.ListProductResponse;
 import com.chuthuong.lthstore.model.User;
 import com.chuthuong.lthstore.utils.ApiResponse;
 import com.chuthuong.lthstore.utils.UserReaderSqlite;
 import com.chuthuong.lthstore.utils.Util;
+import com.github.ybq.android.spinkit.SpinKitView;
+import com.github.ybq.android.spinkit.style.FadingCircle;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,27 +70,27 @@ public class ShowAllActivity extends AppCompatActivity {
     private ImageView imgCart;
     private TextView quantityCart;
     private UserReaderSqlite userReaderSqlite;
+    private NestedScrollView nestedScrollView;
+    private int page = 1;
+    private final int LIMIT = 10;
+    private ArrayList<Product> products;
+    private SpinKitView progressBar;
+    private String title, condition;
+    private boolean isLoading = true;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_all);
-
         addControls();
         addEvents();
+        products = new ArrayList<>();
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        final Object obj = getIntent().getSerializableExtra("list_see_all");
-        String title = getIntent().getStringExtra("title_see_all");
-        if (obj instanceof ListProductResponse) {
-            listProductResponse = (ListProductResponse) obj;
-            showAllAdapter = new ShowAllAdapter(ShowAllActivity.this, listProductResponse);
-            TextView txtTitle = findViewById(R.id.title_see_all);
-            txtTitle.setText(title);
-            recyclerView.setAdapter(showAllAdapter);
-            showAllAdapter.notifyDataSetChanged();
-        }
-        ImageView imgBack, imgSearch;
+        handleToolbar();
+    }
+    private void handleToolbar() {
+        ImageView imgBack;
         imgBack = findViewById(R.id.img_back_detail);
         imgBack.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -85,20 +99,158 @@ public class ShowAllActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-        imgSearch = findViewById(R.id.search_img);
-        imgSearch.setOnClickListener(new View.OnClickListener() {
+    }
+    private void callApiGetAllPopularProducts(int page) {
+        ApiService.apiService.getAllProducts(LIMIT, page, "-likeCount", "0").enqueue(new Callback<ListProductResponse>() {
             @Override
-            public void onClick(View v) {
-                FragmentManager fragmentManager = getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                Fragment searchFragment = new SearchFragment();
-                fragmentTransaction.add(R.id.search_container, searchFragment);
-//                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_right, R.anim.slide_out_right,
-//                        R.anim.slide_out_right);
-                fragmentTransaction.setCustomAnimations(R.anim.slide_in_right, 0);
-                fragmentTransaction.show(searchFragment);
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
+                if (response.isSuccessful()) {
+                    products.addAll(response.body().getProducts());
+                    showAllAdapter = new ShowAllAdapter(ShowAllActivity.this, products);
+                    recyclerView.setAdapter(showAllAdapter);
+                    showAllAdapter.notifyDataSetChanged();
+                    if(response.body().getCountDocument()< LIMIT) {
+                        progressBar.setVisibility(View.GONE);
+                        isLoading =false;
+                    }
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(ShowAllActivity.this, apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
+                setToast(ShowAllActivity.this, "Lỗi server !");
+            }
+        });
+    }
+
+    private void callApiGetAllFlashSaleProducts(int page) {
+        ApiService.apiService.getAllProducts(LIMIT, page, "-discount", "20").enqueue(new Callback<ListProductResponse>() {
+            @Override
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
+                if (response.isSuccessful()) {
+                    products.addAll(response.body().getProducts());
+                    showAllAdapter = new ShowAllAdapter(ShowAllActivity.this, products);
+                    recyclerView.setAdapter(showAllAdapter);
+                    showAllAdapter.notifyDataSetChanged();
+                    if(response.body().getCountDocument()< LIMIT) {
+                        progressBar.setVisibility(View.GONE);
+                        isLoading =false;
+                    }
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(ShowAllActivity.this, apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
+                setToast(ShowAllActivity.this, "Lỗi server !");
+            }
+        });
+    }
+
+    private void callApiGetAllBestSellingProducts(int page) {
+        ApiService.apiService.getAllProducts(LIMIT, page, "-quantitySold", "0").enqueue(new Callback<ListProductResponse>() {
+            @Override
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
+                if (response.isSuccessful()) {
+                    products.addAll(response.body().getProducts());
+                    showAllAdapter = new ShowAllAdapter(ShowAllActivity.this, products);
+                    recyclerView.setAdapter(showAllAdapter);
+                    showAllAdapter.notifyDataSetChanged();
+                    if(response.body().getCountDocument()< LIMIT) {
+                        progressBar.setVisibility(View.GONE);
+                        isLoading =false;
+                    }
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(ShowAllActivity.this, apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
+                setToast(ShowAllActivity.this, "Lỗi server !");
+            }
+        });
+    }
+
+    private void callApiGetAllNewProducts(int page) {
+        ApiService.apiService.getAllProducts(LIMIT, page, "-createdAt", "0").enqueue(new Callback<ListProductResponse>() {
+            @Override
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
+                if (response.isSuccessful()) {
+                    products.addAll(response.body().getProducts());
+                    showAllAdapter = new ShowAllAdapter(ShowAllActivity.this, products);
+                    recyclerView.setAdapter(showAllAdapter);
+                    showAllAdapter.notifyDataSetChanged();
+                    if(response.body().getCountDocument()< LIMIT) {
+                        progressBar.setVisibility(View.GONE);
+                        isLoading =false;
+                    }
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(ShowAllActivity.this, apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
+                setToast(ShowAllActivity.this, "Lỗi server !");
+            }
+        });
+    }
+
+    private void callApiProductByCategory(String category, int page) {
+        ApiService.apiService.getAllProductByCategory(category, LIMIT, page).enqueue(new Callback<ListProductResponse>() {
+            @Override
+            public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
+                if (response.isSuccessful()) {
+                    products.addAll(response.body().getProducts());
+                    showAllAdapter = new ShowAllAdapter(ShowAllActivity.this, products);
+                    recyclerView.setAdapter(showAllAdapter);
+                    showAllAdapter.notifyDataSetChanged();
+                    if(response.body().getCountDocument()< LIMIT) {
+                        progressBar.setVisibility(View.GONE);
+                        isLoading =false;
+                    }
+                } else {
+                    try {
+                        Gson gson = new Gson();
+                        ApiResponse apiError = gson.fromJson(response.errorBody().string(), ApiResponse.class);
+                        setToast(ShowAllActivity.this, apiError.getMessage());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ListProductResponse> call, Throwable t) {
+                setToast(ShowAllActivity.this, "Lỗi server !");
             }
         });
     }
@@ -120,7 +272,31 @@ public class ShowAllActivity extends AppCompatActivity {
                 }
             }
         });
-
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                if(scrollY==v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight() && isLoading) {
+                    page++;
+                    switch (condition) {
+                        case "new product":
+                            callApiGetAllNewProducts(page);
+                            break;
+                        case "flash sale":
+                            callApiGetAllFlashSaleProducts(page);
+                            break;
+                        case "best selling":
+                            callApiGetAllBestSellingProducts(page);
+                            break;
+                        case "popular":
+                            callApiGetAllPopularProducts(page);
+                            break;
+                        case "product by category":
+                            String categoryId = getIntent().getStringExtra("categoryID");
+                            callApiProductByCategory(categoryId, page);
+                    }
+                }
+            }
+        });
         Util.refreshToken(ShowAllActivity.this);
         user = userReaderSqlite.getUser();
         loadCart();
@@ -171,6 +347,8 @@ public class ShowAllActivity extends AppCompatActivity {
         quantityCart = findViewById(R.id.quantity_cart_toolbar);
         imgCart = findViewById(R.id.cart_img_toolbar);
         recyclerView = findViewById(R.id.show_all_rec);
+        nestedScrollView = findViewById(R.id.nestedScrollView3);
+        progressBar = findViewById(R.id.progress_bar_loading_all);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -238,6 +416,27 @@ public class ShowAllActivity extends AppCompatActivity {
         super.onStart();
         Util.refreshToken(this);
         user = userReaderSqlite.getUser();
+        condition = getIntent().getStringExtra("condition");
+        title = getIntent().getStringExtra("title_see_all");
+        TextView txtTitle = findViewById(R.id.title_see_all);
+        txtTitle.setText(title);
+        switch (condition) {
+            case "new product":
+                callApiGetAllNewProducts(page);
+                break;
+            case "flash sale":
+                callApiGetAllFlashSaleProducts(page);
+                break;
+            case "best selling":
+                callApiGetAllBestSellingProducts(page);
+                break;
+            case "popular":
+                callApiGetAllPopularProducts(page);
+                break;
+            case "product by category":
+                String categoryId = getIntent().getStringExtra("categoryID");
+                callApiProductByCategory(categoryId, page);
+        }
         loadCart();
     }
 

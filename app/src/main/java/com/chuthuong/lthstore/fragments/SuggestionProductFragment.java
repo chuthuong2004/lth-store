@@ -63,7 +63,8 @@ public class SuggestionProductFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ShowAllActivity.class);
-                intent.putExtra("list_see_all", listSameProduct);
+                intent.putExtra("condition", "product by category");
+                intent.putExtra("categoryID", product.getCategory());
                 intent.putExtra("title_see_all",getResources().getString(R.string.strTitleSameProductDetail));
                 startActivity(intent);
             }
@@ -79,7 +80,7 @@ public class SuggestionProductFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getContext(), ShowAllActivity.class);
-                intent.putExtra("list_see_all", popularProductList);
+                intent.putExtra("condition", "popular");
                 intent.putExtra("title_see_all",getResources().getString(R.string.strTitleProductOfShop));
                 startActivity(intent);
             }
@@ -88,7 +89,7 @@ public class SuggestionProductFragment extends Fragment {
         return root;
     }
     private void callApiGetAllPopularProducts() {
-        ApiService.apiService.getAllProducts("0", "1", "-likeCount", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(0, 1, "-likeCount", "0").enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -115,7 +116,7 @@ public class SuggestionProductFragment extends Fragment {
         });
     }
     private void callApiProductByCategory(String category) {
-        ApiService.apiService.getAllProductByCategory(category).enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProductByCategory(category, 0, 1).enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {

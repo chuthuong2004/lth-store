@@ -13,7 +13,7 @@ app:cardCornerRadius="10dp">
     android:background="#EDEDED">
 
     <ImageView
-        android:id="@+id/flash_sale_product_img"
+        android:id="@+id/best_selling_product_img"
         android:layout_width="0dp"
         android:layout_height="180dp"
         android:scaleType="centerCrop"
@@ -24,7 +24,7 @@ app:cardCornerRadius="10dp">
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/flash_sale_product_discount"
+        android:id="@+id/best_selling_product_discount"
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:background="@drawable/text_view_bg_circle"
@@ -39,17 +39,17 @@ app:cardCornerRadius="10dp">
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/img_favorite_flash_sale"
+        android:id="@+id/img_favorite_best_selling_product"
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:src="@drawable/ic_baseline_favorite_24"
         android:background="@drawable/image_view_bg_circle"
-        app:layout_constraintBottom_toBottomOf="@+id/flash_sale_product_img"
+        app:layout_constraintBottom_toBottomOf="@+id/best_selling_product_img"
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/pink" />
 
     <TextView
-        android:id="@+id/flash_sale_product_name"
+        android:id="@+id/best_selling_product_name"
         android:layout_width="0dp"
         android:layout_height="54dp"
         android:ellipsize="end"
@@ -66,18 +66,18 @@ app:cardCornerRadius="10dp">
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/flash_sale_product_img" />
+        app:layout_constraintTop_toBottomOf="@+id/best_selling_product_img" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="@+id/flash_sale_product_name"
-        app:layout_constraintStart_toStartOf="@+id/flash_sale_product_name"
-        app:layout_constraintTop_toBottomOf="@+id/flash_sale_product_name">
+        app:layout_constraintEnd_toEndOf="@+id/best_selling_product_name"
+        app:layout_constraintStart_toStartOf="@+id/best_selling_product_name"
+        app:layout_constraintTop_toBottomOf="@+id/best_selling_product_name">
 
         <TextView
-            android:id="@+id/flash_sale_product_current_price"
+            android:id="@+id/best_selling_product_current_price"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="4dp"
@@ -91,7 +91,7 @@ app:cardCornerRadius="10dp">
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/flash_sale_product_price"
+            android:id="@+id/best_selling_product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="5dp"
@@ -118,7 +118,7 @@ app:cardCornerRadius="10dp">
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/flash_sale_product_like_count"
+            android:layout_alignBaseline="@+id/best_selling_product_like_count"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
             android:layout_marginStart="5dp"
@@ -130,10 +130,10 @@ app:cardCornerRadius="10dp">
             tools:ignore="MissingConstraints" />
 
         <TextView
-            android:id="@+id/flash_sale_product_sold"
+            android:id="@+id/best_selling_product_sold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/flash_sale_product_like_count"
+            android:layout_alignBaseline="@+id/best_selling_product_like_count"
             android:layout_marginStart="2sp"
             android:layout_toEndOf="@+id/textView3"
             android:fontFamily="@font/amethysta"
@@ -143,17 +143,17 @@ app:cardCornerRadius="10dp">
             android:textStyle="bold"
             tools:ignore="MissingConstraints" />
         <ImageView
-            android:id="@+id/flash_sale_product_img_like_count"
+            android:id="@+id/best_selling_product_img_like_count"
             android:layout_width="11dp"
             android:layout_height="11dp"
             android:layout_alignParentTop="true"
-            android:layout_toStartOf="@+id/flash_sale_product_like_count"
+            android:layout_toStartOf="@+id/best_selling_product_like_count"
             android:src="@drawable/ic_baseline_favorite_24"
             app:tint="@color/pink"
             tools:ignore="MissingConstraints" />
 
         <TextView
-            android:id="@+id/flash_sale_product_like_count"
+            android:id="@+id/best_selling_product_like_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
@@ -178,7 +178,7 @@ app:cardCornerRadius="10dp">
         app:layout_constraintTop_toBottomOf="@+id/relative_layout_favorite">
 
         <ImageView
-            android:id="@+id/flash_sale_product_img_add_to_cart"
+            android:id="@+id/best_selling_product_img_add_to_cart"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_alignParentTop="true"
@@ -188,7 +188,7 @@ app:cardCornerRadius="10dp">
             tools:ignore="MissingConstraints"
             app:tint="@color/pink" />
         <RatingBar
-            android:id="@+id/flash_sale_product_rating_bar"
+            android:id="@+id/best_selling_product_rating_bar"
             style="?android:attr/ratingBarStyleSmall"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -197,7 +197,7 @@ app:cardCornerRadius="10dp">
             android:numStars="5"
             android:focusable="true"
             android:clickable="true"
-            android:layout_alignBottom="@+id/flash_sale_product_img_add_to_cart"
+            android:layout_alignBottom="@+id/best_selling_product_img_add_to_cart"
             android:stepSize="0.1" />
     </RelativeLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

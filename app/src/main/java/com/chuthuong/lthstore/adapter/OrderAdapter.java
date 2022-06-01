@@ -14,11 +14,13 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
+import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -178,6 +180,12 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.ViewHolder> 
             dialogReOrder.setCancelable(true);
         } else {
             dialogReOrder.setCancelable(false);
+        }
+
+        NestedScrollView nestedScrollView = dialogReOrder.findViewById(R.id.nestedScrollView_item_re_order);
+        if(order.getOrderItems().size()>=2) {
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 550);
+            nestedScrollView.setLayoutParams(layoutParams);
         }
 
         // load adapter

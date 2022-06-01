@@ -21,13 +21,14 @@ public class User implements Serializable {
     private String accessToken;
     private String refreshToken;
     private String avatar;
+    private List<String> favorites;
     @SerializedName("shipmentDetails")
     private List<ShipmentDetail> shipmentDetails;
 
     public User() {
     }
 
-    public User(String id, String username, String email, String password, boolean isAdmin, String cart, List<String> reviews, List<String> blogs, List<String> orders, String createdAt, String updatedAt, String accessToken, String refreshToken, String avatar, List<ShipmentDetail> shipmentDetails) {
+    public User(String id, String username, String email, String password, boolean isAdmin, String cart, List<String> reviews, List<String> blogs, List<String> orders, String createdAt, String updatedAt, String accessToken, String refreshToken, String avatar, List<String> favorites, List<ShipmentDetail> shipmentDetails) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -42,6 +43,7 @@ public class User implements Serializable {
         this.accessToken = accessToken;
         this.refreshToken = refreshToken;
         this.avatar = avatar;
+        this.favorites = favorites;
         this.shipmentDetails = shipmentDetails;
     }
 
@@ -157,6 +159,14 @@ public class User implements Serializable {
         this.avatar = avatar;
     }
 
+    public List<String> getFavorites() {
+        return favorites;
+    }
+
+    public void setFavorites(List<String> favorites) {
+        this.favorites = favorites;
+    }
+
     public List<ShipmentDetail> getShipmentDetails() {
         return shipmentDetails;
     }
@@ -182,6 +192,7 @@ public class User implements Serializable {
                 ", accessToken='" + accessToken + '\'' +
                 ", refreshToken='" + refreshToken + '\'' +
                 ", avatar='" + avatar + '\'' +
+                ", favorites=" + favorites +
                 ", shipmentDetails=" + shipmentDetails +
                 '}';
     }

@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -85,11 +86,13 @@ public class RegisterActivity extends AppCompatActivity {
                     setToast(RegisterActivity.this, response.body().getMessage());
                     startActivity(new Intent(RegisterActivity.this, LoginActivity.class));
                     finish();
+                    Log.e("success", "1");
                 } else {
                     try {
                         Gson gson = new Gson();
                         ApiResponse apiError =  gson.fromJson(response.errorBody().string(), ApiResponse.class);
                         setToast(RegisterActivity.this,apiError.getMessage());
+                        Log.e("error", "error");
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
