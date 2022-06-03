@@ -6,4 +6,43 @@
     android:layout_height="match_parent"
     tools:context=".activities.SearchActivity">
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/grey_3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints">
+
+        <androidx.appcompat.widget.SearchView
+            android:id="@+id/search_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            app:searchIcon="@drawable/ic_baseline_search_24"
+            android:paddingLeft="30dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="5dp"
+            android:focusable="true"
+            app:closeIcon="@drawable/ic_baseline_close_24"
+            android:background="@drawable/custom_bg_search_view"
+            app:defaultQueryHint="Tìm kiếm"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/txt_cancel_search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:queryHint="@string/strTitleSearchHome"></androidx.appcompat.widget.SearchView>
+
+        <TextView
+            android:id="@+id/txt_cancel_search"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="20dp"
+            android:text="Hủy"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

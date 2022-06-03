@@ -49,34 +49,43 @@
                 android:layout_height="match_parent"
                 android:layout_marginRight="10dp"
                 android:orientation="horizontal"
-                android:translationY="-15dp"
+                android:translationY="-22dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/image_slider_detail">
-
+                <androidx.cardview.widget.CardView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginRight="5dp"
+                    app:cardCornerRadius="100dp">
                 <ImageView
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
                     android:layout_marginRight="5dp"
                     android:background="@drawable/image_view_bg_circle"
                     android:padding="5dp"
                     android:src="@drawable/ic_baseline_share_24"
                     app:tint="@color/pink" />
-
-                <ImageView
-                    android:id="@+id/img_favorite_product"
-                    android:layout_width="30dp"
-                    android:layout_height="30dp"
-                    android:background="@drawable/image_view_bg_circle"
-                    android:padding="5dp"
-                    android:src="@drawable/ic_baseline_favorite_border_24"
-                    app:tint="@color/pink" />
+                </androidx.cardview.widget.CardView>
+               <androidx.cardview.widget.CardView
+                   android:layout_width="40dp"
+                   android:layout_height="40dp"
+                   app:cardCornerRadius="100dp">
+                   <ImageView
+                       android:id="@+id/img_favorite_product"
+                       android:layout_width="40dp"
+                       android:layout_height="40dp"
+                       android:background="@drawable/image_view_bg_circle"
+                       android:padding="5dp"
+                       android:src="@drawable/ic_baseline_favorite_border_24"
+                       app:tint="@color/pink" />
+               </androidx.cardview.widget.CardView>
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="15dp"
                 android:orientation="horizontal"
                 android:padding="10dp"
                 android:weightSum="10"

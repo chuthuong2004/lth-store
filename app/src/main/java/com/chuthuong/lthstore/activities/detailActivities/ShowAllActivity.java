@@ -101,7 +101,7 @@ public class ShowAllActivity extends AppCompatActivity {
         });
     }
     private void callApiGetAllPopularProducts(int page) {
-        ApiService.apiService.getAllProducts(LIMIT, page, "-likeCount", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(LIMIT, page, "-likeCount","", 0,0).enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -132,7 +132,7 @@ public class ShowAllActivity extends AppCompatActivity {
     }
 
     private void callApiGetAllFlashSaleProducts(int page) {
-        ApiService.apiService.getAllProducts(LIMIT, page, "-discount", "20").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(LIMIT, page, "-discount","", 20,0).enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -163,7 +163,7 @@ public class ShowAllActivity extends AppCompatActivity {
     }
 
     private void callApiGetAllBestSellingProducts(int page) {
-        ApiService.apiService.getAllProducts(LIMIT, page, "-quantitySold", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(LIMIT, page, "-quantitySold","", 0,0).enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -194,7 +194,7 @@ public class ShowAllActivity extends AppCompatActivity {
     }
 
     private void callApiGetAllNewProducts(int page) {
-        ApiService.apiService.getAllProducts(LIMIT, page, "-createdAt", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(LIMIT, page, "-createdAt","", 0,0).enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {

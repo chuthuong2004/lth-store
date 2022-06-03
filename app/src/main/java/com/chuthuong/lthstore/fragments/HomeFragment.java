@@ -143,11 +143,9 @@ public class HomeFragment extends Fragment {
         progressDialog.setCanceledOnTouchOutside(false);
         progressDialog.show();
 
-        SearchView searchView = root.findViewById(R.id.search_view_home);
-        CardView cardView = root.findViewById(R.id.card_view_search_home);
-        TextView textView = root.findViewById(R.id.text_view_hint_search);
+        TextView search = root.findViewById(R.id.search_view);
         Util.refreshToken(getActivity());
-        cardView.setOnClickListener(new View.OnClickListener() {
+        search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 getActivity().startActivity(new Intent(getActivity(), SearchActivity.class));
@@ -155,7 +153,6 @@ public class HomeFragment extends Fragment {
         });
         return root;
     }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void doLoadData() {
         // Category
@@ -383,7 +380,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void callApiGetAllPopularProducts() {
-        ApiService.apiService.getAllProducts(20, 1, "-likeCount", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(20, 1, "-likeCount","", 0,0).enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -412,7 +409,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void callApiGetAllFlashSaleProducts() {
-        ApiService.apiService.getAllProducts(0, 1, "-discount", "20").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(0, 1, "-discount","", 20,0).enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -441,7 +438,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void callApiGetAllBestSellingProducts() {
-        ApiService.apiService.getAllProducts(0, 1, "-quantitySold", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(0, 1, "-quantitySold","", 0,0).enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {
@@ -470,7 +467,7 @@ public class HomeFragment extends Fragment {
     }
 
     private void callApiGetAllNewProducts() {
-        ApiService.apiService.getAllProducts(0, 1, "-createdAt", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(0, 1, "-createdAt","", 0,0).enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {

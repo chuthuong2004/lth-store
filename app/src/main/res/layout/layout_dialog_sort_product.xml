@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/bg_white_corner_16"
+        android:padding="10dp"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textView55"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_baseline_swap_vert_24"
+            android:text="Sắp xếp theo"
+            android:paddingBottom="10dp"
+            android:background="@drawable/line_bottom_review"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <RadioGroup
+            android:id="@+id/rad_sort_group"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toTopOf="@+id/btn_confirm"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView55"
+            android:orientation="vertical"
+            tools:ignore="MissingConstraints">
+
+            <RadioButton
+                android:id="@+id/rad_new"
+                android:layout_width="wrap_content"
+                android:drawableTint="@color/white"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_button_selector"
+                android:textColor="@drawable/radio_button_text_color"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="Mới nhất" />
+            <RadioButton
+                android:id="@+id/rad_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:drawableTint="@color/white"
+                android:layout_marginTop="10dp"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_button_selector"
+                android:textColor="@drawable/radio_button_text_color"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="Được yêu thích nhất" />
+            <RadioButton
+                android:id="@+id/rad_price_desc"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:drawableTint="@color/white"
+                android:layout_marginTop="10dp"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_button_selector"
+                android:textColor="@drawable/radio_button_text_color"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="Giá giảm dần" />
+            <RadioButton
+                android:id="@+id/rad_price_asc"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginTop="10dp"
+                android:drawableTint="@color/white"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_button_selector"
+                android:textColor="@drawable/radio_button_text_color"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="Giá tăng dần" />
+            <RadioButton
+                android:id="@+id/rad_discount"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:drawableTint="@color/white"
+                android:layout_marginTop="10dp"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_button_selector"
+                android:textColor="@drawable/radio_button_text_color"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="Khuyến mãi nhiều nhất" />
+            <RadioButton
+                android:id="@+id/rad_best_selling"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:drawableTint="@color/white"
+                android:layout_marginTop="10dp"
+                android:button="@android:color/transparent"
+                android:background="@drawable/radio_button_selector"
+                android:textColor="@drawable/radio_button_text_color"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:text="Bán chạy nhất" />
+
+        </RadioGroup>
+
+        <TextView
+            android:id="@+id/btn_confirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/custom_button_profile"
+            android:gravity="center"
+            android:padding="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="50dp"
+            android:text="Áp dụng"
+            android:textAllCaps="true"
+            android:textColor="@color/white_gr"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.526"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/rad_sort_group"
+            app:layout_constraintVertical_bias="1.0"
+            tools:ignore="MissingConstraints" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

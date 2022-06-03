@@ -89,7 +89,7 @@ public class SuggestionProductFragment extends Fragment {
         return root;
     }
     private void callApiGetAllPopularProducts() {
-        ApiService.apiService.getAllProducts(0, 1, "-likeCount", "0").enqueue(new Callback<ListProductResponse>() {
+        ApiService.apiService.getAllProducts(0, 1, "-likeCount","", 0,0).enqueue(new Callback<ListProductResponse>() {
             @Override
             public void onResponse(Call<ListProductResponse> call, Response<ListProductResponse> response) {
                 if (response.isSuccessful()) {

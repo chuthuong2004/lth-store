@@ -52,6 +52,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
 
     public Context context;
     Cart cart;
+    List<CartItem> cartItems;
     LayoutInflater inflater;
     ViewGroup viewGroup;
     User user = null;
@@ -90,28 +91,28 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
         userReaderSqlite = new UserReaderSqlite(context, "user.db", null, 1);
         user = userReaderSqlite.getUser();
         myCartActivity = (MyCartActivity) context;
-        CartItem cartItems = cart.getCartItems().get(position);
-        Glide.with(context).load(cartItems.getProduct().getImages().get(0).getImg()).into(holder.imgProductItem);
-        holder.nameProductItem.setText(cartItems.getProduct().getName());
-        holder.colorProductItem.setText(cartItems.getColor());
-        holder.sizeProductItem.setText(cartItems.getSize());
+        CartItem cartItem = cart.getCartItems().get(cart.getCartItems().size() - 1 - position);
+        Glide.with(context).load(cartItem.getProduct().getImages().get(0).getImg()).into(holder.imgProductItem);
+        holder.nameProductItem.setText(cartItem.getProduct().getName());
+        holder.colorProductItem.setText(cartItem.getColor());
+        holder.sizeProductItem.setText(cartItem.getSize());
         NumberFormat formatter = new DecimalFormat("#,###");
-        String formatterPriceProduct = formatter.format(cartItems.getProduct().getPrice() - (cartItems.getProduct().getPrice() * cartItems.getProduct().getDiscount() / 100));
+        String formatterPriceProduct = formatter.format(cartItem.getProduct().getPrice() - (cartItem.getProduct().getPrice() * cartItem.getProduct().getDiscount() / 100));
         holder.priceProductItem.setText(formatterPriceProduct + "đ");
-        if (cartItems.getProduct().getDiscount() != 0) {
-            String formatterCurrentPriceProduct = formatter.format(cartItems.getProduct().getPrice());
+        if (cartItem.getProduct().getDiscount() != 0) {
+            String formatterCurrentPriceProduct = formatter.format(cartItem.getProduct().getPrice());
             holder.currentPriceProductItem.setText(formatterCurrentPriceProduct + "đ");
         } else {
             holder.currentPriceProductItem.setText("");
         }
-        holder.quantityProductItem.setText(cartItems.getQuantity() + "");
+        holder.quantityProductItem.setText(cartItem.getQuantity() + "");
         int quantity = Integer.parseInt(holder.quantityProductItem.getText().toString());
         if (quantity < 2) {
             holder.minusQuantityProduct.setEnabled(true);
             holder.minusQuantityProduct.setBackgroundTintList(context.getResources().getColorStateList(R.color.grey_2));
         }
-        List<ProductDetailColor> productDetailColors = findProductDetail(cartItems.getProduct().getDetail(), cartItems.getSize());
-        int amountProduct = findAmountBySizeColor(productDetailColors, cartItems.getColor());
+        List<ProductDetailColor> productDetailColors = findProductDetail(cartItem.getProduct().getDetail(), cartItem.getSize());
+        int amountProduct = findAmountBySizeColor(productDetailColors, cartItem.getColor());
         if (quantity >= amountProduct) {
             holder.addQuantityProduct.setEnabled(true);
             holder.maxQuantity.setVisibility(View.VISIBLE);
@@ -127,7 +128,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
                 if (user != null) {
                     dialogRemoveItem = new CustomProgressDialog(context);
                     dialogRemoveItem.show();
-                    callApiRemoveItemFromCart(cartItems.getId(), "Bearer " + user.getAccessToken());
+                    callApiRemoveItemFromCart(cartItem.getId(), "Bearer " + user.getAccessToken());
                 }
             }
         });
@@ -140,7 +141,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
                     holder.quantityProductItem.setText(quantity + "");
                     dialogUpdate = new CustomProgressDialog(context);
                     dialogUpdate.show();
-                    callApiUpdateQuantityCart("Bearer " + user.getAccessToken(), cartItems.getId(), quantity);
+                    callApiUpdateQuantityCart("Bearer " + user.getAccessToken(), cartItem.getId(), quantity);
                 }
 
             }
@@ -154,7 +155,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
                     holder.quantityProductItem.setText(quantity + "");
                     dialogUpdate = new CustomProgressDialog(context);
                     dialogUpdate.show();
-                    callApiUpdateQuantityCart("Bearer " + user.getAccessToken(), cartItems.getId(), quantity);
+                    callApiUpdateQuantityCart("Bearer " + user.getAccessToken(), cartItem.getId(), quantity);
                 }
 
             }
@@ -199,7 +200,7 @@ public class MyCartAdapter extends RecyclerView.Adapter<MyCartAdapter.ViewHolder
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(context.getApplicationContext(), ProductDetailActivity.class);
-                intent.putExtra("product_id", cartItems.getProduct().getId());
+                intent.putExtra("product_id", cartItem.getProduct().getId());
                 context.startActivity(intent);
             }
         });

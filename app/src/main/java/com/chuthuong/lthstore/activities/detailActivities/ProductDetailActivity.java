@@ -356,7 +356,9 @@ public class ProductDetailActivity extends AppCompatActivity {
         for (int i = 0; i < productDetails.size(); i++) {
             Log.e("i", i + "");
             RadioButton radSize = new RadioButton(ProductDetailActivity.this);
+            // run máy ảo thì set 120, máy thật set 60
             RadioGroup.LayoutParams layoutParamsSize = new RadioGroup.LayoutParams(120, 120);
+            // run máy ảo thì set 25, máy thật set 10
             layoutParamsSize.setMarginStart(25);
             radSize.setLayoutParams(layoutParamsSize);
             radSize.setBackground(getResources().getDrawable(R.drawable.radio_button_size_selector));

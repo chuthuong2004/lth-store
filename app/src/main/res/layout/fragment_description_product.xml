@@ -191,19 +191,22 @@
                 \n- Sản phẩm được nhận bị lỗi
                 \n- Sản phẩm được nhận không đúng với sản phẩm đã yêu cầu (Sai mẫu/màu/size)\n"
                 android:textSize="15sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/policy"
+                android:layout_marginBottom="10dp"
                 android:orientation="vertical">
+
                 <TextView
                     android:id="@+id/read_more_policy"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center"
                     android:drawableRight="@drawable/ic_baseline_keyboard_arrow_down_24"
                     android:drawableTint="@color/pink"
                     android:gravity="center"
-                    android:layout_gravity="center"
                     android:text="Xem thêm"
                     android:textColor="@color/pink" />
             </LinearLayout>

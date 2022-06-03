@@ -8,15 +8,17 @@ import java.util.List;
 public class ListProductResponse implements Serializable {
     private List<Product> products;
     private boolean success;
+    private  int documents;
     private  int countDocuments;
     private int resultPerPage;
 
     public ListProductResponse() {
     }
 
-    public ListProductResponse(List<Product> products, boolean success, int countDocument, int resultPerPage) {
+    public ListProductResponse(List<Product> products, boolean success,int documents, int countDocument, int resultPerPage) {
         this.products = products;
         this.success = success;
+        this.documents = documents;
         this.countDocuments = countDocument;
         this.resultPerPage = resultPerPage;
     }
@@ -36,7 +38,13 @@ public class ListProductResponse implements Serializable {
     public void setSuccess(boolean success) {
         this.success = success;
     }
+    public int getDocument() {
+        return documents;
+    }
 
+    public void setDocument(int documents) {
+        this.documents = documents;
+    }
     public int getCountDocument() {
         return countDocuments;
     }

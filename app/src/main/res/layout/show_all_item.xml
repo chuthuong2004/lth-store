@@ -37,15 +37,23 @@
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/img_favorite_show_all"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:src="@drawable/ic_baseline_favorite_24"
+        <androidx.cardview.widget.CardView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="5dp"
             app:layout_constraintBottom_toBottomOf="@+id/show_all_product_img"
             app:layout_constraintEnd_toEndOf="parent"
+            app:cardCornerRadius="100dp">
+        <ImageView
+            android:id="@+id/img_favorite_show_all"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:src="@drawable/ic_baseline_favorite_border_24"
+            android:background="@drawable/image_view_bg_circle"
+            android:padding="4dp"
             app:tint="@color/pink" />
+        </androidx.cardview.widget.CardView>
 
         <TextView
             android:id="@+id/show_all_product_name"

@@ -102,7 +102,9 @@ public interface ApiService {
     Call<ListProductResponse> getAllProducts(@Query("limit") int limit,
                                              @Query("page") int page,
                                              @Query("sort") String sort,
-                                             @Query("discount[gte]") String filterDiscount);
+                                             @Query("search") String search,
+                                             @Query("discount[gte]") int filterDiscount,
+                                             @Query("price[gte]") int filterPrice);
 
     // product detail
     @GET("product/{id}")
